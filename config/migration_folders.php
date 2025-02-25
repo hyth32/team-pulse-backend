@@ -6,4 +6,5 @@
  */
 return [
     'test',
+    'group',
 ];

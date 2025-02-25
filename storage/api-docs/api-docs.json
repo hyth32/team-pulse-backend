@@ -6,6 +6,194 @@
         "version": "1.0.0"
     },
     "paths": {
+        "/api/v1/groups": {
+            "get": {
+                "tags": [
+                    "Group"
+                ],
+                "summary": "Список групп",
+                "operationId": "dd307475c140d9d7218eda49e94ed6fb",
+                "parameters": [
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "description": "Количество записей",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "offset",
+                        "in": "query",
+                        "description": "Смещение",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ответ",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "groups": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Group"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Group"
+                ],
+                "summary": "Создать группу",
+                "operationId": "16452bda6ae9c6c6a6db33cce1f5f27b",
+                "responses": {
+                    "200": {
+                        "description": "Ответ",
+                        "content": {
+                            "application/json": {}
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/groups/{uuid}": {
+            "put": {
+                "tags": [
+                    "Group"
+                ],
+                "summary": "Обновить группу",
+                "operationId": "62008c5414d4de5a6773a5ae75e1ad4a",
+                "responses": {
+                    "200": {
+                        "description": "Ответ",
+                        "content": {
+                            "application/json": {}
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Group"
+                ],
+                "summary": "Удалить группу",
+                "operationId": "763a8b718ef34f1d2b16d597448c73ee",
+                "responses": {
+                    "200": {
+                        "description": "Ответ",
+                        "content": {
+                            "application/json": {}
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/question-topics": {
+            "get": {
+                "tags": [
+                    "QuestionTopic"
+                ],
+                "summary": "Список тем вопросов",
+                "operationId": "f28bf30e4aa9d43d3f433bdd2a2f8076",
+                "parameters": [
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "description": "Количество записей",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "offset",
+                        "in": "query",
+                        "description": "Смещение",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ответ",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "questionTopics": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/QuestionTopic"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "QuestionTopic"
+                ],
+                "summary": "Создать тему вопроса",
+                "operationId": "917959bb1a04bbc3da87785ec9f7e21c",
+                "responses": {
+                    "200": {
+                        "description": "Ответ",
+                        "content": {
+                            "application/json": {}
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/question-topics/{uuid}": {
+            "put": {
+                "tags": [
+                    "QuestionTopic"
+                ],
+                "summary": "Обновить тему вопроса",
+                "operationId": "1bb01d057f4d167f72a10e2ec8e2def4",
+                "responses": {
+                    "200": {
+                        "description": "Ответ",
+                        "content": {
+                            "application/json": {}
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "QuestionTopic"
+                ],
+                "summary": "Удалить тему вопроса",
+                "operationId": "13be4180aefc05c08d1482f6a080d906",
+                "responses": {
+                    "200": {
+                        "description": "Ответ",
+                        "content": {
+                            "application/json": {}
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/tests": {
             "get": {
                 "tags": [
@@ -222,6 +410,22 @@
                         "type": "string",
                         "format": "uuid",
                         "example": "123e4567-e89b-12d3-a456-426614174000"
+                    },
+                    "topic_id": {
+                        "description": "ID темы вопроса",
+                        "type": "string",
+                        "format": "uuid",
+                        "example": "123e4567-e89b-12d3-a456-426614174000"
+                    }
+                },
+                "type": "object"
+            },
+            "QuestionTopic": {
+                "description": "Тема вопроса",
+                "properties": {
+                    "name": {
+                        "description": "Название темы вопроса",
+                        "type": "string"
                     }
                 },
                 "type": "object"
@@ -261,6 +465,18 @@
                         "items": {
                             "$ref": "#/components/schemas/Group"
                         }
+                    },
+                    "assigned_user_id": {
+                        "description": "ID пользователя, назначенного на тест",
+                        "type": "string",
+                        "format": "uuid",
+                        "example": "123e4567-e89b-12d3-a456-426614174000"
+                    },
+                    "assignee_id": {
+                        "description": "ID пользователя, назначившего тест",
+                        "type": "string",
+                        "format": "uuid",
+                        "example": "123e4567-e89b-12d3-a456-426614174000"
                     }
                 },
                 "type": "object"
@@ -316,6 +532,14 @@
         }
     },
     "tags": [
+        {
+            "name": "Group",
+            "description": "Group"
+        },
+        {
+            "name": "QuestionTopic",
+            "description": "QuestionTopic"
+        },
         {
             "name": "Test",
             "description": "Test"

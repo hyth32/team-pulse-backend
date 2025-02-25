@@ -3,6 +3,9 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Test\CreateTestRequest;
+use App\Models\Test;
+use Illuminate\Http\Request;
 
 class TestController extends Controller
 {
@@ -21,9 +24,14 @@ class TestController extends Controller
      *      ),
      * )
      */
-    public function list()
+    public function list(Request $request)
     {
-        //
+        $limit = $request->query('limit', 10);
+        $offset = $request->query('offset', 0);
+
+        $tests = Test::skip($offset)->take($limit)->get();
+
+        return response()->json(['tests' => $tests]);
     }
 
     /**
@@ -35,9 +43,12 @@ class TestController extends Controller
      *      ),
      * )
      */
-    public function create()
+    public function create(CreateTestRequest $request)
     {
-        //
+        $data = $request->validated();
+        $test = Test::create($data);
+
+        return response()->json($test, 201);
     }
 
     /**
@@ -49,9 +60,13 @@ class TestController extends Controller
      *      ),
      * )
      */
-    public function update(string $uuid)
+    public function update(CreateTestRequest $request, string $uuid)
     {
-        //
+        $data = $request->validated();
+        $test = Test::findOrFail($uuid);
+        $test->update($data);
+        
+        return response()->json($test);
     }
 
     /**
@@ -65,7 +80,9 @@ class TestController extends Controller
      */
     public function view(string $uuid)
     {
-        //
+        $test = Test::findOrFail($uuid);
+
+        return response()->json($test);
     }
 
     /**
@@ -79,6 +96,9 @@ class TestController extends Controller
      */
     public function delete(string $uuid)
     {
-        //
+        $test = Test::findOrFail($uuid);
+        $test->delete();
+
+        return response()->json(['message' => 'Тест удален']);
     }
 }
