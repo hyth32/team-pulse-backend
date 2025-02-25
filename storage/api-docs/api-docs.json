@@ -118,11 +118,159 @@
     },
     "components": {
         "schemas": {
+            "AnswerType": {
+                "description": "Типы ответов\n *      0 - Текст\n *      1 - Одиночный выбор\n *      2 - Множественный выбор\n *      3 - Оценка",
+                "type": "integer",
+                "enum": [
+                    "Text",
+                    "SingleChoice",
+                    "MultipleChoice",
+                    "Scale"
+                ],
+                "example": 0
+            },
+            "TestType": {
+                "description": "Типы тестов\n *     0 - Готовый\n *     1 - Опрос\n *     2 - 360",
+                "type": "integer",
+                "enum": [
+                    "Prepared",
+                    "Survey",
+                    "Overall"
+                ],
+                "example": 0
+            },
+            "UserRole": {
+                "description": "Роли пользователей\n *     0 - Администратор\n *     1 - Руководитель\n *     2 - Сотрудник",
+                "type": "integer",
+                "enum": [
+                    "Admin",
+                    "Supervisor",
+                    "Employee"
+                ],
+                "example": 0
+            },
+            "Answer": {
+                "description": "Ответ",
+                "properties": {
+                    "type": {
+                        "$ref": "#/components/schemas/AnswerType"
+                    },
+                    "text": {
+                        "description": "Текст ответа",
+                        "type": "string"
+                    },
+                    "image_id": {
+                        "description": "ID изображения",
+                        "type": "string",
+                        "format": "uuid",
+                        "example": "123e4567-e89b-12d3-a456-426614174000"
+                    },
+                    "question_id": {
+                        "description": "ID вопроса",
+                        "type": "string",
+                        "format": "uuid",
+                        "example": "123e4567-e89b-12d3-a456-426614174000"
+                    }
+                },
+                "type": "object"
+            },
+            "File": {
+                "description": "Файл",
+                "properties": {
+                    "url": {
+                        "description": "Локальный url файла",
+                        "type": "string"
+                    },
+                    "type": {
+                        "description": "Тип файла",
+                        "type": "string"
+                    },
+                    "mime_type": {
+                        "description": "Mime тип файла",
+                        "type": "string"
+                    },
+                    "original_name": {
+                        "description": "Оригинальное имя файла",
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "Group": {
+                "description": "Группа пользователей",
+                "properties": {
+                    "name": {
+                        "description": "Название группы",
+                        "type": "string"
+                    },
+                    "priority": {
+                        "description": "Приоритет группы",
+                        "type": "integer"
+                    }
+                },
+                "type": "object"
+            },
+            "Question": {
+                "description": "Вопрос",
+                "properties": {
+                    "text": {
+                        "description": "Текст вопроса",
+                        "type": "string"
+                    },
+                    "test_id": {
+                        "description": "ID теста",
+                        "type": "string",
+                        "format": "uuid",
+                        "example": "123e4567-e89b-12d3-a456-426614174000"
+                    }
+                },
+                "type": "object"
+            },
             "Test": {
                 "description": "Тест",
                 "properties": {
                     "name": {
                         "description": "Название теста",
+                        "type": "string"
+                    },
+                    "description": {
+                        "description": "Описание теста",
+                        "type": "text"
+                    },
+                    "type": {
+                        "$ref": "#/components/schemas/TestType"
+                    },
+                    "questions": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Question"
+                        }
+                    },
+                    "periodicity": {
+                        "$ref": "#/components/schemas/TestPeriodicity"
+                    },
+                    "start_date": {
+                        "description": "Дата начала теста",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "end_date": {
+                        "description": "Дата окончания теста",
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "TestPeriodicity": {
+                "description": "Периодичность теста",
+                "properties": {
+                    "name": {
+                        "description": "Название",
+                        "type": "string"
+                    },
+                    "timeframe": {
+                        "description": "Временной интервал",
                         "type": "string"
                     }
                 },
