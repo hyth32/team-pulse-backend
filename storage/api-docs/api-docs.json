@@ -6,13 +6,13 @@
         "version": "1.0.0"
     },
     "paths": {
-        "/api/tests": {
+        "/api/v1/tests": {
             "get": {
                 "tags": [
                     "Test"
                 ],
                 "summary": "Список тестов",
-                "operationId": "1a1aee092f8ee95ae3bd02d0de32c8c1",
+                "operationId": "2d6527e0e425c66092b7ce936622f79e",
                 "parameters": [
                     {
                         "name": "limit",
@@ -48,6 +48,68 @@
                                     "type": "object"
                                 }
                             }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Test"
+                ],
+                "summary": "Создать тест",
+                "operationId": "43c9b4110acb891d5bdcb0eef84a0d88",
+                "responses": {
+                    "200": {
+                        "description": "Ответ",
+                        "content": {
+                            "application/json": {}
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/tests/{uuid}": {
+            "get": {
+                "tags": [
+                    "Test"
+                ],
+                "summary": "Получить тест",
+                "operationId": "a7d1053f438af12c53d8fc4b6a05740c",
+                "responses": {
+                    "200": {
+                        "description": "Ответ",
+                        "content": {
+                            "application/json": {}
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Test"
+                ],
+                "summary": "Обновить тест",
+                "operationId": "120144c53622bf9b70a554784527ac0c",
+                "responses": {
+                    "200": {
+                        "description": "Ответ",
+                        "content": {
+                            "application/json": {}
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Test"
+                ],
+                "summary": "Удалить тест",
+                "operationId": "07527a19a600dfa7791470eaf392185e",
+                "responses": {
+                    "200": {
+                        "description": "Ответ",
+                        "content": {
+                            "application/json": {}
                         }
                     }
                 }
