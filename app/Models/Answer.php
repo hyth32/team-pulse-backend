@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Models\BaseModel;
 
 /**
  * @OA\Schema(schema="Answer", description="Ответ", properties={
@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Model;
  *      @OA\Property(property="question_id", type="string", format="uuid", description="ID вопроса", example="123e4567-e89b-12d3-a456-426614174000"),
  * })
  */
-class Answer extends Model
+class Answer extends BaseModel
 {
     //
 }

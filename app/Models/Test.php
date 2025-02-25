@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Models\BaseModel;
 
     /**
      * @OA\Schema(schema="Test", description="Тест", properties={
@@ -15,7 +15,7 @@ use Illuminate\Database\Eloquent\Model;
      *      @OA\Property(property="groups", type="array", @OA\Items(ref="#/components/schemas/Group")),
      * })
      */
-class Test extends Model
+class Test extends BaseModel
 {
     //
 }

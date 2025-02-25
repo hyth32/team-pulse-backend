@@ -240,14 +240,11 @@
                     "type": {
                         "$ref": "#/components/schemas/TestType"
                     },
-                    "questions": {
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/components/schemas/Question"
-                        }
-                    },
                     "periodicity": {
-                        "$ref": "#/components/schemas/TestPeriodicity"
+                        "description": "ID периодичности",
+                        "type": "string",
+                        "format": "uuid",
+                        "example": "123e4567-e89b-12d3-a456-426614174000"
                     },
                     "start_date": {
                         "description": "Дата начала теста",
@@ -258,6 +255,30 @@
                         "description": "Дата окончания теста",
                         "type": "string",
                         "format": "date-time"
+                    },
+                    "groups": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Group"
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "TestGroup": {
+                "description": "Группы, назначенные на тест",
+                "properties": {
+                    "test_id": {
+                        "description": "ID теста",
+                        "type": "string",
+                        "format": "uuid",
+                        "example": "123e4567-e89b-12d3-a456-426614174000"
+                    },
+                    "group_id": {
+                        "description": "ID группы",
+                        "type": "string",
+                        "format": "uuid",
+                        "example": "123e4567-e89b-12d3-a456-426614174000"
                     }
                 },
                 "type": "object"
@@ -272,6 +293,22 @@
                     "timeframe": {
                         "description": "Временной интервал",
                         "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "UserGroup": {
+                "description": "Группы пользователя",
+                "properties": {
+                    "user_id": {
+                        "description": "ID пользователя",
+                        "type": "uuid",
+                        "example": "123e4567-e89b-12d3-a456-426614174000"
+                    },
+                    "group_id": {
+                        "description": "ID группы",
+                        "type": "uuid",
+                        "example": "123e4567-e89b-12d3-a456-426614174000"
                     }
                 },
                 "type": "object"

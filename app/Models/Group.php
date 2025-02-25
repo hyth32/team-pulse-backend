@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Models\BaseModel;
 
 /**
  * @OA\Schema(schema="Group", description="Группа пользователей", properties={
@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
  *      @OA\Property(property="priority", type="integer", description="Приоритет группы"),
  * })
  */
-class Group extends Model
+class Group extends BaseModel
 {
     //
 }

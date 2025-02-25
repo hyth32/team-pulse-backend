@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Models\BaseModel;
 
 /**
  * @OA\Schema(schema="TestPeriodicity", description="Периодичность теста", properties={
@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
  *      @OA\Property(property="timeframe", type="string", description="Временной интервал"),
  * })
  */
-class TestPeriodicity extends Model
+class TestPeriodicity extends BaseModel
 {
     //
 }

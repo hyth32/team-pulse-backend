@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Models\BaseModel;
 
 /**
  * @OA\Schema(schema="File", description="Файл", properties={
@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Model;
  *      @OA\Property(property="original_name", type="string", description="Оригинальное имя файла")
  * })
  */
-class File extends Model
+class File extends BaseModel
 {
     //
 }
