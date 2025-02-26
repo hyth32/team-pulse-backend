@@ -22,13 +22,32 @@ class CreateTestRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'nullable',
-            'description' => 'nullable',
-            'type' => 'nullable',
-            'periodicity' => 'nullable',
-            'start_date' => 'nullable',
-            'end_date' => 'nullable',
-            'assignee_id' => 'nullable',
+            'name' => 'required|string',
+            'description' => 'nullable|string',
+            'type' => 'required|integer',
+
+            'questions' => 'nullable|array',
+            'questions.*.topic' => 'nullable|string|max:255',
+            'questions.*.text' => 'required|string|max:255',
+            'questions.*.type' => 'required|integer',
+
+            'questions.*.answers' => 'nullable|array',
+            'questions.*.answers.*.text' => 'required|string|max:1000',
+
+            'periodicity' => 'nullable|array',
+            'periodicity.name' => 'nullable|string|max:255',
+            'periodicity.timeframe' => 'nullable|array',
+            'periodicity.timeframe.from' => 'nullable|integer',
+            'periodicity.timeframe.to' => 'nullable|integer|gte:periodicity.timeframe.from',
+
+            'start_date' => 'nullable|integer',
+            'end_date' => 'nullable|gte:start_date',
+
+            'groups' => 'nullable|array',
+            'groups.*.name' => 'required|string|max:255',
+
+            'employees' => 'nullable|array',
+            'employees.*.id' => 'required|uuid',
         ];
     }
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Test\CreateTestRequest;
+use App\Http\Services\TestService;
 use App\Models\Test;
 use Illuminate\Http\Request;
 
@@ -45,9 +46,7 @@ class TestController extends Controller
      */
     public function create(CreateTestRequest $request)
     {
-        $data = $request->validated();
-        $test = Test::create($data);
-
+        $test = (new TestService)->save($request);
         return response()->json($test, 201);
     }
 
