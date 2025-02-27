@@ -348,20 +348,20 @@
                 "example": 0
             },
             "CreateTestRequest": {
-                "description": "Request body for creating a new test",
+                "description": "Тело запроса для создания теста",
                 "properties": {
                     "name": {
-                        "description": "Name of the test",
+                        "description": "Название теста",
                         "type": "string",
                         "example": "New test"
                     },
                     "description": {
-                        "description": "Description of the test",
+                        "description": "Описание теста",
                         "type": "string",
                         "example": "New test description"
                     },
                     "type": {
-                        "description": "Type of the test",
+                        "description": "Тип теста",
                         "type": "integer",
                         "example": 1
                     },
@@ -370,17 +370,17 @@
                         "items": {
                             "properties": {
                                 "topic": {
-                                    "description": "Topic of the question",
+                                    "description": "Тема вопроса",
                                     "type": "string",
                                     "example": "default"
                                 },
                                 "text": {
-                                    "description": "Text of the question",
+                                    "description": "Текст вопроса",
                                     "type": "string",
                                     "example": "Question 1"
                                 },
                                 "type": {
-                                    "description": "Type of the question",
+                                    "description": "Тип ответа на вопрос",
                                     "type": "integer",
                                     "example": 0
                                 },
@@ -389,7 +389,7 @@
                                     "items": {
                                         "properties": {
                                             "text": {
-                                                "description": "Text of the answer",
+                                                "description": "Текст вопроса",
                                                 "type": "string",
                                                 "example": "Answer 1"
                                             }
@@ -404,19 +404,19 @@
                     "periodicity": {
                         "properties": {
                             "name": {
-                                "description": "Name of the periodicity",
+                                "description": "Название периодичности",
                                 "type": "string",
                                 "example": "Каждую неделю"
                             },
                             "timeframe": {
                                 "properties": {
                                     "from": {
-                                        "description": "Start timestamp",
+                                        "description": "Временная метка начала теста",
                                         "type": "integer",
                                         "example": 1740566491
                                     },
                                     "to": {
-                                        "description": "End timestamp",
+                                        "description": "Временная метка окончания теста",
                                         "type": "integer",
                                         "example": 1740566491
                                     }
@@ -427,12 +427,12 @@
                         "type": "object"
                     },
                     "start_date": {
-                        "description": "Start date timestamp",
+                        "description": "Временная метка начала прохождения теста",
                         "type": "integer",
                         "example": 1740566491
                     },
                     "end_date": {
-                        "description": "End date timestamp",
+                        "description": "Временная метка окончания прохождения теста",
                         "type": "integer",
                         "example": 1740566491
                     },
@@ -441,7 +441,7 @@
                         "items": {
                             "properties": {
                                 "name": {
-                                    "description": "Name of the group",
+                                    "description": "Название группы",
                                     "type": "string",
                                     "example": "Frontend"
                                 }
@@ -454,7 +454,7 @@
                         "items": {
                             "properties": {
                                 "id": {
-                                    "description": "Employee ID",
+                                    "description": "ID пользователя",
                                     "type": "string",
                                     "format": "uuid",
                                     "example": "123e4567-e89b-12d3-a456-426614174000"
@@ -465,6 +465,15 @@
                     }
                 },
                 "type": "object"
+            },
+            "UpdateTestRequest": {
+                "description": "Тело запроса для обновления теста",
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/CreateTestRequest"
+                    }
+                ]
             },
             "Answer": {
                 "description": "Ответ",

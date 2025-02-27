@@ -4,9 +4,9 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Test\CreateTestRequest;
+use App\Http\Requests\Test\ListTestRequest;
 use App\Http\Services\TestService;
 use App\Models\Test;
-use Illuminate\Http\Request;
 
 class TestController extends Controller
 {
@@ -25,13 +25,9 @@ class TestController extends Controller
      *      ),
      * )
      */
-    public function list(Request $request)
+    public function list(ListTestRequest $request)
     {
-        $limit = $request->query('limit', 10);
-        $offset = $request->query('offset', 0);
-
-        $tests = Test::skip($offset)->take($limit)->get();
-
+        $tests = TestService::list($request);
         return response()->json(['tests' => $tests]);
     }
 

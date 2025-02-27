@@ -8,24 +8,24 @@ use Illuminate\Foundation\Http\FormRequest;
  * @OA\Schema(
  *     schema="CreateTestRequest",
  *     type="object",
- *     description="Request body for creating a new test",
- *     @OA\Property(property="name", type="string", example="New test", description="Name of the test"),
- *     @OA\Property(property="description", type="string", example="New test description", description="Description of the test"),
- *     @OA\Property(property="type", type="integer", example=1, description="Type of the test"),
+ *     description="Тело запроса для создания теста",
+ *     @OA\Property(property="name", type="string", example="New test", description="Название теста"),
+ *     @OA\Property(property="description", type="string", example="New test description", description="Описание теста"),
+ *     @OA\Property(property="type", type="integer", example=1, description="Тип теста"),
  *     @OA\Property(
  *         property="questions",
  *         type="array",
  *         @OA\Items(
  *             type="object",
- *             @OA\Property(property="topic", type="string", example="default", description="Topic of the question"),
- *             @OA\Property(property="text", type="string", example="Question 1", description="Text of the question"),
- *             @OA\Property(property="type", type="integer", example=0, description="Type of the question"),
+ *             @OA\Property(property="topic", type="string", example="default", description="Тема вопроса"),
+ *             @OA\Property(property="text", type="string", example="Question 1", description="Текст вопроса"),
+ *             @OA\Property(property="type", type="integer", example=0, description="Тип ответа на вопрос"),
  *             @OA\Property(
  *                 property="answers",
  *                 type="array",
  *                 @OA\Items(
  *                     type="object",
- *                     @OA\Property(property="text", type="string", example="Answer 1", description="Text of the answer")
+ *                     @OA\Property(property="text", type="string", example="Answer 1", description="Текст вопроса")
  *                 )
  *             )
  *         )
@@ -33,22 +33,22 @@ use Illuminate\Foundation\Http\FormRequest;
  *     @OA\Property(
  *         property="periodicity",
  *         type="object",
- *         @OA\Property(property="name", type="string", example="Каждую неделю", description="Name of the periodicity"),
+ *         @OA\Property(property="name", type="string", example="Каждую неделю", description="Название периодичности"),
  *         @OA\Property(
  *             property="timeframe",
  *             type="object",
- *             @OA\Property(property="from", type="integer", example=1740566491, description="Start timestamp"),
- *             @OA\Property(property="to", type="integer", example=1740566491, description="End timestamp")
+ *             @OA\Property(property="from", type="integer", example=1740566491, description="Временная метка начала теста"),
+ *             @OA\Property(property="to", type="integer", example=1740566491, description="Временная метка окончания теста")
  *         )
  *     ),
- *     @OA\Property(property="start_date", type="integer", example=1740566491, description="Start date timestamp"),
- *     @OA\Property(property="end_date", type="integer", example=1740566491, description="End date timestamp"),
+ *     @OA\Property(property="start_date", type="integer", example=1740566491, description="Временная метка начала прохождения теста"),
+ *     @OA\Property(property="end_date", type="integer", example=1740566491, description="Временная метка окончания прохождения теста"),
  *     @OA\Property(
  *         property="groups",
  *         type="array",
  *         @OA\Items(
  *             type="object",
- *             @OA\Property(property="name", type="string", example="Frontend", description="Name of the group")
+ *             @OA\Property(property="name", type="string", example="Frontend", description="Название группы")
  *         )
  *     ),
  *     @OA\Property(
@@ -56,7 +56,7 @@ use Illuminate\Foundation\Http\FormRequest;
  *         type="array",
  *         @OA\Items(
  *             type="object",
- *             @OA\Property(property="id", type="string", format="uuid", example="123e4567-e89b-12d3-a456-426614174000", description="Employee ID")
+ *             @OA\Property(property="id", type="string", format="uuid", example="123e4567-e89b-12d3-a456-426614174000", description="ID пользователя")
  *         )
  *     )
  * )
