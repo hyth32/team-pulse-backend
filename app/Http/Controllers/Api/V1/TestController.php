@@ -39,6 +39,10 @@ class TestController extends Controller
      * @OA\Post(path="/api/v1/tests",
      *      tags={"Test"},
      *      summary="Создать тест",
+     *      @OA\RequestBody(
+     *        required=true,
+     *        @OA\JsonContent(ref="#/components/schemas/CreateTestRequest"),
+     *      ),
      *      @OA\Response(response=200, description="Ответ",
      *         @OA\MediaType(mediaType="application/json"),
      *      ),

@@ -10,8 +10,12 @@ class TestService
     public function save(CreateTestRequest $request)
     {
         $data = $request->validated();
-        $test = Test::create($data);
 
-        return $test;
+        $periodicity = $data['periodicity'];
+        $questions = $data['questions'];
+        $groups = $data['groups'];
+        $employees = $data['employees'];
+
+        return $data;
     }
 }

@@ -246,6 +246,16 @@
                 ],
                 "summary": "Создать тест",
                 "operationId": "43c9b4110acb891d5bdcb0eef84a0d88",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreateTestRequest"
+                            }
+                        }
+                    }
+                },
                 "responses": {
                     "200": {
                         "description": "Ответ",
@@ -337,12 +347,128 @@
                 ],
                 "example": 0
             },
+            "CreateTestRequest": {
+                "description": "Request body for creating a new test",
+                "properties": {
+                    "name": {
+                        "description": "Name of the test",
+                        "type": "string",
+                        "example": "New test"
+                    },
+                    "description": {
+                        "description": "Description of the test",
+                        "type": "string",
+                        "example": "New test description"
+                    },
+                    "type": {
+                        "description": "Type of the test",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "questions": {
+                        "type": "array",
+                        "items": {
+                            "properties": {
+                                "topic": {
+                                    "description": "Topic of the question",
+                                    "type": "string",
+                                    "example": "default"
+                                },
+                                "text": {
+                                    "description": "Text of the question",
+                                    "type": "string",
+                                    "example": "Question 1"
+                                },
+                                "type": {
+                                    "description": "Type of the question",
+                                    "type": "integer",
+                                    "example": 0
+                                },
+                                "answers": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "text": {
+                                                "description": "Text of the answer",
+                                                "type": "string",
+                                                "example": "Answer 1"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                }
+                            },
+                            "type": "object"
+                        }
+                    },
+                    "periodicity": {
+                        "properties": {
+                            "name": {
+                                "description": "Name of the periodicity",
+                                "type": "string",
+                                "example": "Каждую неделю"
+                            },
+                            "timeframe": {
+                                "properties": {
+                                    "from": {
+                                        "description": "Start timestamp",
+                                        "type": "integer",
+                                        "example": 1740566491
+                                    },
+                                    "to": {
+                                        "description": "End timestamp",
+                                        "type": "integer",
+                                        "example": 1740566491
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        },
+                        "type": "object"
+                    },
+                    "start_date": {
+                        "description": "Start date timestamp",
+                        "type": "integer",
+                        "example": 1740566491
+                    },
+                    "end_date": {
+                        "description": "End date timestamp",
+                        "type": "integer",
+                        "example": 1740566491
+                    },
+                    "groups": {
+                        "type": "array",
+                        "items": {
+                            "properties": {
+                                "name": {
+                                    "description": "Name of the group",
+                                    "type": "string",
+                                    "example": "Frontend"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    },
+                    "employees": {
+                        "type": "array",
+                        "items": {
+                            "properties": {
+                                "id": {
+                                    "description": "Employee ID",
+                                    "type": "string",
+                                    "format": "uuid",
+                                    "example": "123e4567-e89b-12d3-a456-426614174000"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                },
+                "type": "object"
+            },
             "Answer": {
                 "description": "Ответ",
                 "properties": {
-                    "type": {
-                        "$ref": "#/components/schemas/AnswerType"
-                    },
                     "text": {
                         "description": "Текст ответа",
                         "type": "string"
@@ -404,6 +530,9 @@
                     "text": {
                         "description": "Текст вопроса",
                         "type": "string"
+                    },
+                    "type": {
+                        "$ref": "#/components/schemas/AnswerType"
                     },
                     "test_id": {
                         "description": "ID теста",

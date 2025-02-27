@@ -4,6 +4,63 @@ namespace App\Http\Requests\Test;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+/**
+ * @OA\Schema(
+ *     schema="CreateTestRequest",
+ *     type="object",
+ *     description="Request body for creating a new test",
+ *     @OA\Property(property="name", type="string", example="New test", description="Name of the test"),
+ *     @OA\Property(property="description", type="string", example="New test description", description="Description of the test"),
+ *     @OA\Property(property="type", type="integer", example=1, description="Type of the test"),
+ *     @OA\Property(
+ *         property="questions",
+ *         type="array",
+ *         @OA\Items(
+ *             type="object",
+ *             @OA\Property(property="topic", type="string", example="default", description="Topic of the question"),
+ *             @OA\Property(property="text", type="string", example="Question 1", description="Text of the question"),
+ *             @OA\Property(property="type", type="integer", example=0, description="Type of the question"),
+ *             @OA\Property(
+ *                 property="answers",
+ *                 type="array",
+ *                 @OA\Items(
+ *                     type="object",
+ *                     @OA\Property(property="text", type="string", example="Answer 1", description="Text of the answer")
+ *                 )
+ *             )
+ *         )
+ *     ),
+ *     @OA\Property(
+ *         property="periodicity",
+ *         type="object",
+ *         @OA\Property(property="name", type="string", example="Каждую неделю", description="Name of the periodicity"),
+ *         @OA\Property(
+ *             property="timeframe",
+ *             type="object",
+ *             @OA\Property(property="from", type="integer", example=1740566491, description="Start timestamp"),
+ *             @OA\Property(property="to", type="integer", example=1740566491, description="End timestamp")
+ *         )
+ *     ),
+ *     @OA\Property(property="start_date", type="integer", example=1740566491, description="Start date timestamp"),
+ *     @OA\Property(property="end_date", type="integer", example=1740566491, description="End date timestamp"),
+ *     @OA\Property(
+ *         property="groups",
+ *         type="array",
+ *         @OA\Items(
+ *             type="object",
+ *             @OA\Property(property="name", type="string", example="Frontend", description="Name of the group")
+ *         )
+ *     ),
+ *     @OA\Property(
+ *         property="employees",
+ *         type="array",
+ *         @OA\Items(
+ *             type="object",
+ *             @OA\Property(property="id", type="string", format="uuid", example="123e4567-e89b-12d3-a456-426614174000", description="Employee ID")
+ *         )
+ *     )
+ * )
+ */
 class CreateTestRequest extends FormRequest
 {
     /**
@@ -47,7 +104,7 @@ class CreateTestRequest extends FormRequest
             'groups.*.name' => 'required|string|max:255',
 
             'employees' => 'nullable|array',
-            'employees.*.id' => 'required|uuid',
+            'employees.*.id' => 'required|string',
         ];
     }
 }
