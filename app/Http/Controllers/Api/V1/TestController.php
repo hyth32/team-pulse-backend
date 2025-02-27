@@ -5,8 +5,8 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Test\CreateTestRequest;
 use App\Http\Requests\Test\ListTestRequest;
+use App\Http\Requests\Test\UpdateTestRequest;
 use App\Http\Services\TestService;
-use App\Models\Test;
 
 class TestController extends Controller
 {
@@ -59,12 +59,9 @@ class TestController extends Controller
      *      ),
      * )
      */
-    public function update(CreateTestRequest $request, string $uuid)
+    public function update(string $uuid, UpdateTestRequest $request)
     {
-        $data = $request->validated();
-        $test = Test::findOrFail($uuid);
-        $test->update($data);
-        
+        $test = (new TestService)->update($uuid, $request);
         return response()->json($test);
     }
 
@@ -79,8 +76,7 @@ class TestController extends Controller
      */
     public function view(string $uuid)
     {
-        $test = Test::findOrFail($uuid);
-
+        $test = TestService::view($uuid);
         return response()->json($test);
     }
 
@@ -95,9 +91,7 @@ class TestController extends Controller
      */
     public function delete(string $uuid)
     {
-        $test = Test::findOrFail($uuid);
-        $test->delete();
-
+        (new TestService)->delete($uuid);
         return response()->json(['message' => 'Тест удален']);
     }
 }
