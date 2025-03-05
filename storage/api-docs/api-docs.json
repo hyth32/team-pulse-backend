@@ -533,7 +533,7 @@
                 "type": "object"
             },
             "Group": {
-                "description": "Группа пользователей",
+                "description": "Группа",
                 "properties": {
                     "name": {
                         "description": "Название группы",
@@ -551,7 +551,7 @@
                 "properties": {
                     "text": {
                         "description": "Текст вопроса",
-                        "type": "string"
+                        "type": "text"
                     },
                     "type": {
                         "$ref": "#/components/schemas/AnswerType"
@@ -566,6 +566,22 @@
                         "description": "ID темы вопроса",
                         "type": "string",
                         "format": "uuid",
+                        "example": "123e4567-e89b-12d3-a456-426614174000"
+                    }
+                },
+                "type": "object"
+            },
+            "QuestionTag": {
+                "description": "Теги вопроса",
+                "properties": {
+                    "question_id": {
+                        "description": "ID вопроса",
+                        "type": "uuid",
+                        "example": "123e4567-e89b-12d3-a456-426614174000"
+                    },
+                    "tag_id": {
+                        "description": "ID тега",
+                        "type": "uuid",
                         "example": "123e4567-e89b-12d3-a456-426614174000"
                     }
                 },
@@ -591,6 +607,22 @@
                     "priority": {
                         "description": "Приоритет тега",
                         "type": "integer"
+                    }
+                },
+                "type": "object"
+            },
+            "TagGroup": {
+                "description": "Группа тегов",
+                "properties": {
+                    "tag_id": {
+                        "description": "ID тега",
+                        "type": "uuid",
+                        "example": "123e4567-e89b-12d3-a456-426614174000"
+                    },
+                    "group_id": {
+                        "description": "ID группы",
+                        "type": "uuid",
+                        "example": "123e4567-e89b-12d3-a456-426614174000"
                     }
                 },
                 "type": "object"

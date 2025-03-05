@@ -27,8 +27,10 @@ class TestService
     {
         $data = $request->validated();
 
-        $periodicity = $data['periodicity'];
         $questions = $data['questions'];
+        
+
+        $periodicity = $data['periodicity'];
         $groups = $data['groups'];
         $employees = $data['employees'];
 

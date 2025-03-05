@@ -7,4 +7,7 @@
 return [
     'test',
     'group',
+    'question',
+    'answer',
+    'tag',
 ];
