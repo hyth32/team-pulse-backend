@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Model;
  *      @OA\Property(property="point_count", type="integer", description="Количество поинтов на тег"),
  * })
  */
-class TestTagPoints extends Model
+class TestTagPoints extends BaseModel
 {
     //
 }

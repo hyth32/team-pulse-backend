@@ -17,6 +17,13 @@ use App\Models\BaseModel;
  */
 class Test extends BaseModel
 {
+    protected $dates = [
+        'created_at',
+        'updated_at',
+        'start_date',
+        'end_date',
+    ];
+
     protected $fillable = [
         'name',
         'description',
@@ -24,5 +31,6 @@ class Test extends BaseModel
         'periodicity',
         'start_date',
         'end_date',
+        'assignee_id',
     ];
 }

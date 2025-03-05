@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\BaseModel;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 /**
  * @OA\Schema(schema="UserGroup", description="Группы пользователя", properties={
@@ -12,5 +13,13 @@ use App\Models\BaseModel;
  */
 class UserGroup extends BaseModel
 {
-    //
+    public function users(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'user_id');
+    }
+
+    public function groups(): BelongsToMany
+    {
+        return $this->belongsToMany(Group::class, 'group_id');
+    }
 }

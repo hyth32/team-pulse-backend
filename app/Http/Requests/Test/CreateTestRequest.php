@@ -26,6 +26,7 @@ use Illuminate\Foundation\Http\FormRequest;
  *                 @OA\Items(
  *                     type="object",
  *                     @OA\Property(property="name", type="string", example="Tag 1", description="Тег вопроса")
+ *                     @OA\Property(property="points", type="integer", example="8", description="Количество поинтов на тег")
  *                 )
  *             ),
  *             @OA\Property(
@@ -98,6 +99,7 @@ class CreateTestRequest extends FormRequest
 
             'questions.*.tags' => 'nullable|array',
             'questions.*.tags.*.name' => 'required|string|max:255',
+            'questions.*.tags.*.points' => 'nullable|integer',
 
             'questions.*.answers' => 'nullable|array',
             'questions.*.answers.*.text' => 'required|string|max:1000',

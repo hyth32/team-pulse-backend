@@ -556,12 +556,6 @@
                     "type": {
                         "$ref": "#/components/schemas/AnswerType"
                     },
-                    "test_id": {
-                        "description": "ID теста",
-                        "type": "string",
-                        "format": "uuid",
-                        "example": "123e4567-e89b-12d3-a456-426614174000"
-                    },
                     "topic_id": {
                         "description": "ID темы вопроса",
                         "type": "string",
@@ -694,6 +688,52 @@
                     "timeframe": {
                         "description": "Временной интервал",
                         "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "TestQuestion": {
+                "description": "Вопросы теста",
+                "properties": {
+                    "test_id": {
+                        "description": "ID теста",
+                        "type": "string",
+                        "format": "uuid",
+                        "example": "123e4567-e89b-12d3-a456-426614174000"
+                    },
+                    "question_id": {
+                        "description": "ID вопроса",
+                        "type": "string",
+                        "format": "uuid",
+                        "example": "123e4567-e89b-12d3-a456-426614174000"
+                    }
+                },
+                "type": "object"
+            },
+            "TestTagPoints": {
+                "description": "Распределение баллов по тегам в тесте",
+                "properties": {
+                    "test_id": {
+                        "description": "ID теста",
+                        "type": "string",
+                        "format": "uuid",
+                        "example": "123e4567-e89b-12d3-a456-426614174000"
+                    },
+                    "question_id": {
+                        "description": "ID вопроса",
+                        "type": "string",
+                        "format": "uuid",
+                        "example": "123e4567-e89b-12d3-a456-426614174000"
+                    },
+                    "tag_id": {
+                        "description": "ID тега",
+                        "type": "string",
+                        "format": "uuid",
+                        "example": "123e4567-e89b-12d3-a456-426614174000"
+                    },
+                    "point_count": {
+                        "description": "Количество поинтов на тег",
+                        "type": "integer"
                     }
                 },
                 "type": "object"
