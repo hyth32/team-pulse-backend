@@ -392,6 +392,11 @@
                                                 "description": "Тег вопроса",
                                                 "type": "string",
                                                 "example": "Tag 1"
+                                            },
+                                            "points": {
+                                                "description": "Количество поинтов на тег",
+                                                "type": "integer",
+                                                "example": "8"
                                             }
                                         },
                                         "type": "object"
@@ -493,7 +498,7 @@
                 "properties": {
                     "text": {
                         "description": "Текст ответа",
-                        "type": "string"
+                        "type": "text"
                     },
                     "image_id": {
                         "description": "ID изображения",
@@ -577,6 +582,10 @@
                         "description": "ID тега",
                         "type": "uuid",
                         "example": "123e4567-e89b-12d3-a456-426614174000"
+                    },
+                    "point_count": {
+                        "description": "Количество поинтов на тег",
+                        "type": "integer"
                     }
                 },
                 "type": "object"
@@ -594,7 +603,7 @@
             "Tag": {
                 "description": "Тег",
                 "properties": {
-                    "text": {
+                    "name": {
                         "description": "Название тега",
                         "type": "string"
                     },
@@ -660,24 +669,6 @@
                 },
                 "type": "object"
             },
-            "TestGroup": {
-                "description": "Группы, назначенные на тест",
-                "properties": {
-                    "test_id": {
-                        "description": "ID теста",
-                        "type": "string",
-                        "format": "uuid",
-                        "example": "123e4567-e89b-12d3-a456-426614174000"
-                    },
-                    "group_id": {
-                        "description": "ID группы",
-                        "type": "string",
-                        "format": "uuid",
-                        "example": "123e4567-e89b-12d3-a456-426614174000"
-                    }
-                },
-                "type": "object"
-            },
             "TestPeriodicity": {
                 "description": "Периодичность теста",
                 "properties": {
@@ -710,34 +701,6 @@
                 },
                 "type": "object"
             },
-            "TestTagPoints": {
-                "description": "Распределение баллов по тегам в тесте",
-                "properties": {
-                    "test_id": {
-                        "description": "ID теста",
-                        "type": "string",
-                        "format": "uuid",
-                        "example": "123e4567-e89b-12d3-a456-426614174000"
-                    },
-                    "question_id": {
-                        "description": "ID вопроса",
-                        "type": "string",
-                        "format": "uuid",
-                        "example": "123e4567-e89b-12d3-a456-426614174000"
-                    },
-                    "tag_id": {
-                        "description": "ID тега",
-                        "type": "string",
-                        "format": "uuid",
-                        "example": "123e4567-e89b-12d3-a456-426614174000"
-                    },
-                    "point_count": {
-                        "description": "Количество поинтов на тег",
-                        "type": "integer"
-                    }
-                },
-                "type": "object"
-            },
             "UserGroup": {
                 "description": "Группы пользователя",
                 "properties": {
@@ -748,6 +711,22 @@
                     },
                     "group_id": {
                         "description": "ID группы",
+                        "type": "uuid",
+                        "example": "123e4567-e89b-12d3-a456-426614174000"
+                    }
+                },
+                "type": "object"
+            },
+            "UserTest": {
+                "description": "Группы пользователя",
+                "properties": {
+                    "user_id": {
+                        "description": "ID пользователя",
+                        "type": "uuid",
+                        "example": "123e4567-e89b-12d3-a456-426614174000"
+                    },
+                    "test_id": {
+                        "description": "ID теста",
                         "type": "uuid",
                         "example": "123e4567-e89b-12d3-a456-426614174000"
                     }

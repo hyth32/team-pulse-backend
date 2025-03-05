@@ -25,9 +25,9 @@ use Illuminate\Foundation\Http\FormRequest;
  *                 type="array",
  *                 @OA\Items(
  *                     type="object",
- *                     @OA\Property(property="name", type="string", example="Tag 1", description="Тег вопроса")
+ *                     @OA\Property(property="name", type="string", example="Tag 1", description="Тег вопроса"),
  *                     @OA\Property(property="points", type="integer", example="8", description="Количество поинтов на тег")
- *                 )
+ *                 ),
  *             ),
  *             @OA\Property(
  *                 property="answers",

@@ -10,4 +10,5 @@ return [
     'question',
     'answer',
     'tag',
+    'file',
 ];

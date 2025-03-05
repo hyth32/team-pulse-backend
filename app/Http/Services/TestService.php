@@ -5,8 +5,13 @@ namespace App\Http\Services;
 use App\Http\Requests\Test\CreateTestRequest;
 use App\Http\Requests\Test\ListTestRequest;
 use App\Http\Requests\Test\UpdateTestRequest;
-use Illuminate\Http\Request;
+use App\Models\Answer;
+use App\Models\Question;
+use App\Models\QuestionTag;
+use App\Models\QuestionTopic;
+use App\Models\Tag;
 use App\Models\Test;
+use App\Models\TestQuestion;
 
 class TestService
 {
@@ -27,12 +32,102 @@ class TestService
     {
         $data = $request->validated();
 
-        $questions = $data['questions'];
-        
+        // if (isset($data['periodicity']['timeframe'])) {
+        //     $periodicityTimeframe = $data['periodicity']['timeframe'];
+        //     $periodicityFrom = $periodicityTimeframe['from'] ?? null;
+        //     $periodicityTo = $periodicityTimeframe['to'] ?? null;
+        //     $periodicityTimeframe = $periodicityTo - $periodicityFrom;
+        //     // TODO: добавить логику вычисления таймфрейма периодичности
+        // }
+        // $periodicity = TestPeriodicity::firstOrCreate([
+        //     'name' => $data['periodicity']['name'],
+        // ], ['timeframe' => $periodicityTimeframe]);
 
-        $periodicity = $data['periodicity'];
-        $groups = $data['groups'];
-        $employees = $data['employees'];
+        $test = Test::create([
+            'name' => $data['name'] ?? null,
+            'description' => $data['description'] ?? null,
+            'type' => $data['type'] ?? 'default',
+            // 'periodicity' => $periodicity->id,
+            // 'start_date' => Carbon::parse($data['start_date']) ?? null,
+            // 'end_date' => Carbon::parse($data['end_date']) ?? null,
+            // 'assignee_id' => $request->user()->id ?? 1,
+        ]);
+
+        if (isset($data['questions'])) {
+            $questions = $data['questions'];
+            foreach ($questions as $questionData) {
+                $topic = QuestionTopic::firstOrCreate([
+                    'name' => $questionData['topic'],
+                ]);
+
+                $question = Question::create([
+                    'text' => $questionData['text'],
+                    'type' => $questionData['type'],
+                    'topic_id' => $topic->id,
+                ]);
+
+                TestQuestion::create([
+                    'test_id' => $test->id,
+                    'question_id' => $question->id,
+                ]);
+
+                if (isset($questionData['tags'])) {
+                    $questionTags = $questionData['tags'];
+                    if (count($questionTags) > 0) {
+                        array_map(function ($tag) use ($question) {
+                            $tag = Tag::create([
+                                'name' => $tag['name']
+                            ]);
+                            QuestionTag::create([
+                                'question_id' => $question->id,
+                                'tag_id' => $tag->id,
+                                'point_count' => $tag['points'] ?? 1,
+                            ]);
+                        }, $questionData['tags']);
+                    }
+                }
+
+                if (isset($questionData['answers'])) {
+                    $questionAnswers = $questionData['answers'];
+                    if (count($questionAnswers) > 0) {
+                        $questionAnswers = array_map(function ($answer) use ($question) {
+                            $answer = Answer::create([
+                                'text' => $answer['text'],
+                                'question_id' => $question->id,
+                            ]);
+
+                        }, $questionData['answers']);
+                    }
+                }
+            }
+        }
+
+        // $usersToAssign = [];
+        // if (isset($data['groups'])) {
+        //     $groups = $data['groups'];
+        //     foreach ($groups as $groupData) {
+        //         $group = Group::first(['name' => $groupData['name']]);
+        //         $groupUsers = $group->users();
+        //         foreach ($groupUsers as $user) {
+        //             $usersToAssign[] = $user->id;
+        //         }
+        //     }
+        // }
+
+        // if (isset($data['employees'])) {
+        //     $employees = $data['employees'];
+        //     foreach ($employees as $employee) {
+        //         $employeeId = $employee['id'];
+        //         $usersToAssign[] = $employeeId;
+        //     }
+        // }
+
+        // foreach ($usersToAssign as $userId) {
+        //     UserTest::firstOrCreate([
+        //         'user_id' => $userId,
+        //         'test_id' => $test->id,
+        //     ]);
+        // }
 
         return $data;
     }

@@ -11,21 +11,21 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('question_tags', function (Blueprint $table) {
+        Schema::create('answers', function (Blueprint $table) {
             $table->uuid('id')->primary();
+            $table->text('text')->nullable();
+            $table->uuid('image_id')->nullable();
+            $table->foreign('image_id', 'fk-answer-file-1')
+                ->references('id')
+                ->on('files')
+                ->onDelete('set null')
+                ->onUpdate('no action');
             $table->uuid('question_id')->nullable();
-            $table->foreign('question_id', 'fk-question-tag-1')
+            $table->foreign('question_id', 'fk-answer-question-1')
                 ->references('id')
                 ->on('questions')
                 ->onDelete('set null')
                 ->onUpdate('no action');
-            $table->uuid('tag_id')->nullable();
-            $table->foreign('tag_id', 'fk-question-tag-2')
-                ->references('id')
-                ->on('tags')
-                ->onDelete('set null')
-                ->onUpdate('no action');
-            $table->float('point_count')->nullable();
 
             $table->timestamps();
         });
@@ -36,6 +36,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('question_tags');
+        Schema::dropIfExists('answers');
     }
 };
