@@ -20,6 +20,14 @@ use Illuminate\Foundation\Http\FormRequest;
  *             @OA\Property(property="topic", type="string", example="default", description="Тема вопроса"),
  *             @OA\Property(property="text", type="string", example="Question 1", description="Текст вопроса"),
  *             @OA\Property(property="type", type="integer", example=0, description="Тип ответа на вопрос"),
+ *              @OA\Property(
+ *                 property="tags",
+ *                 type="array",
+ *                 @OA\Items(
+ *                     type="object",
+ *                     @OA\Property(property="name", type="string", example="Tag 1", description="Тег вопроса")
+ *                 )
+ *             ),
  *             @OA\Property(
  *                 property="answers",
  *                 type="array",
@@ -87,6 +95,9 @@ class CreateTestRequest extends FormRequest
             'questions.*.topic' => 'nullable|string|max:255',
             'questions.*.text' => 'required|string|max:255',
             'questions.*.type' => 'required|integer',
+
+            'questions.*.tags' => 'nullable|array',
+            'questions.*.tags.*.name' => 'required|string|max:255',
 
             'questions.*.answers' => 'nullable|array',
             'questions.*.answers.*.text' => 'required|string|max:1000',

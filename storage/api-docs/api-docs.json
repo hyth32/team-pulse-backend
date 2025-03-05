@@ -317,7 +317,7 @@
     "components": {
         "schemas": {
             "AnswerType": {
-                "description": "Типы ответов\n *      0 - Текст\n *      1 - Одиночный выбор\n *      2 - Множественный выбор\n *      3 - Оценка",
+                "description": "Типы ответов\n *      0 - Текст\n *      1 - Одиночный выбор\n *      2 - Множественный выбор\n *      3 - Оценка\n *      4 - Распределение баллов",
                 "type": "integer",
                 "enum": [
                     "Text",
@@ -383,6 +383,19 @@
                                     "description": "Тип ответа на вопрос",
                                     "type": "integer",
                                     "example": 0
+                                },
+                                "tags": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "name": {
+                                                "description": "Тег вопроса",
+                                                "type": "string",
+                                                "example": "Tag 1"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
                                 },
                                 "answers": {
                                     "type": "array",
@@ -564,6 +577,20 @@
                     "name": {
                         "description": "Название темы вопроса",
                         "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "Tag": {
+                "description": "Тег",
+                "properties": {
+                    "text": {
+                        "description": "Название тега",
+                        "type": "string"
+                    },
+                    "priority": {
+                        "description": "Приоритет тега",
+                        "type": "integer"
                     }
                 },
                 "type": "object"
