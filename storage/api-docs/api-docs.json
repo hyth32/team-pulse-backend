@@ -312,6 +312,23 @@
                     }
                 }
             }
+        },
+        "/api/v1/tests/{uuid}/assign": {
+            "post": {
+                "tags": [
+                    "Test"
+                ],
+                "summary": "Назначить тест",
+                "operationId": "ef5f3186ad1e4c1b36e2435b446d0920",
+                "responses": {
+                    "200": {
+                        "description": "Ответ",
+                        "content": {
+                            "application/json": {}
+                        }
+                    }
+                }
+            }
         }
     },
     "components": {
@@ -473,9 +490,8 @@
                             "properties": {
                                 "id": {
                                     "description": "ID пользователя",
-                                    "type": "string",
-                                    "format": "uuid",
-                                    "example": "123e4567-e89b-12d3-a456-426614174000"
+                                    "type": "id",
+                                    "example": "1"
                                 }
                             },
                             "type": "object"

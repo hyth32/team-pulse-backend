@@ -15,7 +15,6 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->string('name')->nullable();
             $table->text('description')->nullable();
-            $table->integer('type')->nullable();
             $table->uuid('periodicity')->nullable();
             $table->foreign('periodicity', 'fk-test-periodicity-1')->references('id')->on('test_periodicities')->onUpdate('no action')->onDelete('set null');
             $table->timestamp('start_date')->nullable();

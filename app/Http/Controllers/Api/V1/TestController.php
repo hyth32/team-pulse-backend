@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\AssignTestRequest;
 use App\Http\Requests\Test\CreateTestRequest;
 use App\Http\Requests\Test\ListTestRequest;
 use App\Http\Requests\Test\UpdateTestRequest;
@@ -93,5 +94,20 @@ class TestController extends Controller
     {
         (new TestService)->delete($uuid);
         return response()->json(['message' => 'Тест удален']);
+    }
+
+    /**
+     * @OA\Post(path="/api/v1/tests/{uuid}/assign",
+     *      tags={"Test"},
+     *      summary="Назначить тест",
+     *      @OA\Response(response=200, description="Ответ",
+     *         @OA\MediaType(mediaType="application/json"),
+     *      ),
+     * )
+     */
+    public function assign(AssignTestRequest $request, string $uuid)
+    {
+        (new TestService)->assign($uuid, $request);
+        return response()->json(['message' => 'Тест назначен']);
     }
 }

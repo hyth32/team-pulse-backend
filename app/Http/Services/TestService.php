@@ -2,16 +2,21 @@
 
 namespace App\Http\Services;
 
+use App\Http\Requests\AssignTestRequest;
 use App\Http\Requests\Test\CreateTestRequest;
 use App\Http\Requests\Test\ListTestRequest;
 use App\Http\Requests\Test\UpdateTestRequest;
 use App\Models\Answer;
+use App\Models\Group;
 use App\Models\Question;
 use App\Models\QuestionTag;
 use App\Models\QuestionTopic;
 use App\Models\Tag;
 use App\Models\Test;
+use App\Models\TestPeriodicity;
 use App\Models\TestQuestion;
+use App\Models\UserTest;
+use Carbon\Carbon;
 
 class TestService
 {
@@ -32,25 +37,10 @@ class TestService
     {
         $data = $request->validated();
 
-        // if (isset($data['periodicity']['timeframe'])) {
-        //     $periodicityTimeframe = $data['periodicity']['timeframe'];
-        //     $periodicityFrom = $periodicityTimeframe['from'] ?? null;
-        //     $periodicityTo = $periodicityTimeframe['to'] ?? null;
-        //     $periodicityTimeframe = $periodicityTo - $periodicityFrom;
-        //     // TODO: добавить логику вычисления таймфрейма периодичности
-        // }
-        // $periodicity = TestPeriodicity::firstOrCreate([
-        //     'name' => $data['periodicity']['name'],
-        // ], ['timeframe' => $periodicityTimeframe]);
-
         $test = Test::create([
             'name' => $data['name'] ?? null,
             'description' => $data['description'] ?? null,
             'type' => $data['type'] ?? 'default',
-            // 'periodicity' => $periodicity->id,
-            // 'start_date' => Carbon::parse($data['start_date']) ?? null,
-            // 'end_date' => Carbon::parse($data['end_date']) ?? null,
-            // 'assignee_id' => $request->user()->id ?? 1,
         ]);
 
         if (isset($data['questions'])) {
@@ -102,34 +92,68 @@ class TestService
             }
         }
 
-        // $usersToAssign = [];
-        // if (isset($data['groups'])) {
-        //     $groups = $data['groups'];
-        //     foreach ($groups as $groupData) {
-        //         $group = Group::first(['name' => $groupData['name']]);
-        //         $groupUsers = $group->users();
-        //         foreach ($groupUsers as $user) {
-        //             $usersToAssign[] = $user->id;
-        //         }
-        //     }
-        // }
-
-        // if (isset($data['employees'])) {
-        //     $employees = $data['employees'];
-        //     foreach ($employees as $employee) {
-        //         $employeeId = $employee['id'];
-        //         $usersToAssign[] = $employeeId;
-        //     }
-        // }
-
-        // foreach ($usersToAssign as $userId) {
-        //     UserTest::firstOrCreate([
-        //         'user_id' => $userId,
-        //         'test_id' => $test->id,
-        //     ]);
-        // }
-
         return $data;
+    }
+
+    /**
+     * Назначение теста
+     * @param string $uuid
+     * @param AssignTestRequest $request
+     */
+    public function assign(string $uuid, AssignTestRequest $request)
+    {
+        $test = Test::findOrFail($uuid);
+        if (!$test) {
+            return response()->json(['message' => 'Тест не существует']);
+        }
+
+        $data = $request->validated();
+        if (isset($data['periodicity']['timeframe'])) {
+            $periodicityTimeframe = $data['periodicity']['timeframe'];
+            $periodicityFrom = $periodicityTimeframe['from'] ?? null;
+            $periodicityTo = $periodicityTimeframe['to'] ?? null;
+            $periodicityTimeframe = $periodicityTo - $periodicityFrom;
+            // TODO: добавить логику вычисления таймфрейма периодичности
+        }
+        $periodicity = TestPeriodicity::firstOrCreate([
+            'name' => $data['periodicity']['name'],
+        ], ['timeframe' => $periodicityTimeframe]);
+
+        $test->update([
+            'periodicity' => $periodicity->id,
+            'start_date' => Carbon::parse($data['start_date']) ?? null,
+            'end_date' => Carbon::parse($data['end_date']) ?? null,
+            'assignee_id' => $request->user()->id ?? 1,
+        ]);
+
+        $usersToAssign = [];
+        if (isset($data['groups'])) {
+            $groups = $data['groups'];
+            foreach ($groups as $groupData) {
+                $group = Group::first(['name' => $groupData['name']]);
+                $groupUsers = $group->users();
+                foreach ($groupUsers as $user) {
+                    $usersToAssign[] = $user->id;
+                }
+            }
+        }
+
+        if (isset($data['employees'])) {
+            $employees = $data['employees'];
+            foreach ($employees as $employee) {
+                $employeeId = $employee['id'];
+                $usersToAssign[] = $employeeId;
+            }
+        }
+
+        foreach ($usersToAssign as $userId) {
+            UserTest::firstOrCreate([
+                'user_id' => $userId,
+                'test_id' => $test->id,
+            ]);
+        }
+
+        return response()->json(['message' => 'Тест обновлен']);
     }
 
     /**
