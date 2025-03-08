@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('user_groups', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->id('user_id')->nullable();
+            $table->integer('user_id')->nullable();
             $table->foreign('user_id', 'fk-user-group-1')
                 ->references('id')
                 ->on('users')

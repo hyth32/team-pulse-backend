@@ -5,6 +5,7 @@
  * @see AppServiceProvider::boot()
  */
 return [
+    'user',
     'test',
     'group',
     'question',
