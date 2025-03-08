@@ -14,7 +14,7 @@ use App\Enums\EnumTrait;
  *      2 - Множественный выбор
  *      3 - Оценка
  *      4 - Распределение баллов",
- *      example=0 
+ *      example=0
  * )
  */
 enum AnswerType

@@ -344,6 +344,15 @@
                 ],
                 "example": 0
             },
+            "UserNotificationStatus": {
+                "description": "Статус уведомления\n *      0 - Не уведомлен\n *      1 - Уведомлен",
+                "type": "integer",
+                "enum": [
+                    "NotNotified",
+                    "Notified"
+                ],
+                "example": 0
+            },
             "UserRole": {
                 "description": "Роли пользователей\n *     0 - Сотрудник\n *     1 - Руководитель\n *     2 - Администратор",
                 "type": "integer",
@@ -695,6 +704,19 @@
                         "type": "string",
                         "format": "uuid",
                         "example": "123e4567-e89b-12d3-a456-426614174000"
+                    }
+                },
+                "type": "object"
+            },
+            "UserNotification": {
+                "description": "Уведомление пользователя о создании аккаунта",
+                "properties": {
+                    "is_notified": {
+                        "$ref": "#/components/schemas/UserNotificationStatus"
+                    },
+                    "user_id": {
+                        "description": "ID пользователя",
+                        "type": "integer"
                     }
                 },
                 "type": "object"
