@@ -344,18 +344,8 @@
                 ],
                 "example": 0
             },
-            "TestType": {
-                "description": "Типы тестов\n *     0 - Готовый\n *     1 - Опрос\n *     2 - 360",
-                "type": "integer",
-                "enum": [
-                    "Prepared",
-                    "Survey",
-                    "Overall"
-                ],
-                "example": 0
-            },
             "UserRole": {
-                "description": "Роли пользователей\n *     0 - Администратор\n *     1 - Руководитель\n *     2 - Сотрудник",
+                "description": "Роли пользователей\n *     0 - Сотрудник\n *     1 - Руководитель\n *     2 - Администратор",
                 "type": "integer",
                 "enum": [
                     "Admin",
@@ -376,11 +366,6 @@
                         "description": "Описание теста",
                         "type": "string",
                         "example": "New test description"
-                    },
-                    "type": {
-                        "description": "Тип теста",
-                        "type": "integer",
-                        "example": 1
                     },
                     "questions": {
                         "type": "array",
@@ -656,9 +641,6 @@
                     "description": {
                         "description": "Описание теста",
                         "type": "text"
-                    },
-                    "type": {
-                        "$ref": "#/components/schemas/TestType"
                     },
                     "periodicity": {
                         "description": "ID периодичности",
