@@ -28,8 +28,7 @@ class TestController extends Controller
      */
     public function list(ListTestRequest $request)
     {
-        $tests = TestService::list($request);
-        return response()->json(['tests' => $tests]);
+        return TestService::list($request);
     }
 
     /**
@@ -47,8 +46,7 @@ class TestController extends Controller
      */
     public function create(CreateTestRequest $request)
     {
-        $test = (new TestService)->save($request);
-        return response()->json($test, 201);
+        return (new TestService)->save($request);
     }
 
     /**
@@ -62,8 +60,7 @@ class TestController extends Controller
      */
     public function update(string $uuid, UpdateTestRequest $request)
     {
-        $test = (new TestService)->update($uuid, $request);
-        return response()->json($test);
+        return (new TestService)->update($uuid, $request);
     }
 
     /**
@@ -77,8 +74,7 @@ class TestController extends Controller
      */
     public function view(string $uuid)
     {
-        $test = TestService::view($uuid);
-        return response()->json($test);
+        return TestService::view($uuid);
     }
 
     /**
@@ -92,8 +88,7 @@ class TestController extends Controller
      */
     public function delete(string $uuid)
     {
-        (new TestService)->delete($uuid);
-        return response()->json(['message' => 'Тест удален']);
+        return (new TestService)->delete($uuid);
     }
 
     /**
@@ -109,9 +104,8 @@ class TestController extends Controller
      *      ),
      * )
      */
-    public function assign(AssignTestRequest $request, string $uuid)
+    public function assign(string $uuid, AssignTestRequest $request)
     {
-        (new TestService)->assign($uuid, $request);
-        return response()->json(['message' => 'Тест назначен']);
+        return (new TestService)->assign($uuid, $request);
     }
 }

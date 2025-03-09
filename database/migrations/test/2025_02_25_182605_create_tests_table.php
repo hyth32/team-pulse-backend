@@ -20,6 +20,7 @@ return new class extends Migration
             $table->timestamp('start_date')->nullable();
             $table->timestamp('end_date')->nullable();
             $table->integer('assignee_id')->nullable();
+            $table->integer('status')->default(1);
             $table->foreign('assignee_id', 'fk-test-assignee-1')->references('id')->on('users')->onUpdate('no action')->onDelete('no action');
 
             $table->timestamps();

@@ -2,6 +2,7 @@
 
 namespace App\Http\Services;
 
+use App\Enums\EntityStatus;
 use App\Http\Requests\AssignTestRequest;
 use App\Http\Requests\Test\CreateTestRequest;
 use App\Http\Requests\Test\ListTestRequest;
@@ -26,7 +27,14 @@ class TestService
      */
     public static function list(ListTestRequest $request)
     {
-        return Test::skip($request['offset'])->take($request['limit'])->get();
+        $tests = Test::query()
+            ->where(['status' => EntityStatus::Active->value()])
+            ->offset($request['offset'])
+            ->limit($request['limit'])
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return ['tests' => $tests];
     }
 
     /**
@@ -152,7 +160,7 @@ class TestService
             ]);
         }
 
-        return response()->json(['message' => 'Тест обновлен']);
+        return response()->json(['message' => 'Тест назначен']);
     }
 
     /**
@@ -185,6 +193,8 @@ class TestService
     public function delete(string $uuid)
     {
         $test = Test::findOrFail($uuid);
-        return $test->delete();
+        $test->update(['status' => EntityStatus::Deleted->value()]);
+
+        return response()->json(['message' => 'Тест удален']);
     }
 }

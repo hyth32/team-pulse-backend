@@ -29,6 +29,7 @@ class Test extends BaseModel
         'type',
         'periodicity',
         'start_date',
+        'status',
         'end_date',
         'assignee_id',
     ];
