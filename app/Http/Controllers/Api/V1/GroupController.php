@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Group\CreateGroupRequest;
+use App\Http\Services\GroupService;
 
 class GroupController extends Controller
 {
@@ -30,14 +32,19 @@ class GroupController extends Controller
      * @OA\Post(path="/api/v1/groups",
      *     tags={"Group"},
      *     summary="Создать группу",
+     *     @OA\RequestBody(
+     *        required=true,
+     *        @OA\JsonContent(ref="#/components/schemas/CreateGroupRequest"),
+     *     ),
      *     @OA\Response(response=200, description="Ответ",
      *         @OA\MediaType(mediaType="application/json"),
      *     ),
      * )
      */
-    public function create()
+    public function create(CreateGroupRequest $request)
     {
-        //
+        $group = (new GroupService)->save($request);
+        return response()->json($group, 201);
     }
 
     /**
