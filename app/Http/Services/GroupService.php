@@ -4,6 +4,7 @@ namespace App\Http\Services;
 
 use App\Http\Requests\Group\CreateGroupRequest;
 use App\Http\Requests\ListGroupRequest;
+use App\Http\Requests\UpdateGroupRequest;
 use App\Http\Resources\GroupShortResource;
 use App\Models\Group;
 use App\Models\User;
@@ -47,7 +48,32 @@ class GroupService
         return $group;
     }
 
-    public function update() {}
+    /**
+     * Обновление группы
+     * @param UpdateGroupRequest $request
+     */
+    public function update(string $uuid, UpdateGroupRequest $request) {
+        $data = $request->validated();
 
-    public function delete() {}
+        $group = Group::findOrFail($uuid);
+        $group->update($data);
+
+        return $group;
+    }
+
+    /**
+     * Удаление группы
+     * @param string $uuid
+     */
+    public function delete(string $uuid) {
+        $group = Group::findOrFail($uuid);
+        if (count($group->users) > 0) {
+            $message = 'Невозможно удалить группу с активными сотрудниками.';
+        } else {
+            $group->delete();
+            $message = 'Группа удалена';
+        }
+
+        return response()->json(['message' => $message]);
+    }
 }
