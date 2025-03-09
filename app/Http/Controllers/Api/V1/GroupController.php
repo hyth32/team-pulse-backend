@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Group\CreateGroupRequest;
+use App\Http\Requests\ListGroupRequest;
 use App\Http\Services\GroupService;
 
 class GroupController extends Controller
@@ -23,9 +24,9 @@ class GroupController extends Controller
      *     ),
      * )
      */
-    public function list()
+    public function list(ListGroupRequest $request)
     {
-        //
+        return GroupService::list($request);
     }
 
     /**

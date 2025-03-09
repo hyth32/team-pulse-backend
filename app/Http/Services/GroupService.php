@@ -3,13 +3,22 @@
 namespace App\Http\Services;
 
 use App\Http\Requests\Group\CreateGroupRequest;
+use App\Http\Requests\ListGroupRequest;
+use App\Http\Resources\GroupShortResource;
 use App\Models\Group;
 use App\Models\User;
 use App\Models\UserGroup;
 
 class GroupService
 {
-    public static function list() {}
+    /**
+     * Получение списка групп
+     * @param ListGroupRequest $request
+     */
+    public static function list(ListGroupRequest $request) {
+        $groups = Group::skip($request['offset'])->take($request['limit'])->get();
+        return ['groups' => GroupShortResource::collection($groups)];
+    }
 
     /**
      * Сохранение группы
