@@ -4,6 +4,21 @@ namespace App\Http\Requests\Tag;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+/**
+ * @OA\Schema(
+ *      schema="CreateTagRequest",
+ *      type="object",
+ *      description="Тело запроса для создания тегов",
+ *      @OA\Property(
+ *         property="tags",
+ *         type="array",
+ *         @OA\Items(
+ *             type="object",
+ *             @OA\Property(property="name", type="string", example="Стрессоустойчивость", description="Название тега")
+ *         )
+ *     )
+ * )
+ */
 class CreateTagRequest extends FormRequest
 {
     /**

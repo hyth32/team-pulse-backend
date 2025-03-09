@@ -85,6 +85,16 @@
                 ],
                 "summary": "Обновить группу",
                 "operationId": "62008c5414d4de5a6773a5ae75e1ad4a",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateGroupRequest"
+                            }
+                        }
+                    }
+                },
                 "responses": {
                     "200": {
                         "description": "Ответ",
@@ -110,13 +120,13 @@
                 }
             }
         },
-        "/api/v1/question-topics": {
+        "/api/v1/tags": {
             "get": {
                 "tags": [
-                    "QuestionTopic"
+                    "Tag"
                 ],
-                "summary": "Список тем вопросов",
-                "operationId": "f28bf30e4aa9d43d3f433bdd2a2f8076",
+                "summary": "Список тегов",
+                "operationId": "97ac0f91b9a964807a1bed41e3f2218e",
                 "parameters": [
                     {
                         "name": "limit",
@@ -142,10 +152,10 @@
                             "application/json": {
                                 "schema": {
                                     "properties": {
-                                        "questionTopics": {
+                                        "groups": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/components/schemas/QuestionTopic"
+                                                "$ref": "#/components/schemas/Group"
                                             }
                                         }
                                     },
@@ -158,10 +168,20 @@
             },
             "post": {
                 "tags": [
-                    "QuestionTopic"
+                    "Tag"
                 ],
-                "summary": "Создать тему вопроса",
-                "operationId": "917959bb1a04bbc3da87785ec9f7e21c",
+                "summary": "Создать тег",
+                "operationId": "1f8a7f58589e712a07ad0e78686c0110",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreateTagRequest"
+                            }
+                        }
+                    }
+                },
                 "responses": {
                     "200": {
                         "description": "Ответ",
@@ -172,28 +192,23 @@
                 }
             }
         },
-        "/api/v1/question-topics/{uuid}": {
+        "/api/v1/tags/{uuid}": {
             "put": {
                 "tags": [
-                    "QuestionTopic"
+                    "Tag"
                 ],
-                "summary": "Обновить тему вопроса",
-                "operationId": "1bb01d057f4d167f72a10e2ec8e2def4",
-                "responses": {
-                    "200": {
-                        "description": "Ответ",
-                        "content": {
-                            "application/json": {}
+                "summary": "Обновить тег",
+                "operationId": "3d3389fded203f4cb83ee129425d41fc",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateTagRequest"
+                            }
                         }
                     }
-                }
-            },
-            "delete": {
-                "tags": [
-                    "QuestionTopic"
-                ],
-                "summary": "Удалить тему вопроса",
-                "operationId": "13be4180aefc05c08d1482f6a080d906",
+                },
                 "responses": {
                     "200": {
                         "description": "Ответ",
@@ -383,6 +398,92 @@
                 ],
                 "example": 0
             },
+            "CreateGroupRequest": {
+                "description": "Тело запроса для создания группы",
+                "properties": {
+                    "name": {
+                        "description": "Название группы",
+                        "type": "string",
+                        "example": "Frontend"
+                    },
+                    "employees": {
+                        "type": "array",
+                        "items": {
+                            "properties": {
+                                "id": {
+                                    "description": "ID пользователя",
+                                    "type": "integer",
+                                    "example": "1"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "UpdateGroupRequest": {
+                "description": "Тело запроса для обновления группы",
+                "properties": {
+                    "name": {
+                        "description": "Название группы",
+                        "type": "string",
+                        "example": "Frontend"
+                    },
+                    "employees": {
+                        "type": "array",
+                        "items": {
+                            "properties": {
+                                "id": {
+                                    "description": "ID пользователя",
+                                    "type": "id",
+                                    "example": "1"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "CreateTagRequest": {
+                "description": "Тело запроса для создания тегов",
+                "properties": {
+                    "tags": {
+                        "type": "array",
+                        "items": {
+                            "properties": {
+                                "name": {
+                                    "description": "Название тега",
+                                    "type": "string",
+                                    "example": "Стрессоустойчивость"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "UpdateTagRequest": {
+                "description": "Тело запроса для обновления тегов",
+                "properties": {
+                    "tags": {
+                        "type": "array",
+                        "items": {
+                            "properties": {
+                                "name": {
+                                    "description": "Название тега",
+                                    "type": "string",
+                                    "example": "Стрессоустойчивость"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                },
+                "type": "object"
+            },
             "AssignTestRequest": {
                 "description": "Тело запроса для назначения теста",
                 "properties": {
@@ -433,30 +534,6 @@
                             },
                             "type": "object"
                         }
-                    },
-                    "employees": {
-                        "type": "array",
-                        "items": {
-                            "properties": {
-                                "id": {
-                                    "description": "ID пользователя",
-                                    "type": "id",
-                                    "example": "1"
-                                }
-                            },
-                            "type": "object"
-                        }
-                    }
-                },
-                "type": "object"
-            },
-            "CreateGroupRequest": {
-                "description": "Тело запроса для создания группы",
-                "properties": {
-                    "name": {
-                        "description": "Название группы",
-                        "type": "string",
-                        "example": "Frontend"
                     },
                     "employees": {
                         "type": "array",
@@ -776,8 +853,8 @@
                 "properties": {
                     "user_id": {
                         "description": "ID пользователя",
-                        "type": "uuid",
-                        "example": "123e4567-e89b-12d3-a456-426614174000"
+                        "type": "integer",
+                        "example": "1"
                     },
                     "group_id": {
                         "description": "ID группы",
@@ -792,8 +869,8 @@
                 "properties": {
                     "user_id": {
                         "description": "ID пользователя",
-                        "type": "uuid",
-                        "example": "123e4567-e89b-12d3-a456-426614174000"
+                        "type": "integer",
+                        "example": "1"
                     },
                     "test_id": {
                         "description": "ID теста",
@@ -811,8 +888,8 @@
             "description": "Group"
         },
         {
-            "name": "QuestionTopic",
-            "description": "QuestionTopic"
+            "name": "Tag",
+            "description": "Tag"
         },
         {
             "name": "Test",

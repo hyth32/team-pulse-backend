@@ -52,6 +52,10 @@ class GroupController extends Controller
      * @OA\Put(path="/api/v1/groups/{uuid}",
      *     tags={"Group"},
      *     summary="Обновить группу",
+     *     @OA\RequestBody(
+     *        required=true,
+     *        @OA\JsonContent(ref="#/components/schemas/UpdateGroupRequest"),
+     *     ),
      *     @OA\Response(response=200, description="Ответ",
      *         @OA\MediaType(mediaType="application/json"),
      *     ),

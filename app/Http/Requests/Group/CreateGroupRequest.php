@@ -15,7 +15,7 @@ use Illuminate\Foundation\Http\FormRequest;
  *         type="array",
  *         @OA\Items(
  *             type="object",
- *             @OA\Property(property="id", type="id", example="1", description="ID пользователя")
+ *             @OA\Property(property="id", type="integer", example="1", description="ID пользователя")
  *         )
  *     )
  * )
