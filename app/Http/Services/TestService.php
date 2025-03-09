@@ -160,7 +160,7 @@ class TestService
             ]);
         }
 
-        return response()->json(['message' => 'Тест назначен']);
+        return ['message' => 'Тест назначен'];
     }
 
     /**
@@ -195,6 +195,6 @@ class TestService
         $test = Test::findOrFail($uuid);
         $test->update(['status' => EntityStatus::Deleted->value()]);
 
-        return response()->json(['message' => 'Тест удален']);
+        return ['message' => 'Тест удален'];
     }
 }

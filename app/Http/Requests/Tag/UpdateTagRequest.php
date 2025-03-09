@@ -9,14 +9,7 @@ use Illuminate\Foundation\Http\FormRequest;
  *      schema="UpdateTagRequest",
  *      type="object",
  *      description="Тело запроса для обновления тегов",
- *      @OA\Property(
- *         property="tags",
- *         type="array",
- *         @OA\Items(
- *             type="object",
- *             @OA\Property(property="name", type="string", example="Стрессоустойчивость", description="Название тега")
- *         )
- *     )
+ *      @OA\Property(property="name", type="string", description="Название тега")
  * )
  */
 class UpdateTagRequest extends FormRequest
@@ -37,7 +30,7 @@ class UpdateTagRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'name' => 'required|string',
         ];
     }
 }

@@ -152,7 +152,7 @@
                             "application/json": {
                                 "schema": {
                                     "properties": {
-                                        "groups": {
+                                        "tags": {
                                             "type": "array",
                                             "items": {
                                                 "$ref": "#/components/schemas/Group"
@@ -209,6 +209,21 @@
                         }
                     }
                 },
+                "responses": {
+                    "200": {
+                        "description": "Ответ",
+                        "content": {
+                            "application/json": {}
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Tag"
+                ],
+                "summary": "Удалить тег",
+                "operationId": "887ab4bc25101aa04db0ee3dc50ade5f",
                 "responses": {
                     "200": {
                         "description": "Ответ",
@@ -468,18 +483,9 @@
             "UpdateTagRequest": {
                 "description": "Тело запроса для обновления тегов",
                 "properties": {
-                    "tags": {
-                        "type": "array",
-                        "items": {
-                            "properties": {
-                                "name": {
-                                    "description": "Название тега",
-                                    "type": "string",
-                                    "example": "Стрессоустойчивость"
-                                }
-                            },
-                            "type": "object"
-                        }
+                    "name": {
+                        "description": "Название тега",
+                        "type": "string"
                     }
                 },
                 "type": "object"

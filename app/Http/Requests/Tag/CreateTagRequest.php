@@ -37,7 +37,8 @@ class CreateTagRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'tags' => 'required|array',
+            'tags.*.name' => 'required|string',
         ];
     }
 }

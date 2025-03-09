@@ -16,7 +16,8 @@ class GroupService
      * Получение списка групп
      * @param ListGroupRequest $request
      */
-    public static function list(ListGroupRequest $request) {
+    public static function list(ListGroupRequest $request)
+    {
         $groups = Group::skip($request['offset'])->take($request['limit'])->get();
         return ['groups' => GroupShortResource::collection($groups)];
     }
@@ -25,7 +26,8 @@ class GroupService
      * Сохранение группы
      * @param CreateGroupRequest $request
      */
-    public function save(CreateGroupRequest $request) {
+    public function save(CreateGroupRequest $request)
+    {
         $data = $request->validated();
 
         $group = Group::firstOrCreate([
@@ -52,7 +54,8 @@ class GroupService
      * Обновление группы
      * @param UpdateGroupRequest $request
      */
-    public function update(string $uuid, UpdateGroupRequest $request) {
+    public function update(string $uuid, UpdateGroupRequest $request)
+    {
         $data = $request->validated();
 
         $group = Group::findOrFail($uuid);
@@ -65,7 +68,8 @@ class GroupService
      * Удаление группы
      * @param string $uuid
      */
-    public function delete(string $uuid) {
+    public function delete(string $uuid)
+    {
         $group = Group::findOrFail($uuid);
         if (count($group->users) > 0) {
             $message = 'Невозможно удалить группу с активными сотрудниками.';
@@ -74,6 +78,6 @@ class GroupService
             $message = 'Группа удалена';
         }
 
-        return response()->json(['message' => $message]);
+        return ['message' => $message];
     }
 }
