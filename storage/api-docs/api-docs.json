@@ -58,6 +58,16 @@
                 ],
                 "summary": "Создать группу",
                 "operationId": "16452bda6ae9c6c6a6db33cce1f5f27b",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreateGroupRequest"
+                            }
+                        }
+                    }
+                },
                 "responses": {
                     "200": {
                         "description": "Ответ",
@@ -320,6 +330,16 @@
                 ],
                 "summary": "Назначить тест",
                 "operationId": "ef5f3186ad1e4c1b36e2435b446d0920",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AssignTestRequest"
+                            }
+                        }
+                    }
+                },
                 "responses": {
                     "200": {
                         "description": "Ответ",
@@ -362,6 +382,97 @@
                     "Employee"
                 ],
                 "example": 0
+            },
+            "AssignTestRequest": {
+                "description": "Тело запроса для назначения теста",
+                "properties": {
+                    "periodicity": {
+                        "properties": {
+                            "name": {
+                                "description": "Название периодичности",
+                                "type": "string",
+                                "example": "Каждую неделю"
+                            },
+                            "timeframe": {
+                                "properties": {
+                                    "from": {
+                                        "description": "Временная метка начала теста",
+                                        "type": "integer",
+                                        "example": 1740566491
+                                    },
+                                    "to": {
+                                        "description": "Временная метка окончания теста",
+                                        "type": "integer",
+                                        "example": 1740566491
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        },
+                        "type": "object"
+                    },
+                    "start_date": {
+                        "description": "Временная метка начала прохождения теста",
+                        "type": "integer",
+                        "example": 1740566491
+                    },
+                    "end_date": {
+                        "description": "Временная метка окончания прохождения теста",
+                        "type": "integer",
+                        "example": 1740566491
+                    },
+                    "groups": {
+                        "type": "array",
+                        "items": {
+                            "properties": {
+                                "name": {
+                                    "description": "Название группы",
+                                    "type": "string",
+                                    "example": "Frontend"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    },
+                    "employees": {
+                        "type": "array",
+                        "items": {
+                            "properties": {
+                                "id": {
+                                    "description": "ID пользователя",
+                                    "type": "id",
+                                    "example": "1"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "CreateGroupRequest": {
+                "description": "Тело запроса для создания группы",
+                "properties": {
+                    "name": {
+                        "description": "Название группы",
+                        "type": "string",
+                        "example": "Frontend"
+                    },
+                    "employees": {
+                        "type": "array",
+                        "items": {
+                            "properties": {
+                                "id": {
+                                    "description": "ID пользователя",
+                                    "type": "id",
+                                    "example": "1"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                },
+                "type": "object"
             },
             "CreateTestRequest": {
                 "description": "Тело запроса для создания теста",
@@ -425,67 +536,6 @@
                                         },
                                         "type": "object"
                                     }
-                                }
-                            },
-                            "type": "object"
-                        }
-                    },
-                    "periodicity": {
-                        "properties": {
-                            "name": {
-                                "description": "Название периодичности",
-                                "type": "string",
-                                "example": "Каждую неделю"
-                            },
-                            "timeframe": {
-                                "properties": {
-                                    "from": {
-                                        "description": "Временная метка начала теста",
-                                        "type": "integer",
-                                        "example": 1740566491
-                                    },
-                                    "to": {
-                                        "description": "Временная метка окончания теста",
-                                        "type": "integer",
-                                        "example": 1740566491
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        },
-                        "type": "object"
-                    },
-                    "start_date": {
-                        "description": "Временная метка начала прохождения теста",
-                        "type": "integer",
-                        "example": 1740566491
-                    },
-                    "end_date": {
-                        "description": "Временная метка окончания прохождения теста",
-                        "type": "integer",
-                        "example": 1740566491
-                    },
-                    "groups": {
-                        "type": "array",
-                        "items": {
-                            "properties": {
-                                "name": {
-                                    "description": "Название группы",
-                                    "type": "string",
-                                    "example": "Frontend"
-                                }
-                            },
-                            "type": "object"
-                        }
-                    },
-                    "employees": {
-                        "type": "array",
-                        "items": {
-                            "properties": {
-                                "id": {
-                                    "description": "ID пользователя",
-                                    "type": "id",
-                                    "example": "1"
                                 }
                             },
                             "type": "object"

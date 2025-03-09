@@ -13,11 +13,6 @@ use App\Models\BaseModel;
  */
 class Answer extends BaseModel
 {
-    protected $dates = [
-        'created_at',
-        'updated_at',
-    ];
-
     protected $fillable = [
         'text',
         'image_id',

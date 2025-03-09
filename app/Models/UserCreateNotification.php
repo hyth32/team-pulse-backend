@@ -10,11 +10,6 @@ namespace App\Models;
  */
 class UserCreateNotification extends BaseModel
 {
-    protected $dates = [
-        'created_at',
-        'updated_at',
-    ];
-
     protected $fillable = [
         'is_notified',
         'user_id',

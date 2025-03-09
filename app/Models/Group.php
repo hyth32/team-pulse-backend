@@ -12,13 +12,13 @@ use App\Models\BaseModel;
  */
 class Group extends BaseModel
 {
-    protected $dates = [
-        'created_at',
-        'updated_at',
-    ];
-
     protected $fillable = [
         'name',
         'priority',
     ];
+
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'user_groups', 'group_id', 'user_id');
+    }
 }

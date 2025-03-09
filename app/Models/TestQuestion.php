@@ -10,11 +10,6 @@ namespace App\Models;
  */
 class TestQuestion extends BaseModel
 {
-    protected $dates = [
-        'created_at',
-        'updated_at',
-    ];
-
     protected $fillable = [
         'test_id',
         'question_id',

@@ -100,6 +100,10 @@ class TestController extends Controller
      * @OA\Post(path="/api/v1/tests/{uuid}/assign",
      *      tags={"Test"},
      *      summary="Назначить тест",
+     *      @OA\RequestBody(
+     *        required=true,
+     *        @OA\JsonContent(ref="#/components/schemas/AssignTestRequest"),
+     *      ),
      *      @OA\Response(response=200, description="Ответ",
      *         @OA\MediaType(mediaType="application/json"),
      *      ),

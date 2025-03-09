@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->uuid('image_id');
+            $table->uuid('image_id')->nullable();
             $table->foreign('image_id', 'fk-user-file-1')
                 ->references('id')
                 ->on('files')

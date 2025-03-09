@@ -12,6 +12,11 @@ class BaseModel extends Model
     public $incrementing = false;
     public $timestamps = true;
 
+    protected $dates = [
+        'created_at',
+        'updated_at',
+    ];
+
     public function getTable()
     {
         if (!empty($this->table)) {

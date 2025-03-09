@@ -13,11 +13,6 @@ use App\Models\BaseModel;
  */
 class Question extends BaseModel
 {
-    protected $dates = [
-        'created_at',
-        'updated_at',
-    ];
-
     protected $fillable = [
         'text',
         'type',

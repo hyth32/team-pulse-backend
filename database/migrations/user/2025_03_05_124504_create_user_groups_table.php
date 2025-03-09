@@ -19,10 +19,10 @@ return new class extends Migration
                 ->on('users')
                 ->onDelete('cascade')
                 ->onUpdate('no action');
-            $table->uuid('test_id')->nullable();
-            $table->foreign('test_id', 'fk-user-group-2')
+            $table->uuid('group_id')->nullable();
+            $table->foreign('group_id', 'fk-user-group-2')
                 ->references('id')
-                ->on('tests')
+                ->on('groups')
                 ->onDelete('cascade')
                 ->onUpdate('no action');
 

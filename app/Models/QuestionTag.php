@@ -11,11 +11,6 @@ namespace App\Models;
  */
 class QuestionTag extends BaseModel
 {
-    protected $dates = [
-        'created_at',
-        'updated_at',
-    ];
-
     protected $fillable = [
         'question_id',
         'tag_id',

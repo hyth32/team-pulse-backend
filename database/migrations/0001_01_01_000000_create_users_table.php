@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('login')->unique();
             $table->string('password');
             $table->integer('role')->default(0);
-            $table->integer('status')->default(0);
+            $table->integer('status')->default(1);
             $table->timestamp('deleted_at')->nullable();
 
             $table->rememberToken();

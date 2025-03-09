@@ -12,11 +12,6 @@ use App\Models\BaseModel;
  */
 class TestPeriodicity extends BaseModel
 {
-    protected $dates = [
-        'created_at',
-        'updated_at',
-    ];
-
     protected $fillable = [
         'name',
         'timeframe',

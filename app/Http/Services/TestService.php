@@ -40,7 +40,6 @@ class TestService
         $test = Test::create([
             'name' => $data['name'] ?? null,
             'description' => $data['description'] ?? null,
-            'type' => $data['type'] ?? 'default',
         ]);
 
         if (isset($data['questions'])) {
@@ -108,6 +107,7 @@ class TestService
         }
 
         $data = $request->validated();
+        $periodicityTimeframe = null;
         if (isset($data['periodicity']['timeframe'])) {
             $periodicityTimeframe = $data['periodicity']['timeframe'];
             $periodicityFrom = $periodicityTimeframe['from'] ?? null;
@@ -130,9 +130,8 @@ class TestService
         if (isset($data['groups'])) {
             $groups = $data['groups'];
             foreach ($groups as $groupData) {
-                $group = Group::first(['name' => $groupData['name']]);
-                $groupUsers = $group->users();
-                foreach ($groupUsers as $user) {
+                $group = Group::where(['name' => $groupData['name']])->first();
+                foreach ($group->users as $user) {
                     $usersToAssign[] = $user->id;
                 }
             }

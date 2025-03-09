@@ -38,35 +38,6 @@ use Illuminate\Foundation\Http\FormRequest;
  *             )
  *         )
  *     ),
- *     @OA\Property(
- *         property="periodicity",
- *         type="object",
- *         @OA\Property(property="name", type="string", example="Каждую неделю", description="Название периодичности"),
- *         @OA\Property(
- *             property="timeframe",
- *             type="object",
- *             @OA\Property(property="from", type="integer", example=1740566491, description="Временная метка начала теста"),
- *             @OA\Property(property="to", type="integer", example=1740566491, description="Временная метка окончания теста")
- *         )
- *     ),
- *     @OA\Property(property="start_date", type="integer", example=1740566491, description="Временная метка начала прохождения теста"),
- *     @OA\Property(property="end_date", type="integer", example=1740566491, description="Временная метка окончания прохождения теста"),
- *     @OA\Property(
- *         property="groups",
- *         type="array",
- *         @OA\Items(
- *             type="object",
- *             @OA\Property(property="name", type="string", example="Frontend", description="Название группы")
- *         )
- *     ),
- *     @OA\Property(
- *         property="employees",
- *         type="array",
- *         @OA\Items(
- *             type="object",
- *             @OA\Property(property="id", type="id", example="1", description="ID пользователя")
- *         )
- *     )
  * )
  */
 class CreateTestRequest extends FormRequest

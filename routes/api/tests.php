@@ -9,4 +9,5 @@ Route::controller(TestController::class)->group(function () {
     Route::put('/tests/{uuid}', 'update');
     Route::get('/tests/{uuid}', 'view');
     Route::delete('/tests/{uuid}', 'delete');
+    Route::post('/tests/{uuid}/assign', 'assign');
 });
