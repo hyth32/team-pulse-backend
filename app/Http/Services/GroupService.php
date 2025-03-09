@@ -3,8 +3,8 @@
 namespace App\Http\Services;
 
 use App\Http\Requests\Group\CreateGroupRequest;
-use App\Http\Requests\ListGroupRequest;
-use App\Http\Requests\UpdateGroupRequest;
+use App\Http\Requests\Group\ListGroupRequest;
+use App\Http\Requests\Group\UpdateGroupRequest;
 use App\Http\Resources\GroupShortResource;
 use App\Models\Group;
 use App\Models\User;

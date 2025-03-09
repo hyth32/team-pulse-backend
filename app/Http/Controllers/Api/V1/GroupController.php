@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Group\CreateGroupRequest;
-use App\Http\Requests\ListGroupRequest;
-use App\Http\Requests\UpdateGroupRequest;
+use App\Http\Requests\Group\ListGroupRequest;
+use App\Http\Requests\Group\UpdateGroupRequest;
 use App\Http\Services\GroupService;
 
 class GroupController extends Controller

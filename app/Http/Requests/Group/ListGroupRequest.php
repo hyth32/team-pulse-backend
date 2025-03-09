@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Group;
+
+use App\Http\Requests\BaseListRequest;
 
 class ListGroupRequest extends BaseListRequest
 {
