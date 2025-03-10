@@ -14,6 +14,5 @@ class QuestionTag extends BaseModel
     protected $fillable = [
         'question_id',
         'tag_id',
-        'point_count',
     ];
 }
