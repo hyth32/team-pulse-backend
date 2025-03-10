@@ -5,6 +5,7 @@ use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Route;
+use App\Http\Middleware\DisableCsrfForApi;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -23,13 +24,15 @@ return Application::configure(basePath: dirname(__DIR__))
         }
     )
     ->withMiddleware(function (Middleware $middleware) {
-        $middleware->api(prepend: [
-            \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
-        ]);
+//	$middleware->prependToGroup('api', \Illuminate\Http\Middleware\HandleCors::class);
+//        $middleware->api(prepend: [
+//            \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
+//        ]);
+//	$middleware->prependToGroup('api', DisableCsrfForApi::class);
 
-        $middleware->alias([
-            'verified' => \App\Http\Middleware\EnsureEmailIsVerified::class,
-        ]);
+//        $middleware->alias([
+//            'verified' => \App\Http\Middleware\EnsureEmailIsVerified::class,
+//        ]);
 
         //
     })
