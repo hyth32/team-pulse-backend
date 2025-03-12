@@ -658,6 +658,29 @@
                 },
                 "type": "object"
             },
+            "AnswerTagPoints": {
+                "description": "Распределение баллов по тегам на ответы",
+                "properties": {
+                    "answer_id": {
+                        "description": "ID темы вопроса",
+                        "type": "string",
+                        "format": "uuid",
+                        "example": "123e4567-e89b-12d3-a456-426614174000"
+                    },
+                    "tag_id": {
+                        "description": "ID темы вопроса",
+                        "type": "string",
+                        "format": "uuid",
+                        "example": "123e4567-e89b-12d3-a456-426614174000"
+                    },
+                    "point_count": {
+                        "description": "Количество баллов",
+                        "type": "integer",
+                        "example": "1"
+                    }
+                },
+                "type": "object"
+            },
             "File": {
                 "description": "Файл",
                 "properties": {
