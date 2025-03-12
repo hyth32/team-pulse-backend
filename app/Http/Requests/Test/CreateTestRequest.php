@@ -60,6 +60,7 @@ class CreateTestRequest extends FormRequest
         return [
             'name' => 'required|string',
             'description' => 'nullable|string',
+            'status' => 'required|string',
             'tests' => 'nullable|array',
 
             'tests.*.topic' => 'nullable|string|max:255',

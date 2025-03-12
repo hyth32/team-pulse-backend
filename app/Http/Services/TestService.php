@@ -3,6 +3,7 @@
 namespace App\Http\Services;
 
 use App\Enums\EntityStatus;
+use App\Enums\Test\TestStatus;
 use App\Http\Requests\Test\AssignTestRequest;
 use App\Http\Requests\Test\CreateTestRequest;
 use App\Http\Requests\Test\ListTestRequest;
@@ -64,8 +65,9 @@ class TestService
         $data = $request->validated();
 
         $test = Test::create([
-            'name' => $data['name'] ?? null,
+            'name' => $data['name'],
             'description' => $data['description'] ?? null,
+            'test_status' => TestStatus::getValueFromLabel($data['status']),
         ]);
 
         if (isset($data['tests'])) {
