@@ -58,13 +58,13 @@ class CreateTestRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => 'required|string',
+            'name' => 'required|string',
             'description' => 'nullable|string',
             'tests' => 'nullable|array',
 
             'tests.*.topic' => 'nullable|string|max:255',
             'tests.*.questions' => 'nullable|array',
-            'tests.*.questions.*.title' => 'required|string|max:255',
+            'tests.*.questions.*.name' => 'required|string|max:255',
             'tests.*.questions.*.type' => 'required|integer',
 
             'tests.*.questions.*.tags' => 'nullable|array',
