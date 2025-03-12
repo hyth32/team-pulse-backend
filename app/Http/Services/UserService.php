@@ -54,7 +54,7 @@ class UserService
                 'email' => $data['email'],
                 'login' => $data['login'],
                 'password' => Hash::make($generatedPassword),
-                'role' => $data['role'],
+                'role' => UserRole::getValueFromLabel($data['role']),
                 'status' => EntityStatus::Active->value(),
             ]);
 
