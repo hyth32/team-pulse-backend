@@ -544,12 +544,12 @@
                 "example": 0
             },
             "UserRole": {
-                "description": "Роли пользователей\n *     0 - Сотрудник\n *     1 - Руководитель\n *     2 - Администратор",
+                "description": "Роли пользователей\n *     employee - Сотрудник\n *     supervisor - Руководитель\n *     admin - Администратор",
                 "type": "integer",
                 "enum": [
-                    "Admin",
+                    "Employee",
                     "Supervisor",
-                    "Employee"
+                    "Admin"
                 ],
                 "example": 0
             },
@@ -564,14 +564,8 @@
                     "employees": {
                         "type": "array",
                         "items": {
-                            "properties": {
-                                "id": {
-                                    "description": "ID пользователя",
-                                    "type": "integer",
-                                    "example": "1"
-                                }
-                            },
-                            "type": "object"
+                            "description": "ID пользователя",
+                            "type": "integer"
                         }
                     }
                 },
@@ -1045,32 +1039,37 @@
             "User": {
                 "description": "Пользователь",
                 "properties": {
-                    "name": {
-                        "description": "Название теста",
+                    "id": {
+                        "description": "ID пользователя",
                         "type": "string"
                     },
-                    "description": {
-                        "description": "Описание теста",
-                        "type": "text"
+                    "name": {
+                        "description": "Имя",
+                        "type": "string"
                     },
-                    "frequency": {
-                        "$ref": "#/components/schemas/TestFrequency"
+                    "lastname": {
+                        "description": "Фамилия",
+                        "type": "string"
                     },
-                    "start_date": {
-                        "description": "Дата начала теста",
-                        "type": "string",
-                        "format": "date-time"
+                    "login": {
+                        "description": "Логин",
+                        "type": "string"
                     },
-                    "end_date": {
-                        "description": "Дата окончания теста",
-                        "type": "string",
-                        "format": "date-time"
+                    "email": {
+                        "description": "Email",
+                        "type": "string"
                     },
-                    "assignee_id": {
-                        "description": "ID пользователя, назначившего тест",
-                        "type": "string",
-                        "format": "uuid",
-                        "example": "123e4567-e89b-12d3-a456-426614174000"
+                    "role": {
+                        "description": "Роль",
+                        "type": "string"
+                    },
+                    "status": {
+                        "description": "Статус сущности",
+                        "type": "string"
+                    },
+                    "createdAt": {
+                        "description": "Дата создания",
+                        "type": "string"
                     }
                 },
                 "type": "object"
