@@ -886,6 +886,11 @@
             "Group": {
                 "description": "Группа",
                 "properties": {
+                    "id": {
+                        "description": "ID группы",
+                        "type": "string",
+                        "format": "uuid"
+                    },
                     "name": {
                         "description": "Название группы",
                         "type": "string"

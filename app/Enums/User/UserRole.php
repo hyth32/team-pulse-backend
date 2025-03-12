@@ -19,25 +19,25 @@ enum UserRole
 {
     use EnumTrait;
 
-    case Admin;
-    case Supervisor;
     case Employee;
+    case Supervisor;
+    case Admin;
 
     public function value(): ?string
     {
         return match($this) {
-            self::Admin => 0,
+            self::Employee => 0,
             self::Supervisor => 1,
-            self::Employee => 2,
+            self::Admin => 2,
         };
     }
 
     public function label(): ?string
     {
         return match($this) {
-            self::Admin => 'Администратор',
-            self::Supervisor => 'Руководитель',
             self::Employee => 'Сотрудник',
+            self::Supervisor => 'Руководитель',
+            self::Admin => 'Администратор',
         };
     }
 }
