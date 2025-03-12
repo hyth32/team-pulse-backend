@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Enums\EntityStatus;
 use App\Enums\User\UserRole;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -22,6 +23,7 @@ class UserShortResource extends JsonResource
             'login' => $this->login,
             'email' => $this->email,
             'role' => UserRole::getLabelFromValue($this->role),
+            'status' => EntityStatus::getLabelFromValue($this->status),
             'createdAt' => $this->created_at,
         ];
     }

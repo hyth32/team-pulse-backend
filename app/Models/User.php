@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
 
 /**
  * @OA\Schema(schema="User", description="Пользователь", properties={
@@ -15,12 +16,13 @@ use Illuminate\Notifications\Notifiable;
  *      @OA\Property(property="login", type="string", description="Логин"),
  *      @OA\Property(property="email", type="string", description="Email"),
  *      @OA\Property(property="role", type="string", description="Роль"),
+ *      @OA\Property(property="status", type="string", description="Статус сущности"),
  *      @OA\Property(property="createdAt", type="string", description="Дата создания"),
  * })
  */
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable;
 
     public function avatar(): HasOne
     {
