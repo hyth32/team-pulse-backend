@@ -8,6 +8,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 /**
  * @OA\Schema(schema="TestTemplateShortResource", description="Шаблон теста", properties={
+ *      @OA\Property(property="id", type="string", format="uuid", description="ID теста"),
  *      @OA\Property(property="name", type="string", description="Название теста"),
  *      @OA\Property(property="status", type="integer", description="Статус теста", ref="#/components/schemas/TestStatus"),
  *      @OA\Property(property="author", type="string", description="Автор теста"),
