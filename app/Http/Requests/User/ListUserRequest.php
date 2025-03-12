@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Tag;
+namespace App\Http\Requests\User;
 
 use App\Http\Requests\BaseListRequest;
 
-class ListTagRequest extends BaseListRequest
+class ListUserRequest extends BaseListRequest
 {
     /**
      * Determine if the user is authorized to make this request.

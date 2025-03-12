@@ -426,6 +426,78 @@
                     }
                 }
             }
+        },
+        "/api/v1/users": {
+            "get": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "Список пользователей",
+                "operationId": "060d4f5de83424a6805147d8b704b904",
+                "parameters": [
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "description": "Количество записей",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "offset",
+                        "in": "query",
+                        "description": "Смещение",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ответ",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "users": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/User"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "Создать пользователя",
+                "operationId": "d64b8014ed54fbe96476f308a5c0e22a",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreateUserRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Ответ",
+                        "content": {
+                            "application/json": {}
+                        }
+                    }
+                }
+            }
         }
     },
     "components": {
@@ -681,6 +753,39 @@
                     }
                 ]
             },
+            "CreateUserRequest": {
+                "description": "Тело запроса для создания группы",
+                "properties": {
+                    "name": {
+                        "description": "Имя",
+                        "type": "string"
+                    },
+                    "lastname": {
+                        "description": "Фамилия",
+                        "type": "string"
+                    },
+                    "login": {
+                        "description": "Логин",
+                        "type": "string"
+                    },
+                    "email": {
+                        "description": "Email",
+                        "type": "string"
+                    },
+                    "role": {
+                        "$ref": "#/components/schemas/UserRole"
+                    },
+                    "groups": {
+                        "type": "array",
+                        "items": {
+                            "description": "ID группы",
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                },
+                "type": "object"
+            },
             "TestTemplateShortResource": {
                 "description": "Шаблон теста",
                 "properties": {
@@ -932,6 +1037,39 @@
                 },
                 "type": "object"
             },
+            "User": {
+                "description": "Пользователь",
+                "properties": {
+                    "name": {
+                        "description": "Название теста",
+                        "type": "string"
+                    },
+                    "description": {
+                        "description": "Описание теста",
+                        "type": "text"
+                    },
+                    "frequency": {
+                        "$ref": "#/components/schemas/TestFrequency"
+                    },
+                    "start_date": {
+                        "description": "Дата начала теста",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "end_date": {
+                        "description": "Дата окончания теста",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "assignee_id": {
+                        "description": "ID пользователя, назначившего тест",
+                        "type": "string",
+                        "format": "uuid",
+                        "example": "123e4567-e89b-12d3-a456-426614174000"
+                    }
+                },
+                "type": "object"
+            },
             "UserNotification": {
                 "description": "Уведомление пользователя о создании аккаунта",
                 "properties": {
@@ -996,6 +1134,10 @@
         {
             "name": "Test",
             "description": "Test"
+        },
+        {
+            "name": "User",
+            "description": "User"
         }
     ]
 }

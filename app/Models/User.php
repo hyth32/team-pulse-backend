@@ -7,6 +7,16 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
+/**
+ * @OA\Schema(schema="User", description="Пользователь", properties={
+ *      @OA\Property(property="name", type="string", description="Название теста"),
+ *      @OA\Property(property="description", type="text", description="Описание теста"),
+ *      @OA\Property(property="frequency", type="integer", ref="#/components/schemas/TestFrequency"),
+ *      @OA\Property(property="start_date", type="datetime", description="Дата начала теста"),
+ *      @OA\Property(property="end_date", type="datetime", description="Дата окончания теста"),
+ *      @OA\Property(property="assignee_id", type="string", format="uuid", description="ID пользователя, назначившего тест", example="123e4567-e89b-12d3-a456-426614174000"),
+ * })
+ */
 class User extends Authenticatable
 {
     use HasFactory, Notifiable;
