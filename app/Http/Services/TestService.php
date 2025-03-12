@@ -59,11 +59,11 @@ class TestService
                     'name' => $testData['topic'],
                 ]);
 
-                if (isset($testData['questions'])) {
+                if (isset($testData['questions']) && count($testData['questions']) > 0) {
                     $questionsData = $testData['questions'];
                     foreach ($questionsData as $questionData) {
                         $question = Question::create([
-                            'text' => $questionData['title'],
+                            'text' => $questionData['name'],
                             'type' => $questionData['type'],
                             'topic_id' => $topic->id,
                         ]);
