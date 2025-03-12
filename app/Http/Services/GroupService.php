@@ -34,18 +34,17 @@ class GroupService
             'name' => $data['name'],
         ]);
 
-//        if (isset($data['employees'])) {
-//            foreach ($data['employees'] as $userData) {
-//                $userId = $userData['id'];
-//               $userExists = User::where(['id' => $userId])->exists();
-//                if ($userExists) {
-//                    UserGroup::firstOrCreate([
-//                        'user_id' => $userId,
-//                        'group_id' => $group->id,
-//                    ]);
-//                }
-//            }
-//        }
+        if (isset($data['employees']) && count($data['employees']) > 0) {
+            foreach ($data['employees'] as $userId) {
+                $userExists = User::find($userId)->exists();
+                if ($userExists) {
+                    UserGroup::firstOrCreate([
+                        'user_id' => $userId,
+                        'group_id' => $group->id,
+                    ]);
+                }
+            }
+        }
 
         return ['message' => 'Группа создана'];
     }

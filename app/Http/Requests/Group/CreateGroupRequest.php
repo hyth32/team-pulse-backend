@@ -10,14 +10,9 @@ use Illuminate\Foundation\Http\FormRequest;
  *      type="object",
  *      description="Тело запроса для создания группы",
  *      @OA\Property(property="name", type="string", description="Название группы", example="Frontend"),
- *      @OA\Property(
- *         property="employees",
- *         type="array",
- *         @OA\Items(
- *             type="object",
- *             @OA\Property(property="id", type="integer", example="1", description="ID пользователя")
- *         )
- *     )
+ *      @OA\Property(property="employees", type="array",
+*           @OA\Items(type="integer", description="ID пользователя")
+*       ),
  * )
  */
 class CreateGroupRequest extends FormRequest
@@ -40,7 +35,6 @@ class CreateGroupRequest extends FormRequest
         return [
             'name' => 'required|string',
             'employees' => 'nullable|array',
-            'employees.*.id' => 'required|integer',
         ];
     }
 }
