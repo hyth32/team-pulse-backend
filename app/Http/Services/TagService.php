@@ -29,11 +29,11 @@ class TagService
         $data = $request->validated();
         foreach ($data['tags'] as $tagData) {
             Tag::firstOrCreate([
-                'name' => $tagData['name'],
+                'name' => trim($tagData['name']),
             ]);
         }
 
-        return $data;
+        return ['message' => 'Тег создан'];
     }
 
     /**

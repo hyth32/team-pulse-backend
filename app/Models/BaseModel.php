@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use ReflectionClass;
 use Illuminate\Support\Str;
@@ -44,5 +45,21 @@ class BaseModel extends Model
         static::updating(function ($model) {
             $model->{$model->getUpdatedAtColumn()} = now();
         });
+    }
+
+    /**
+     * Получение форматированного аттрибута created_at
+     */
+    public function getCreatedAtAttribute()
+    {
+        return Carbon::parse($this->attributes['created_at'])->format('d.m.Y');
+    }
+
+    /**
+     * Получение форматированного аттрибута updated_at
+     */
+    public function getUpdatedAtAttribute()
+    {
+        return Carbon::parse($this->attributes['updated_at'])->format('d.m.Y');
     }
 }

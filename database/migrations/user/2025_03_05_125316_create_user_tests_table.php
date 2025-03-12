@@ -25,6 +25,12 @@ return new class extends Migration
                 ->on('tests')
                 ->onDelete('cascade')
                 ->onUpdate('no action');
+            $table->integer('assignee_id');
+            $table->foreign('assignee_id', 'fk-user-assignee-1')
+                ->references('id')
+                ->on('users')
+                ->onDelete('cascade')
+                ->onUpdate('no action');
 
             $table->timestamps();
         });

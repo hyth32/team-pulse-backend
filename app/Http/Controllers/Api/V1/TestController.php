@@ -32,6 +32,26 @@ class TestController extends Controller
     }
 
     /**
+     * @OA\Get(path="/api/v1/tests/templates",
+     *      tags={"Test"},
+     *      summary="Список шаблонов",
+     *      @OA\Parameter(name="limit", @OA\Schema(type="integer"), description="Количество записей", in="query"),
+     *      @OA\Parameter(name="offset", @OA\Schema(type="integer"), description="Смещение", in="query"),
+     *      @OA\Response(response = 200, description="Ответ",
+     *          @OA\MediaType(mediaType="application/json",
+     *              @OA\Schema(
+     *                  @OA\Property(property="tests", type="array", @OA\Items(ref="#/components/schemas/TestTemplateShortResource"))
+     *              ),
+     *          ),
+     *      ),
+     * )
+     */
+    public function templateList(ListTestRequest $request)
+    {
+        return TestService::templateList($request);
+    }
+
+    /**
      * @OA\Post(path="/api/v1/tests",
      *      tags={"Test"},
      *      summary="Создать тест",

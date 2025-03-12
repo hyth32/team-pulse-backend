@@ -306,6 +306,53 @@
                 }
             }
         },
+        "/api/v1/tests/templates": {
+            "get": {
+                "tags": [
+                    "Test"
+                ],
+                "summary": "Список шаблонов",
+                "operationId": "2a9ae385076e308863aa810ac779f5d3",
+                "parameters": [
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "description": "Количество записей",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "offset",
+                        "in": "query",
+                        "description": "Смещение",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ответ",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "tests": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/TestTemplateShortResource"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/tests/{uuid}": {
             "get": {
                 "tags": [
@@ -393,6 +440,15 @@
                     "Scale"
                 ],
                 "example": 0
+            },
+            "TestStatus": {
+                "description": "Статус теста\n *          draft - Черновик\n *          done - Готовый тест",
+                "type": "string",
+                "enum": [
+                    "Draft",
+                    "Done"
+                ],
+                "example": "draft"
             },
             "UserNotificationStatus": {
                 "description": "Статус уведомления\n *      0 - Не уведомлен\n *      1 - Уведомлен",
@@ -636,6 +692,19 @@
                     }
                 ]
             },
+            "TestTemplateShortResource": {
+                "description": "Шаблон теста",
+                "properties": {
+                    "name": {
+                        "description": "Название теста",
+                        "type": "string"
+                    },
+                    "status": {
+                        "$ref": "#/components/schemas/TestStatus"
+                    }
+                },
+                "type": "object"
+            },
             "Answer": {
                 "description": "Ответ",
                 "properties": {
@@ -709,10 +778,6 @@
                     "name": {
                         "description": "Название группы",
                         "type": "string"
-                    },
-                    "priority": {
-                        "description": "Приоритет группы",
-                        "type": "integer"
                     }
                 },
                 "type": "object"
@@ -894,7 +959,7 @@
                 "type": "object"
             },
             "UserTest": {
-                "description": "Группы пользователя",
+                "description": "Тесты пользователя",
                 "properties": {
                     "user_id": {
                         "description": "ID пользователя",
@@ -905,6 +970,11 @@
                         "description": "ID теста",
                         "type": "uuid",
                         "example": "123e4567-e89b-12d3-a456-426614174000"
+                    },
+                    "assignee_id": {
+                        "description": "ID пользователя, назначившего тест",
+                        "type": "integer",
+                        "example": "1"
                     }
                 },
                 "type": "object"

@@ -7,7 +7,7 @@ use App\Http\Requests\Test\AssignTestRequest;
 use App\Http\Requests\Test\CreateTestRequest;
 use App\Http\Requests\Test\ListTestRequest;
 use App\Http\Requests\Test\UpdateTestRequest;
-use App\Http\Resources\TestShortResource;
+use App\Http\Resources\TestTemplateShortResource;
 use App\Models\Answer;
 use App\Models\AnswerTagPoints;
 use App\Models\Group;
@@ -36,7 +36,23 @@ class TestService
             ->orderBy('created_at', 'desc')
             ->get();
 
-        return ['tests' => TestShortResource::collection($tests)];
+        return ['tests' => $tests];
+    }
+
+    /**
+     * Получение списка шаблонов
+     * @param ListTestRequest $request
+     */
+    public static function templateList(ListTestRequest $request)
+    {
+        $tests = Test::query()
+            ->where(['status' => EntityStatus::Active->value()])
+            ->offset($request['offset'])
+            ->limit($request['limit'])
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return ['tests' => TestTemplateShortResource::collection($tests)];
     }
 
     /**
@@ -48,7 +64,7 @@ class TestService
         $data = $request->validated();
 
         $test = Test::create([
-            'name' => $data['title'] ?? null,
+            'name' => $data['name'] ?? null,
             'description' => $data['description'] ?? null,
         ]);
 
@@ -74,19 +90,17 @@ class TestService
                             'question_id' => $question->id,
                         ]);
 
-                        if (isset($questionData['tags'])) {
+                        if (isset($questionData['tags']) && count($questionData['tags']) > 0) {
                             $questionTags = $questionData['tags'];
-                            if (count($questionTags) > 0) {
-                                foreach ($questionTags as $tagName) {
-                                    $tag = Tag::create([
-                                        'name' => $tagName,
-                                    ]);
+                            foreach ($questionTags as $tagName) {
+                                $tag = Tag::firstOrCreate([
+                                    'name' => trim($tagName),
+                                ]);
 
-                                    QuestionTag::create([
-                                        'question_id' => $question->id,
-                                        'tag_id' => $tag->id,
-                                    ]);
-                                }
+                                QuestionTag::create([
+                                    'question_id' => $question->id,
+                                    'tag_id' => $tag->id,
+                                ]);
                             }
                         }
                     }
@@ -101,8 +115,6 @@ class TestService
 
                             if (isset($answerData['points']) && count($answerData['points']) > 0) {
                                 foreach ($answerData['points'] as $answerPointsData) {
-                                    $tag = Tag::firstOrFail(['name' => $answerPointsData['name']]);
-
                                     AnswerTagPoints::create([
                                         'answer_id' => $answer->id,
                                         'tag_id' => $tag->id,
@@ -148,7 +160,6 @@ class TestService
             'periodicity' => $periodicity->id,
             'start_date' => Carbon::parse($data['start_date']) ?? null,
             'end_date' => Carbon::parse($data['end_date']) ?? null,
-            'assignee_id' => $request->user()->id ?? 1,
         ]);
 
         $usersToAssign = [];
@@ -174,6 +185,7 @@ class TestService
             UserTest::firstOrCreate([
                 'user_id' => $userId,
                 'test_id' => $test->id,
+                'assignee_id' => $request->user()->id ?? 1,
             ]);
         }
 

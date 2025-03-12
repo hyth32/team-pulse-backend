@@ -19,9 +19,10 @@ return new class extends Migration
             $table->foreign('periodicity', 'fk-test-periodicity-1')->references('id')->on('test_periodicities')->onUpdate('no action')->onDelete('set null');
             $table->timestamp('start_date')->nullable();
             $table->timestamp('end_date')->nullable();
-            $table->integer('assignee_id')->nullable();
+            $table->integer('author_id')->nullable();
+            $table->foreign('author_id', 'fk-test-author-1')->references('id')->on('users')->onUpdate('no action')->onDelete('no action');
             $table->integer('status')->default(1);
-            $table->foreign('assignee_id', 'fk-test-assignee-1')->references('id')->on('users')->onUpdate('no action')->onDelete('no action');
+            $table->integer('test_status')->default(0);
 
             $table->timestamps();
         });

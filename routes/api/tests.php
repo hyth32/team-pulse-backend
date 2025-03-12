@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::controller(TestController::class)->group(function () {
     Route::get('/tests', 'list');
+    Route::get('/tests/templates', 'templateList');
     Route::post('/tests', 'create');
     Route::put('/tests/{uuid}', 'update');
     Route::get('/tests/{uuid}', 'view');
