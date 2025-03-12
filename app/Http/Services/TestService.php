@@ -7,6 +7,7 @@ use App\Http\Requests\Test\AssignTestRequest;
 use App\Http\Requests\Test\CreateTestRequest;
 use App\Http\Requests\Test\ListTestRequest;
 use App\Http\Requests\Test\UpdateTestRequest;
+use App\Http\Resources\TestShortResource;
 use App\Models\Answer;
 use App\Models\AnswerTagPoints;
 use App\Models\Group;
@@ -35,7 +36,7 @@ class TestService
             ->orderBy('created_at', 'desc')
             ->get();
 
-        return ['tests' => $tests];
+        return ['tests' => TestShortResource::collection($tests)];
     }
 
     /**
