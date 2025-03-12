@@ -53,58 +53,61 @@ class TestService
 
         if (isset($data['tests'])) {
             $testsData = $data['tests'];
-            $topic = QuestionTopic::firstOrCreate([
-                'name' => $testsData['topic'],
-            ]);
 
-            if (isset($testsData['questions'])) {
-                $questionsData = $testsData['questions'];
-                foreach ($questionsData as $questionData) {
-                    $question = Question::create([
-                        'text' => $questionData['title'],
-                        'type' => $questionData['type'],
-                        'topic_id' => $topic->id,
-                    ]);
+            foreach ($testsData as $testData) {
+                $topic = QuestionTopic::firstOrCreate([
+                    'name' => $testData['topic'],
+                ]);
 
-                    TestQuestion::create([
-                        'test_id' => $test->id,
-                        'question_id' => $question->id,
-                    ]);
+                if (isset($testData['questions'])) {
+                    $questionsData = $testData['questions'];
+                    foreach ($questionsData as $questionData) {
+                        $question = Question::create([
+                            'text' => $questionData['title'],
+                            'type' => $questionData['type'],
+                            'topic_id' => $topic->id,
+                        ]);
 
-                    if (isset($questionData['tags'])) {
-                        $questionTags = $questionData['tags'];
-                        if (count($questionTags) > 0) {
-                            foreach ($questionTags as $tagData) {
-                                $tag = Tag::create([
-                                    'name' => $tagData['name']
-                                ]);
-
-                                QuestionTag::create([
-                                    'question_id' => $question->id,
-                                    'tag_id' => $tag->id,
-                                ]);
-                            }
-                        }
-                    }
-                }
-
-                if (isset($questionData['answers']) && count($questionData['answers']) > 0) {
-                    $questionAnswers = $questionData['answers'];
-                    foreach ($questionAnswers as $answerData) {
-                        $answer = Answer::create([
-                            'text' => $answerData['text'],
+                        TestQuestion::create([
+                            'test_id' => $test->id,
                             'question_id' => $question->id,
                         ]);
 
-                        if (isset($answerData['points']) && count($answerData['points']) > 0) {
-                            foreach ($answerData['points'] as $answerPointsData) {
-                                $tag = Tag::firstOrFail(['name' => $answerPointsData['name']]);
+                        if (isset($questionData['tags'])) {
+                            $questionTags = $questionData['tags'];
+                            if (count($questionTags) > 0) {
+                                foreach ($questionTags as $tagData) {
+                                    $tag = Tag::create([
+                                        'name' => $tagData['name']
+                                    ]);
 
-                                AnswerTagPoints::create([
-                                    'answer_id' => $answer->id,
-                                    'tag_id' => $tag->id,
-                                    'point_count' => $answerPointsData['points'],
-                                ]);
+                                    QuestionTag::create([
+                                        'question_id' => $question->id,
+                                        'tag_id' => $tag->id,
+                                    ]);
+                                }
+                            }
+                        }
+                    }
+
+                    if (isset($questionData['answers']) && count($questionData['answers']) > 0) {
+                        $questionAnswers = $questionData['answers'];
+                        foreach ($questionAnswers as $answerData) {
+                            $answer = Answer::create([
+                                'text' => $answerData['text'],
+                                'question_id' => $question->id,
+                            ]);
+
+                            if (isset($answerData['points']) && count($answerData['points']) > 0) {
+                                foreach ($answerData['points'] as $answerPointsData) {
+                                    $tag = Tag::firstOrFail(['name' => $answerPointsData['name']]);
+
+                                    AnswerTagPoints::create([
+                                        'answer_id' => $answer->id,
+                                        'tag_id' => $tag->id,
+                                        'point_count' => $answerPointsData['points'],
+                                    ]);
+                                }
                             }
                         }
                     }
