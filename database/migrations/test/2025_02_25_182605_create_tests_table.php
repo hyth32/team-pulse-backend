@@ -15,14 +15,13 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->string('name')->nullable();
             $table->text('description')->nullable();
-            $table->uuid('periodicity')->nullable();
-            $table->foreign('periodicity', 'fk-test-periodicity-1')->references('id')->on('test_periodicities')->onUpdate('no action')->onDelete('set null');
+            $table->integer('frequency')->nullable();
             $table->timestamp('start_date')->nullable();
             $table->timestamp('end_date')->nullable();
             $table->integer('author_id')->nullable();
             $table->foreign('author_id', 'fk-test-author-1')->references('id')->on('users')->onUpdate('no action')->onDelete('no action');
             $table->integer('status')->default(1);
-            $table->integer('test_status')->default(0);
+            $table->integer('test_status');
 
             $table->timestamps();
         });

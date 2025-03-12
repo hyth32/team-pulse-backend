@@ -3,6 +3,7 @@
 namespace App\Http\Services;
 
 use App\Enums\EntityStatus;
+use App\Enums\Test\TestFrequency;
 use App\Enums\Test\TestStatus;
 use App\Http\Requests\Test\AssignTestRequest;
 use App\Http\Requests\Test\CreateTestRequest;
@@ -68,6 +69,7 @@ class TestService
             'name' => $data['name'],
             'description' => $data['description'] ?? null,
             'test_status' => TestStatus::getValueFromLabel($data['status']),
+            'author_id' => $request->user()->id ?? 1,
         ]);
 
         if (isset($data['tests'])) {
@@ -142,33 +144,24 @@ class TestService
     {
         $test = Test::findOrFail($uuid);
         if (!$test) {
-            return response()->json(['message' => 'Тест не существует']);
+            return ['message' => 'Тест не существует'];
         }
 
         $data = $request->validated();
-        $periodicityTimeframe = null;
-        if (isset($data['periodicity']['timeframe'])) {
-            $periodicityTimeframe = $data['periodicity']['timeframe'];
-            $periodicityFrom = $periodicityTimeframe['from'] ?? null;
-            $periodicityTo = $periodicityTimeframe['to'] ?? null;
-            $periodicityTimeframe = $periodicityTo - $periodicityFrom;
-            // TODO: добавить логику вычисления таймфрейма периодичности
-        }
-        $periodicity = TestPeriodicity::firstOrCreate([
-            'name' => $data['periodicity']['name'],
-        ], ['timeframe' => $periodicityTimeframe]);
 
         $test->update([
-            'periodicity' => $periodicity->id,
-            'start_date' => Carbon::parse($data['start_date']) ?? null,
-            'end_date' => Carbon::parse($data['end_date']) ?? null,
+            'name' => $data['name'],
+            'description' => $data['description'],
+            'frequency' => $data['frequency'],
+            'start_date' => Carbon::parse($data['startDate']),
+            'end_date' => Carbon::parse($data['endDate']) ?? null,
         ]);
 
         $usersToAssign = [];
         if (isset($data['groups'])) {
             $groups = $data['groups'];
-            foreach ($groups as $groupData) {
-                $group = Group::where(['name' => $groupData['name']])->first();
+            foreach ($groups as $groupId) {
+                $group = Group::find($groupId);
                 foreach ($group->users as $user) {
                     $usersToAssign[] = $user->id;
                 }
@@ -177,8 +170,7 @@ class TestService
 
         if (isset($data['employees'])) {
             $employees = $data['employees'];
-            foreach ($employees as $employee) {
-                $employeeId = $employee['id'];
+            foreach ($employees as $employeeId) {
                 $usersToAssign[] = $employeeId;
             }
         }

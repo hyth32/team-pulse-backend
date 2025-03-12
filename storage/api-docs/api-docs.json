@@ -441,6 +441,18 @@
                 ],
                 "example": 0
             },
+            "TestFrequency": {
+                "description": "Статус теста\n *          0 - Каждый день\n *          1 - Каждую неделю\n *          2 - Каждый месяц\n *          3 - Каждые полгода\n *          4- Каждый год",
+                "type": "integer",
+                "enum": [
+                    "Daily",
+                    "Weekly",
+                    "Monthly",
+                    "HalfYearly",
+                    "Yearly"
+                ],
+                "example": "0"
+            },
             "TestStatus": {
                 "description": "Статус теста\n *          draft - Черновик\n *          done - Готовый тест",
                 "type": "string",
@@ -549,65 +561,42 @@
             "AssignTestRequest": {
                 "description": "Тело запроса для назначения теста",
                 "properties": {
-                    "periodicity": {
-                        "properties": {
-                            "name": {
-                                "description": "Название периодичности",
-                                "type": "string",
-                                "example": "Каждую неделю"
-                            },
-                            "timeframe": {
-                                "properties": {
-                                    "from": {
-                                        "description": "Временная метка начала теста",
-                                        "type": "integer",
-                                        "example": 1740566491
-                                    },
-                                    "to": {
-                                        "description": "Временная метка окончания теста",
-                                        "type": "integer",
-                                        "example": 1740566491
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        },
-                        "type": "object"
+                    "name": {
+                        "type": "string",
+                        "example": "New test name"
                     },
-                    "start_date": {
+                    "description": {
+                        "type": "string",
+                        "example": "New test description"
+                    },
+                    "frequency": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "startDate": {
                         "description": "Временная метка начала прохождения теста",
-                        "type": "integer",
-                        "example": 1740566491
+                        "type": "string",
+                        "format": "date-time"
                     },
-                    "end_date": {
+                    "endDate": {
                         "description": "Временная метка окончания прохождения теста",
-                        "type": "integer",
-                        "example": 1740566491
+                        "type": "string",
+                        "format": "date-time"
                     },
                     "groups": {
                         "type": "array",
                         "items": {
-                            "properties": {
-                                "name": {
-                                    "description": "Название группы",
-                                    "type": "string",
-                                    "example": "Frontend"
-                                }
-                            },
-                            "type": "object"
+                            "description": "ID группы",
+                            "type": "string",
+                            "format": "uuid"
                         }
                     },
                     "employees": {
                         "type": "array",
                         "items": {
-                            "properties": {
-                                "id": {
-                                    "description": "ID пользователя",
-                                    "type": "id",
-                                    "example": "1"
-                                }
-                            },
-                            "type": "object"
+                            "description": "ID пользователя",
+                            "type": "integer",
+                            "example": "1"
                         }
                     }
                 },
@@ -695,12 +684,29 @@
             "TestTemplateShortResource": {
                 "description": "Шаблон теста",
                 "properties": {
+                    "id": {
+                        "description": "ID теста",
+                        "type": "string",
+                        "format": "uuid"
+                    },
                     "name": {
                         "description": "Название теста",
                         "type": "string"
                     },
                     "status": {
                         "$ref": "#/components/schemas/TestStatus"
+                    },
+                    "author": {
+                        "description": "Автор теста",
+                        "type": "string"
+                    },
+                    "createdAt": {
+                        "description": "Дата создания",
+                        "type": "string"
+                    },
+                    "updatedAt": {
+                        "description": "Дата обновления",
+                        "type": "string"
                     }
                 },
                 "type": "object"
@@ -872,11 +878,8 @@
                         "description": "Описание теста",
                         "type": "text"
                     },
-                    "periodicity": {
-                        "description": "ID периодичности",
-                        "type": "string",
-                        "format": "uuid",
-                        "example": "123e4567-e89b-12d3-a456-426614174000"
+                    "frequency": {
+                        "$ref": "#/components/schemas/TestFrequency"
                     },
                     "start_date": {
                         "description": "Дата начала теста",

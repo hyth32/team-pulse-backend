@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests\Test;
 
+use App\Enums\Test\TestStatus;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 /**
  * @OA\Schema(
@@ -60,7 +62,7 @@ class CreateTestRequest extends FormRequest
         return [
             'name' => 'required|string',
             'description' => 'nullable|string',
-            'status' => 'required|string',
+            'status' => ['required', Rule::in(TestStatus::labels())],
             'tests' => 'nullable|array',
 
             'tests.*.topic' => 'nullable|string|max:255',
