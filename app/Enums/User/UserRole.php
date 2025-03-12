@@ -9,9 +9,9 @@ use App\Enums\EnumTrait;
  *     schema="UserRole",
  *     type="integer",
  *     description="Роли пользователей
- *     0 - Сотрудник
- *     1 - Руководитель
- *     2 - Администратор",
+ *     employee - Сотрудник
+ *     supervisor - Руководитель
+ *     admin - Администратор",
  *     example=0
  * )
  */
