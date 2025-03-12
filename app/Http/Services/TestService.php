@@ -76,9 +76,9 @@ class TestService
                         if (isset($questionData['tags'])) {
                             $questionTags = $questionData['tags'];
                             if (count($questionTags) > 0) {
-                                foreach ($questionTags as $tagData) {
+                                foreach ($questionTags as $tagName) {
                                     $tag = Tag::create([
-                                        'name' => $tagData['name']
+                                        'name' => $tagName,
                                     ]);
 
                                     QuestionTag::create([
