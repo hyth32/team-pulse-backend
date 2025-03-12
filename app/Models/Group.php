@@ -6,6 +6,7 @@ use App\Models\BaseModel;
 
 /**
  * @OA\Schema(schema="Group", description="Группа", properties={
+ *      @OA\Property(property="id", type="string", format="uuid", description="ID группы"),
  *      @OA\Property(property="name", type="string", description="Название группы"),
  * })
  */
