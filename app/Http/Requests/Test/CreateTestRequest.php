@@ -74,18 +74,6 @@ class CreateTestRequest extends FormRequest
             'tests.*.questions.*.answers.*.points' => 'nullable|array',
             'tests.*.questions.*.answers.*.points.*.name' => 'required|string|max:255',
             'tests.*.questions.*.answers.*.points.*.points' => 'required|integer',
-
-            // 'questions' => 'nullable|array',
-            // 'questions.*.topic' => 'nullable|string|max:255',
-            // 'questions.*.text' => 'required|string|max:255',
-            // 'questions.*.type' => 'required|integer',
-
-            // 'questions.*.tags' => 'nullable|array',
-            // 'questions.*.tags.*.name' => 'required|string|max:255',
-            // 'questions.*.tags.*.points' => 'nullable|integer',
-
-            // 'questions.*.answers' => 'nullable|array',
-            // 'questions.*.answers.*.text' => 'required|string|max:1000',
         ];
     }
 }
