@@ -46,20 +46,4 @@ class BaseModel extends Model
             $model->{$model->getUpdatedAtColumn()} = now();
         });
     }
-
-    /**
-     * Получение форматированного аттрибута created_at
-     */
-    public function getCreatedAtAttribute()
-    {
-        return Carbon::parse($this->attributes['created_at'])->format('d.m.Y');
-    }
-
-    /**
-     * Получение форматированного аттрибута updated_at
-     */
-    public function getUpdatedAtAttribute()
-    {
-        return Carbon::parse($this->attributes['updated_at'])->format('d.m.Y');
-    }
 }
