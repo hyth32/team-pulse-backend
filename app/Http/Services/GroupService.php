@@ -18,8 +18,12 @@ class GroupService
      */
     public static function list(ListGroupRequest $request)
     {
+        $total = Group::count();
         $groups = Group::skip($request['offset'])->take($request['limit'])->get();
-        return ['groups' => GroupShortResource::collection($groups)];
+        return [
+            'total' => $total,
+            'groups' => GroupShortResource::collection($groups),
+        ];
     }
 
     /**

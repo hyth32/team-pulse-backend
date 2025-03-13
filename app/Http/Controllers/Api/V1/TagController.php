@@ -19,6 +19,7 @@ class TagController extends Controller
      *     @OA\Response(response = 200, description="Ответ",
      *         @OA\MediaType(mediaType="application/json",
      *             @OA\Schema(
+     *                 @OA\Property(property="total", type="integer", description="Общее количество записей"),
      *                 @OA\Property(property="tags", type="array", @OA\Items(ref="#/components/schemas/Group"))
      *             ),
      *         ),

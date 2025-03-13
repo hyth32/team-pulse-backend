@@ -38,6 +38,10 @@
                             "application/json": {
                                 "schema": {
                                     "properties": {
+                                        "total": {
+                                            "description": "Общее количество записей",
+                                            "type": "integer"
+                                        },
                                         "groups": {
                                             "type": "array",
                                             "items": {
@@ -152,6 +156,10 @@
                             "application/json": {
                                 "schema": {
                                     "properties": {
+                                        "total": {
+                                            "description": "Общее количество записей",
+                                            "type": "integer"
+                                        },
                                         "tags": {
                                             "type": "array",
                                             "items": {
@@ -266,6 +274,10 @@
                             "application/json": {
                                 "schema": {
                                     "properties": {
+                                        "total": {
+                                            "description": "Общее количество записей",
+                                            "type": "integer"
+                                        },
                                         "tests": {
                                             "type": "array",
                                             "items": {
@@ -338,6 +350,10 @@
                             "application/json": {
                                 "schema": {
                                     "properties": {
+                                        "total": {
+                                            "description": "Общее количество записей",
+                                            "type": "integer"
+                                        },
                                         "tests": {
                                             "type": "array",
                                             "items": {

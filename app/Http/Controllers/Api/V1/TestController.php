@@ -20,6 +20,7 @@ class TestController extends Controller
      *      @OA\Response(response = 200, description="Ответ",
      *          @OA\MediaType(mediaType="application/json",
      *              @OA\Schema(
+     *                 @OA\Property(property="total", type="integer", description="Общее количество записей"),
      *                  @OA\Property(property="tests", type="array", @OA\Items(ref="#/components/schemas/Test"))
      *              ),
      *          ),
@@ -40,7 +41,8 @@ class TestController extends Controller
      *      @OA\Response(response = 200, description="Ответ",
      *          @OA\MediaType(mediaType="application/json",
      *              @OA\Schema(
-     *                  @OA\Property(property="tests", type="array", @OA\Items(ref="#/components/schemas/TestTemplateShortResource"))
+     *                 @OA\Property(property="total", type="integer", description="Общее количество записей"),
+     *                 @OA\Property(property="tests", type="array", @OA\Items(ref="#/components/schemas/TestTemplateShortResource"))
      *              ),
      *          ),
      *      ),

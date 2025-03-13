@@ -21,6 +21,7 @@ class UserService
      */
     public static function list(ListUserRequest $request)
     {
+        $total = User::where(['status' => EntityStatus::Active->value(), 'role' => UserRole::Employee->value()])->count();
         $users = User::query()
             ->where([
                 'status' => EntityStatus::Active->value(),
@@ -31,7 +32,10 @@ class UserService
             ->orderBy('created_at', 'desc')
             ->get();
 
-        return ['users' => UserShortResource::collection($users)];
+        return [
+            'total' => $total,
+            'users' => UserShortResource::collection($users),
+        ];
     }
 
     /**

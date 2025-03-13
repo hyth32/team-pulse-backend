@@ -31,6 +31,7 @@ class TestService
      */
     public static function list(ListTestRequest $request)
     {
+        $total = Test::where(['status' => EntityStatus::Active->value()])->count();
         $tests = Test::query()
             ->where(['status' => EntityStatus::Active->value()])
             ->offset($request['offset'])
@@ -38,7 +39,10 @@ class TestService
             ->orderBy('created_at', 'desc')
             ->get();
 
-        return ['tests' => $tests];
+        return [
+            'total' => $total,
+            'tests' => $tests,
+        ];
     }
 
     /**
@@ -47,6 +51,7 @@ class TestService
      */
     public static function templateList(ListTestRequest $request)
     {
+        $total = Test::where(['status' => EntityStatus::Active->value()])->count();
         $tests = Test::query()
             ->where(['status' => EntityStatus::Active->value()])
             ->offset($request['offset'])
@@ -54,7 +59,10 @@ class TestService
             ->orderBy('created_at', 'desc')
             ->get();
 
-        return ['tests' => TestTemplateShortResource::collection($tests)];
+        return [
+            'total' => $total,
+            'tests' => TestTemplateShortResource::collection($tests),
+        ];
     }
 
     /**
