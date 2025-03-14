@@ -42,7 +42,7 @@ class AssignTestRequest extends FormRequest
         return [
             'name' => 'required|string',
             'description' => 'nullable|string',
-            'frequency' => 'nullable|integer',
+            'frequency' => 'nullable|string',
             'startDate' => 'required|string',
             'endDate' => 'nullable|string',
 
