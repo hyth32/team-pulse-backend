@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\EntityStatus;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -15,7 +16,8 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->string('name')->nullable();
             $table->integer('priority')->default(1);
-            
+            $table->integer('status')->default(EntityStatus::Active->value());
+
             $table->timestamps();
         });
     }

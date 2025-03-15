@@ -19,7 +19,7 @@ use Illuminate\Foundation\Http\FormRequest;
 *           @OA\Items(type="string", format="uuid", description="ID группы")
 *       ),
 *       @OA\Property(property="employees", type="array",
-*           @OA\Items(type="integer", description="ID пользователя", example="1"),
+*           @OA\Items(type="string", format="uuid", description="ID пользователя", example="123e4567-e89b-12d3-a456-426614174000"),
 *       )
  * )
  */

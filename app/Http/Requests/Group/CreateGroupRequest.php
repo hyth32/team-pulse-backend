@@ -11,7 +11,7 @@ use Illuminate\Foundation\Http\FormRequest;
  *      description="Тело запроса для создания группы",
  *      @OA\Property(property="name", type="string", description="Название группы", example="Frontend"),
  *      @OA\Property(property="employees", type="array",
-*           @OA\Items(type="integer", description="ID пользователя")
+*           @OA\Items(type="string", format="uuid", description="ID пользователя", example="123e4567-e89b-12d3-a456-426614174000"),
 *       ),
  * )
  */

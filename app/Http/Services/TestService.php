@@ -192,7 +192,7 @@ class TestService
             UserTest::firstOrCreate([
                 'user_id' => $userId,
                 'test_id' => $test->id,
-                'assignee_id' => $request->user()->id ?? 1,
+                'assignee_id' => $request->user()->id,
             ]);
         }
 

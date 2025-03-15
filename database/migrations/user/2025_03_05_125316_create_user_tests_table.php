@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('user_tests', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->integer('user_id');
+            $table->uuid('user_id');
             $table->foreign('user_id', 'fk-user-test-1')
                 ->references('id')
                 ->on('users')
@@ -25,7 +25,7 @@ return new class extends Migration
                 ->on('tests')
                 ->onDelete('cascade')
                 ->onUpdate('no action');
-            $table->integer('assignee_id');
+            $table->uuid('assignee_id');
             $table->foreign('assignee_id', 'fk-user-assignee-1')
                 ->references('id')
                 ->on('users')

@@ -57,8 +57,8 @@ class UserController extends Controller
      *      ),
      * )
      */
-    public function delete(string $id)
+    public function delete(string $uuid)
     {
-        return (new UserService)->delete($id);
+        return (new UserService)->delete($uuid);
     }
 }

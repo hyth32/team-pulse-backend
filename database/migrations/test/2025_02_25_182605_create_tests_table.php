@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\EntityStatus;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -18,9 +19,9 @@ return new class extends Migration
             $table->integer('frequency')->nullable();
             $table->timestamp('start_date')->nullable();
             $table->timestamp('end_date')->nullable();
-            $table->integer('author_id')->nullable();
+            $table->uuid('author_id')->nullable();
             $table->foreign('author_id', 'fk-test-author-1')->references('id')->on('users')->onUpdate('no action')->onDelete('no action');
-            $table->integer('status')->default(1);
+            $table->integer('status')->default(EntityStatus::Active->value());
             $table->integer('test_status');
 
             $table->timestamps();

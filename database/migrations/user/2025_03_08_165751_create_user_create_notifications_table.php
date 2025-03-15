@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('user_create_notifications', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->integer('is_notified')->default(0);
-            $table->integer('user_id');
+            $table->uuid('user_id');
             $table->foreign('user_id', 'fk-notification-user-1')
                 ->references('id')
                 ->on('users')

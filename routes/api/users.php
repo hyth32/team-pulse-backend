@@ -6,5 +6,5 @@ use Illuminate\Support\Facades\Route;
 Route::controller(UserController::class)->group(function () {
     Route::get('/users', 'list');
     Route::post('/users', 'create');
-    Route::delete('/users/{id}', 'delete');
+    Route::delete('/users/{uuid}', 'delete');
 });

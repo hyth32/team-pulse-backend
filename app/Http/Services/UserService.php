@@ -23,10 +23,7 @@ class UserService
     {
         $total = User::where(['status' => EntityStatus::Active->value(), 'role' => UserRole::Employee->value()])->count();
         $users = User::query()
-            ->where([
-                'status' => EntityStatus::Active->value(),
-                'role' => UserRole::Employee->value(),
-            ])
+            ->where(['status' => EntityStatus::Active->value(), 'role' => UserRole::Employee->value()])
             ->offset($request['offset'])
             ->limit($request['limit'])
             ->orderBy('created_at', 'desc')
@@ -81,9 +78,9 @@ class UserService
      * Удаление пользователя по id
      * @param int $id
      */
-    public function delete(string $id)
+    public function delete(string $uuid)
     {
-        $user = User::findOrFail($id);
+        $user = User::findOrFail($uuid);
         $user->update(['status' => EntityStatus::Deleted->value()]);
 
         return ['message' => 'Пользователь удален'];
