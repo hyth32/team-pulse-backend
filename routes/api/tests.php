@@ -3,7 +3,7 @@
 use App\Http\Controllers\Api\V1\TestController;
 use Illuminate\Support\Facades\Route;
 
-Route::controller(TestController::class)->group(function () {
+Route::controller(TestController::class)->middleware('auth:sanctum')->group(function () {
     Route::get('/tests', 'list');
     Route::get('/tests/templates', 'templateList');
     Route::post('/tests', 'create');
