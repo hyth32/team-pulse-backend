@@ -15,7 +15,7 @@ class AuthController extends Controller
         $data = $request->validated();
 
         $user = User::where('login', $data['login'])->first();
-        if (!$user) {
+        if (!$user || !$user->isActive()) {
             throw new AuthorizationException('Пользователь не существует');
         }
 

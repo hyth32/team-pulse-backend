@@ -475,6 +475,10 @@
                             "application/json": {
                                 "schema": {
                                     "properties": {
+                                        "total": {
+                                            "description": "Общее количество записей",
+                                            "type": "integer"
+                                        },
                                         "users": {
                                             "type": "array",
                                             "items": {
@@ -664,6 +668,10 @@
                         "description": "Временная метка окончания прохождения теста",
                         "type": "string",
                         "format": "date-time"
+                    },
+                    "assignToAll": {
+                        "description": "Метка назначения всем сотрудникам",
+                        "type": "boolean"
                     },
                     "groups": {
                         "type": "array",

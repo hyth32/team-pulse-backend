@@ -47,4 +47,18 @@ class UserController extends Controller
     {
         return (new UserService)->save($request);
     }
+
+    /**
+     * @OA\Delete(path="/api/v1/users/{uuid}",
+     *      tags={"User"},
+     *      summary="Удалить пользователя",
+     *      @OA\Response(response=200, description="Ответ",
+     *         @OA\MediaType(mediaType="application/json"),
+     *      ),
+     * )
+     */
+    public function delete(string $id)
+    {
+        return (new UserService)->delete($id);
+    }
 }

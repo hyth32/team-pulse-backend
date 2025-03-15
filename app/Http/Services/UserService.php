@@ -76,4 +76,16 @@ class UserService
 
         return ['message' => $generatedPassword];
     }
+
+    /**
+     * Удаление пользователя по id
+     * @param int $id
+     */
+    public function delete(string $id)
+    {
+        $user = User::findOrFail($id);
+        $user->update(['status' => EntityStatus::Deleted->value()]);
+
+        return ['message' => 'Пользователь удален'];
+    }
 }

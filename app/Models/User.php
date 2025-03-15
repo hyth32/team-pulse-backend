@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\EntityStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -56,5 +57,13 @@ class User extends Authenticatable
     public function groups()
     {
         return $this->belongsToMany(Group::class, 'user_groups', 'user_id', 'group_id');
+    }
+
+    /**
+     * Определение статуса пользователя
+     */
+    public function isActive()
+    {
+        return $this->status === EntityStatus::Active->value();
     }
 }
