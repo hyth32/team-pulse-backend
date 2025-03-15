@@ -16,7 +16,7 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->string('name')->nullable();
             $table->text('description')->nullable();
-            $table->integer('frequency')->nullable();
+            $table->string('frequency')->nullable();
             $table->timestamp('start_date')->nullable();
             $table->timestamp('end_date')->nullable();
             $table->uuid('author_id')->nullable();

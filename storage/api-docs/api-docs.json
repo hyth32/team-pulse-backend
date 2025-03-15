@@ -518,6 +518,23 @@
                     }
                 }
             }
+        },
+        "/api/v1/users/{uuid}": {
+            "delete": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "Удалить пользователя",
+                "operationId": "6f69d6a09252414c4d8d8e6b80b2516c",
+                "responses": {
+                    "200": {
+                        "description": "Ответ",
+                        "content": {
+                            "application/json": {}
+                        }
+                    }
+                }
+            }
         }
     },
     "components": {
@@ -585,7 +602,9 @@
                         "type": "array",
                         "items": {
                             "description": "ID пользователя",
-                            "type": "integer"
+                            "type": "string",
+                            "format": "uuid",
+                            "example": "123e4567-e89b-12d3-a456-426614174000"
                         }
                     }
                 },
@@ -605,8 +624,9 @@
                             "properties": {
                                 "id": {
                                     "description": "ID пользователя",
-                                    "type": "id",
-                                    "example": "1"
+                                    "type": "string",
+                                    "format": "uuid",
+                                    "example": "123e4567-e89b-12d3-a456-426614174000"
                                 }
                             },
                             "type": "object"
@@ -685,8 +705,9 @@
                         "type": "array",
                         "items": {
                             "description": "ID пользователя",
-                            "type": "integer",
-                            "example": "1"
+                            "type": "string",
+                            "format": "uuid",
+                            "example": "123e4567-e89b-12d3-a456-426614174000"
                         }
                     }
                 },
@@ -1065,7 +1086,9 @@
                 "properties": {
                     "id": {
                         "description": "ID пользователя",
-                        "type": "string"
+                        "type": "string",
+                        "format": "uuid",
+                        "example": "123e4567-e89b-12d3-a456-426614174000"
                     },
                     "name": {
                         "description": "Имя",
@@ -1106,7 +1129,9 @@
                     },
                     "user_id": {
                         "description": "ID пользователя",
-                        "type": "integer"
+                        "type": "string",
+                        "format": "uuid",
+                        "example": "123e4567-e89b-12d3-a456-426614174000"
                     }
                 },
                 "type": "object"
@@ -1116,12 +1141,14 @@
                 "properties": {
                     "user_id": {
                         "description": "ID пользователя",
-                        "type": "integer",
-                        "example": "1"
+                        "type": "string",
+                        "format": "uuid",
+                        "example": "123e4567-e89b-12d3-a456-426614174000"
                     },
                     "group_id": {
                         "description": "ID группы",
-                        "type": "uuid",
+                        "type": "string",
+                        "format": "uuid",
                         "example": "123e4567-e89b-12d3-a456-426614174000"
                     }
                 },
@@ -1132,8 +1159,9 @@
                 "properties": {
                     "user_id": {
                         "description": "ID пользователя",
-                        "type": "integer",
-                        "example": "1"
+                        "type": "string",
+                        "format": "uuid",
+                        "example": "123e4567-e89b-12d3-a456-426614174000"
                     },
                     "test_id": {
                         "description": "ID теста",
@@ -1142,8 +1170,9 @@
                     },
                     "assignee_id": {
                         "description": "ID пользователя, назначившего тест",
-                        "type": "integer",
-                        "example": "1"
+                        "type": "string",
+                        "format": "uuid",
+                        "example": "123e4567-e89b-12d3-a456-426614174000"
                     }
                 },
                 "type": "object"
