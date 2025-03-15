@@ -33,5 +33,6 @@ class Test extends BaseModel
         'end_date',
         'assignee_id',
         'test_status',
+        'author_id',
     ];
 }

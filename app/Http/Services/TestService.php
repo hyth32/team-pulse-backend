@@ -17,7 +17,6 @@ use App\Models\QuestionTag;
 use App\Models\QuestionTopic;
 use App\Models\Tag;
 use App\Models\Test;
-use App\Models\TestPeriodicity;
 use App\Models\TestQuestion;
 use App\Models\User;
 use App\Models\UserTest;
@@ -77,7 +76,7 @@ class TestService
             'name' => $data['name'],
             'description' => $data['description'] ?? null,
             'test_status' => TestStatus::getValueFromLabel($data['status']),
-            'author_id' => $request->user()->id ?? 1,
+            'author_id' => $request->user()->id,
         ]);
 
         if (isset($data['tests'])) {
