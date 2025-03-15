@@ -14,6 +14,7 @@ use Illuminate\Foundation\Http\FormRequest;
  *      @OA\Property(property="frequency", type="string", format="uuid"),
 *       @OA\Property(property="startDate", type="string", format="date-time", description="Временная метка начала прохождения теста"),
 *       @OA\Property(property="endDate", type="string", format="date-time", description="Временная метка окончания прохождения теста"),
+*       @OA\Property(property="assignToAll", type="bool", description="Метка назначения всем сотрудникам"),
 *       @OA\Property(property="groups", type="array",
 *           @OA\Items(type="string", format="uuid", description="ID группы")
 *       ),
@@ -46,8 +47,9 @@ class AssignTestRequest extends FormRequest
             'startDate' => 'required|string',
             'endDate' => 'nullable|string',
 
+            'assignToAll' => 'required|boolean',
             'groups' => 'nullable|array',
-            'employees' => 'nullable|array'
+            'employees' => 'nullable|array',
         ];
     }
 }

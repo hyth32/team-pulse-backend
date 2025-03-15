@@ -3,7 +3,6 @@
 namespace App\Http\Services;
 
 use App\Enums\EntityStatus;
-use App\Enums\Test\TestFrequency;
 use App\Enums\Test\TestStatus;
 use App\Http\Requests\Test\AssignTestRequest;
 use App\Http\Requests\Test\CreateTestRequest;
@@ -20,6 +19,7 @@ use App\Models\Tag;
 use App\Models\Test;
 use App\Models\TestPeriodicity;
 use App\Models\TestQuestion;
+use App\Models\User;
 use App\Models\UserTest;
 use Carbon\Carbon;
 
@@ -165,8 +165,13 @@ class TestService
             'end_date' => Carbon::parse($data['endDate']) ?? null,
         ]);
 
-        $usersToAssign = [];
-        if (isset($data['groups'])) {
+        $isAssignToAll = $data['assignToAll'];
+
+        $usersToAssign = $isAssignToAll
+            ? User::where(['status' => EntityStatus::Active->value()])->pluck('id')->toArray()
+            : [];
+
+        if (isset($data['groups']) && !$isAssignToAll) {
             $groups = $data['groups'];
             foreach ($groups as $groupId) {
                 $group = Group::find($groupId);
@@ -176,7 +181,7 @@ class TestService
             }
         }
 
-        if (isset($data['employees'])) {
+        if (isset($data['employees']) && !$isAssignToAll) {
             $employees = $data['employees'];
             foreach ($employees as $employeeId) {
                 $usersToAssign[] = $employeeId;
