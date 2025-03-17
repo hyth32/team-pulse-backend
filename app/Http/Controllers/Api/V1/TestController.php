@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Test\AssignTestRequest;
 use App\Http\Requests\Test\CreateTestRequest;
 use App\Http\Requests\Test\ListTestRequest;
+use App\Http\Requests\Test\ListUserTestsRequest;
 use App\Http\Requests\Test\UpdateTestRequest;
 use App\Http\Services\TestService;
 
@@ -51,6 +52,28 @@ class TestController extends Controller
     public function templateList(ListTestRequest $request)
     {
         return TestService::templateList($request);
+    }
+
+    /**
+     * @OA\Get(path="/api/v1/tests/user-list",
+     *      tags={"Test"},
+     *      summary="Список назначенных на пользователя тестов",
+     *      @OA\Parameter(name="limit", @OA\Schema(type="integer"), description="Количество записей", in="query"),
+     *      @OA\Parameter(name="offset", @OA\Schema(type="integer"), description="Смещение", in="query"),
+     *      @OA\Parameter(name="userId", @OA\Schema(type="string"), format="uuid", description="ID пользователя", in="query"),
+     *      @OA\Response(response = 200, description="Ответ",
+     *          @OA\MediaType(mediaType="application/json",
+     *              @OA\Schema(
+     *                 @OA\Property(property="total", type="integer", description="Общее количество записей"),
+     *                 @OA\Property(property="tests", type="array", @OA\Items(ref="#/components/schemas/TestTemplateShortResource"))
+     *              ),
+     *          ),
+     *      ),
+     * )
+     */
+    public function userList(ListUserTestsRequest $request)
+    {
+        return TestService::listUserTests($request);
     }
 
     /**

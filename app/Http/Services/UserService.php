@@ -21,17 +21,18 @@ class UserService
      */
     public static function list(ListUserRequest $request)
     {
-        $total = User::where(['status' => EntityStatus::Active->value(), 'role' => UserRole::Employee->value()])->count();
-        $users = User::query()
-            ->where(['status' => EntityStatus::Active->value(), 'role' => UserRole::Employee->value()])
+        $query = User::query()->where([
+            'status' => EntityStatus::Active->value(),
+            'role' => UserRole::Employee->value(),
+        ]);
+        $users = $query
             ->offset($request['offset'])
             ->limit($request['limit'])
-            ->orderBy('created_at', 'desc')
-            ->get();
+            ->orderBy('created_at', 'desc');
 
         return [
-            'total' => $total,
-            'users' => UserShortResource::collection($users),
+            'total' => $query->count(),
+            'users' => UserShortResource::collection($users->get()),
         ];
     }
 

@@ -6,7 +6,6 @@ use App\Enums\User\UserRole;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Models\User;
 use Illuminate\Auth\Access\AuthorizationException;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class AuthService

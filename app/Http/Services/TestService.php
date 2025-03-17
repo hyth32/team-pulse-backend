@@ -7,7 +7,9 @@ use App\Enums\Test\TestStatus;
 use App\Http\Requests\Test\AssignTestRequest;
 use App\Http\Requests\Test\CreateTestRequest;
 use App\Http\Requests\Test\ListTestRequest;
+use App\Http\Requests\Test\ListUserTestsRequest;
 use App\Http\Requests\Test\UpdateTestRequest;
+use App\Http\Resources\TestShortResource;
 use App\Http\Resources\TestTemplateShortResource;
 use App\Models\Answer;
 use App\Models\AnswerTagPoints;
@@ -21,6 +23,7 @@ use App\Models\TestQuestion;
 use App\Models\User;
 use App\Models\UserTest;
 use Carbon\Carbon;
+use Exception;
 
 class TestService
 {
@@ -30,17 +33,15 @@ class TestService
      */
     public static function list(ListTestRequest $request)
     {
-        $total = Test::where(['status' => EntityStatus::Active->value()])->count();
-        $tests = Test::query()
-            ->where(['status' => EntityStatus::Active->value()])
+        $query = Test::query()->where(['status' => EntityStatus::Active->value()]);
+        $tests = $query
             ->offset($request['offset'])
             ->limit($request['limit'])
-            ->orderBy('created_at', 'desc')
-            ->get();
+            ->orderBy('created_at', 'desc');
 
         return [
-            'total' => $total,
-            'tests' => $tests,
+            'total' => $query->count(),
+            'tests' => TestShortResource::collection($tests->get()),
         ];
     }
 
@@ -50,17 +51,37 @@ class TestService
      */
     public static function templateList(ListTestRequest $request)
     {
-        $total = Test::where(['status' => EntityStatus::Active->value()])->count();
-        $tests = Test::query()
-            ->where(['status' => EntityStatus::Active->value()])
+        $query = Test::query()->where(['status' => EntityStatus::Active->value()]);
+        $tests = $query
             ->offset($request['offset'])
             ->limit($request['limit'])
-            ->orderBy('created_at', 'desc')
-            ->get();
+            ->orderBy('created_at', 'desc');
 
         return [
-            'total' => $total,
-            'tests' => TestTemplateShortResource::collection($tests),
+            'total' => $query->count(),
+            'tests' => TestTemplateShortResource::collection($tests->get()),
+        ];
+    }
+
+    /**
+     * Получение списка назначенных тестов по userId
+     * @param ListUserTestsRequest $request
+     */
+    public static function listUserTests(ListUserTestsRequest $request)
+    {
+        $user = User::find($request['userId']);
+        if (!$user->exists()) {
+            throw new Exception('Пользователь не найден');
+        }
+
+        $query = $user->tests()->where(['status' => EntityStatus::Active->value()]);
+        $tests = $query
+            ->offset($request['offset'])
+            ->limit($request['limit']);
+
+        return [
+            'total' => $query->count(),
+            'tests' => TestShortResource::collection($tests->get()),
         ];
     }
 

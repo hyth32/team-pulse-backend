@@ -16,11 +16,14 @@ class TagService
      */
     public static function list(ListTagRequest $request)
     {
-        $total = Tag::count();
-        $tags = Tag::skip($request['offset'])->take($request['limit'])->get();
+        $query = Tag::query();
+        $tags = $query
+            ->offset($request['offset'])
+            ->limit($request['limit']);
+
         return [
-            'total' => $total,
-            'tags' => TagShortResource::collection($tags),
+            'total' => $query->count(),
+            'tags' => TagShortResource::collection($tags->get()),
         ];
     }
 
