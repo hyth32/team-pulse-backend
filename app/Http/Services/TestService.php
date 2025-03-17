@@ -37,20 +37,22 @@ class TestService
 
         $query = null;
         if (in_array($user->role, [UserRole::Admin->value(), UserRole::Supervisor->value()])) {
-            $query = Test::query();
+            $query = Test::query()->whereHas('assignedUsers');
         } else {
             $query = $user->tests();
         }
 
+        $total = $query->count();
         $tests = $query
             ->where(['status' => EntityStatus::Active->value()])
             ->offset($request['offset'])
             ->limit($request['limit'])
-            ->orderBy('created_at', 'desc');
+            ->orderBy('created_at', 'desc')
+            ->get();
 
         return [
-            'total' => $query->count(),
-            'tests' => TestShortResource::collection($tests->get()),
+            'total' => $total,
+            'tests' => TestShortResource::collection($tests),
         ];
     }
 

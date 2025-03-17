@@ -42,6 +42,11 @@ class Test extends BaseModel
         'is_anonymous',
     ];
 
+    public function assignedUsers(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'user_tests', 'test_id', 'user_id');
+    }
+
     public function author(): HasOne
     {
         return $this->hasOne(User::class, 'author_id');

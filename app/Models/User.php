@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Enums\EntityStatus;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -73,14 +74,14 @@ class User extends Authenticatable
         ];
     }
 
-    public function groups()
+    public function groups(): BelongsToMany
     {
         return $this->belongsToMany(Group::class, 'user_groups', 'user_id', 'group_id');
     }
 
-    public function tests()
+    public function tests(): BelongsToMany
     {
-        return $this->hasMany(Test::class);
+        return $this->belongsToMany(Test::class, 'user_tests', 'user_id', 'test_id');
     }
 
     /**
