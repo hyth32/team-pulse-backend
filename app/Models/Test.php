@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\BaseModel;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
  * @OA\Schema(schema="Test", description="Тест", properties={
@@ -38,4 +39,14 @@ class Test extends BaseModel
         'subject_id',
         'is_anonymous',
     ];
+
+    public function author(): HasOne
+    {
+        return $this->hasOne(User::class, 'author_id');
+    }
+
+    public function subject(): HasOne
+    {
+        return $this->hasOne(User::class, 'subject_id');
+    }
 }

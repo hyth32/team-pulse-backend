@@ -905,8 +905,7 @@
                         "$ref": "#/components/schemas/TestStatus"
                     },
                     "author": {
-                        "description": "Автор теста",
-                        "type": "string"
+                        "$ref": "#/components/schemas/User"
                     },
                     "createdAt": {
                         "description": "Дата создания",
