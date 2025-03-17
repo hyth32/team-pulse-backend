@@ -4,6 +4,7 @@ namespace App\Http\Services;
 
 use App\Enums\EntityStatus;
 use App\Enums\User\UserRole;
+use App\Http\Requests\User\UpdateProfileRequest;
 use App\Http\Requests\User\CreateUserRequest;
 use App\Http\Requests\User\ListUserRequest;
 use App\Http\Resources\UserProfileResource;
@@ -39,11 +40,55 @@ class UserService
         ];
     }
 
+    /**
+     * Получение профиля пользователя
+     * @param string $uuid
+     */
     public static function profile(string $uuid)
     {
         $user = User::findOrFail($uuid);
-
         return ['user' => UserProfileResource::make($user)];
+    }
+
+    /**
+     * Изменение профиля пользователя
+     * @param string $uuid
+     * @param UpdateProfileRequest $request
+     */
+    public function changeProfile(string $uuid, UpdateProfileRequest $request)
+    {
+        $user = User::findOrFail($uuid);
+        $data = $request->validated();
+
+        if (isset($data['password'])) {
+            $data['password'] = Hash::make($data['password']);
+        }
+
+        if (isset($data['groups']) && count($data['groups']) > 0) {
+            $currentGroupIds = $user->groups()->pluck('groups.id')->toArray();
+
+            $newGroupIds = array_diff($data['groups'], $currentGroupIds);
+            $groupIdsToRemove = array_diff($currentGroupIds, $data['groups']);
+
+            foreach ($newGroupIds as $groupId) {
+                UserGroup::create([
+                    'user_id' => $user->id,
+                    'group_id' => $groupId,
+                ]);
+            }
+
+            if (!empty($groupIdsToRemove)) {
+                UserGroup::query()
+                    ->where('user_id', $user->id)
+                    ->whereIn('group_id', $groupIdsToRemove)
+                    ->delete();
+            }
+            unset($data['groups']);
+        }
+
+        $user->update($data);
+
+        return ['message' => 'Профиль обновлен'];
     }
 
     /**

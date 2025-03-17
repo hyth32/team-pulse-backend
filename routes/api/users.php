@@ -7,5 +7,6 @@ Route::controller(UserController::class)->middleware('auth:sanctum')->group(func
     Route::get('/users', 'list');
     Route::post('/users', 'create');
     Route::get('/users/{uuid}', 'profile');
+    Route::put('/users/{uuid}', 'changeProfile');
     Route::delete('/users/{uuid}', 'delete');
 });

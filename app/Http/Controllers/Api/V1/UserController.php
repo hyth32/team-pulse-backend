@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\User\UpdateProfileRequest;
 use App\Http\Requests\User\CreateUserRequest;
 use App\Http\Requests\User\ListUserRequest;
 use App\Http\Services\UserService;
@@ -46,6 +47,24 @@ class UserController extends Controller
     public function profile(string $uuid)
     {
         return UserService::profile($uuid);
+    }
+
+    /**
+     * @OA\Put(path="/api/v1/users/{uuid}",
+     *     tags={"User"},
+     *     summary="Обновить профиль пользователя",
+     *     @OA\RequestBody(
+     *        required=true,
+     *        @OA\JsonContent(ref="#/components/schemas/UpdateGroupRequest"),
+     *     ),
+     *     @OA\Response(response=200, description="Ответ",
+     *         @OA\MediaType(mediaType="application/json"),
+     *     ),
+     * )
+     */
+    public function changeProfile(string $uuid, UpdateProfileRequest $request)
+    {
+        return (new UserService)->changeProfile($uuid, $request);
     }
 
     /**
