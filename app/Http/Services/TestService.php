@@ -8,10 +8,11 @@ use App\Enums\User\UserRole;
 use App\Http\Requests\Test\AssignTestRequest;
 use App\Http\Requests\Test\CreateTestRequest;
 use App\Http\Requests\Test\ListTestRequest;
-use App\Http\Requests\Test\ListUserTestsRequest;
 use App\Http\Requests\Test\UpdateTestRequest;
+use App\Http\Resources\GroupShortResource;
 use App\Http\Resources\TestShortResource;
 use App\Http\Resources\TestTemplateShortResource;
+use App\Http\Resources\UserShortResource;
 use App\Models\Answer;
 use App\Models\AnswerTagPoints;
 use App\Models\Group;
@@ -20,6 +21,7 @@ use App\Models\QuestionTag;
 use App\Models\QuestionTopic;
 use App\Models\Tag;
 use App\Models\Test;
+use App\Models\TestGroup;
 use App\Models\TestQuestion;
 use App\Models\User;
 use App\Models\UserTest;
@@ -186,6 +188,11 @@ class TestService
             $groups = $data['groups'];
             foreach ($groups as $groupId) {
                 $group = Group::find($groupId);
+                TestGroup::firstOrCreate([
+                    'test_id' => $test->id,
+                    'group_id' => $group->id,
+                ]);
+
                 foreach ($group->users as $user) {
                     $usersToAssign[] = $user->id;
                 }
@@ -243,5 +250,17 @@ class TestService
         $test->update(['status' => EntityStatus::Deleted->value()]);
 
         return ['message' => 'Тест удален'];
+    }
+
+    public function getAssignedUsers(string $uuid)
+    {
+        $test = Test::findOrFail($uuid);
+        return ['users' => UserShortResource::collection($test->assignedUsers)];
+    }
+
+    public function getAssignedGroups(string $uuid)
+    {
+        $test = Test::findOrFail($uuid);
+        return ['groups' => GroupShortResource::collection($test->groups)];
     }
 }

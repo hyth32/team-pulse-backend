@@ -322,7 +322,7 @@
                                         "tests": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/components/schemas/Test"
+                                                "$ref": "#/components/schemas/TestShortResource"
                                             }
                                         }
                                     },
@@ -590,6 +590,16 @@
                     "Scale"
                 ],
                 "example": 0
+            },
+            "TestCompletionStatus": {
+                "description": "Статус прохождения теста\n *          not_passed - Не пройден\n *          passed - Пройден,\n *          expired - Просрочен",
+                "type": "string",
+                "enum": [
+                    "NotPassed",
+                    "Passed",
+                    "Expired"
+                ],
+                "example": "not_passed"
             },
             "TestFrequency": {
                 "description": "Статус теста\n *          0 - Каждый день\n *          1 - Каждую неделю\n *          2 - Каждый месяц\n *          3 - Каждые полгода\n *          4- Каждый год",
@@ -889,6 +899,35 @@
                 },
                 "type": "object"
             },
+            "TestShortResource": {
+                "description": "Тест",
+                "properties": {
+                    "id": {
+                        "description": "ID теста",
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "name": {
+                        "description": "Название теста",
+                        "type": "string"
+                    },
+                    "assigner": {
+                        "$ref": "#/components/schemas/User"
+                    },
+                    "startDate": {
+                        "description": "Дата начала",
+                        "type": "date-time"
+                    },
+                    "endDate": {
+                        "description": "Дата окончания",
+                        "type": "date-time"
+                    },
+                    "completionStatus": {
+                        "$ref": "#/components/schemas/TestCompletionStatus"
+                    }
+                },
+                "type": "object"
+            },
             "TestTemplateShortResource": {
                 "description": "Шаблон теста",
                 "properties": {
@@ -1031,10 +1070,6 @@
                         "description": "ID тега",
                         "type": "uuid",
                         "example": "123e4567-e89b-12d3-a456-426614174000"
-                    },
-                    "point_count": {
-                        "description": "Количество поинтов на тег",
-                        "type": "integer"
                     }
                 },
                 "type": "object"
@@ -1059,22 +1094,6 @@
                     "priority": {
                         "description": "Приоритет тега",
                         "type": "integer"
-                    }
-                },
-                "type": "object"
-            },
-            "TagGroup": {
-                "description": "Группа тегов",
-                "properties": {
-                    "tag_id": {
-                        "description": "ID тега",
-                        "type": "uuid",
-                        "example": "123e4567-e89b-12d3-a456-426614174000"
-                    },
-                    "group_id": {
-                        "description": "ID группы",
-                        "type": "uuid",
-                        "example": "123e4567-e89b-12d3-a456-426614174000"
                     }
                 },
                 "type": "object"
@@ -1117,6 +1136,20 @@
                     "is_anonymous": {
                         "description": "Метка анонимности",
                         "type": "boolean"
+                    }
+                },
+                "type": "object"
+            },
+            "TestGroup": {
+                "description": "Группы, назначенные на тест",
+                "properties": {
+                    "test_id": {
+                        "description": "ID теста",
+                        "type": "uuid"
+                    },
+                    "group_id": {
+                        "description": "ID группы",
+                        "type": "uuid"
                     }
                 },
                 "type": "object"
@@ -1245,6 +1278,9 @@
                         "type": "string",
                         "format": "uuid",
                         "example": "123e4567-e89b-12d3-a456-426614174000"
+                    },
+                    "completion_status": {
+                        "$ref": "#/components/schemas/TestCompletionStatus"
                     }
                 },
                 "type": "object"

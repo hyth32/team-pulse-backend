@@ -4,7 +4,6 @@ namespace App\Models;
 
 use App\Models\BaseModel;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
@@ -47,6 +46,23 @@ class Test extends BaseModel
         return $this->belongsToMany(User::class, 'user_tests', 'test_id', 'user_id');
     }
 
+    public function getCompletionStatus($userId)
+    {
+        return $this->hasOne(UserTest::class)->where(['user_id' => $userId])->first()->completion_status;
+    }
+
+    public function assigner()
+    {
+        return $this->hasOneThrough(
+            User::class,
+            UserTest::class,
+            'test_id',
+            'id',
+            'id',
+            'assigner_id',
+        );
+    }
+
     public function author(): HasOne
     {
         return $this->hasOne(User::class, 'author_id');
@@ -60,5 +76,10 @@ class Test extends BaseModel
     public function questions(): BelongsToMany
     {
         return $this->belongsToMany(Question::class, 'test_questions', 'test_id', 'question_id');
+    }
+
+    public function groups(): BelongsToMany
+    {
+        return $this->belongsToMany(Group::class, 'test_groups', 'test_id', 'group_id');
     }
 }
