@@ -41,7 +41,7 @@ class CreateUserRequest extends FormRequest
         return [
             'name' => 'required|string',
             'lastname' => 'required|string',
-            'login' => 'required|string',
+            'login' => 'required|string|unique:users',
             'email' => 'required|string|unique:users',
             'role' => ['required', Rule::in(UserRole::labels())],
             'groups' => 'nullable|array',

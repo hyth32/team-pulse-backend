@@ -6,6 +6,7 @@ use App\Enums\EntityStatus;
 use App\Enums\User\UserRole;
 use App\Http\Requests\User\CreateUserRequest;
 use App\Http\Requests\User\ListUserRequest;
+use App\Http\Resources\UserProfileResource;
 use App\Http\Resources\UserShortResource;
 use App\Models\Group;
 use App\Models\User;
@@ -36,6 +37,13 @@ class UserService
             'total' => $total,
             'users' => UserShortResource::collection($users->get()),
         ];
+    }
+
+    public static function profile(string $uuid)
+    {
+        $user = User::findOrFail($uuid);
+
+        return ['user' => UserProfileResource::make($user)];
     }
 
     /**

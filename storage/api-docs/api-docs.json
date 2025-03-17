@@ -667,6 +667,30 @@
             }
         },
         "/api/v1/users/{uuid}": {
+            "get": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "Профиль пользователя",
+                "operationId": "fce2aeb440b63cda409b80c08a6a2ac2",
+                "responses": {
+                    "200": {
+                        "description": "Ответ",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "user": {
+                                            "$ref": "#/components/schemas/UserProfile"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
             "delete": {
                 "tags": [
                     "User"
@@ -1377,6 +1401,44 @@
                     "createdAt": {
                         "description": "Дата создания",
                         "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "UserProfile": {
+                "description": "Профиль пользователя",
+                "properties": {
+                    "id": {
+                        "description": "ID пользователя",
+                        "type": "string",
+                        "format": "uuid",
+                        "example": "123e4567-e89b-12d3-a456-426614174000"
+                    },
+                    "name": {
+                        "description": "Имя",
+                        "type": "string"
+                    },
+                    "lastname": {
+                        "description": "Фамилия",
+                        "type": "string"
+                    },
+                    "login": {
+                        "description": "Логин",
+                        "type": "string"
+                    },
+                    "email": {
+                        "description": "Email",
+                        "type": "string"
+                    },
+                    "role": {
+                        "description": "Роль",
+                        "type": "string"
+                    },
+                    "groups": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Group"
+                        }
                     }
                 },
                 "type": "object"

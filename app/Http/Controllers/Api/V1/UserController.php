@@ -31,6 +31,24 @@ class UserController extends Controller
     }
 
     /**
+     * @OA\Get(path="/api/v1/users/{uuid}",
+     *     tags={"User"},
+     *     summary="Профиль пользователя",
+     *     @OA\Response(response = 200, description="Ответ",
+     *         @OA\MediaType(mediaType="application/json",
+     *             @OA\Schema(
+     *                 @OA\Property(property="user", type="object", ref="#/components/schemas/UserProfile")
+     *             ),
+     *         ),
+     *     ),
+     * )
+     */
+    public function profile(string $uuid)
+    {
+        return UserService::profile($uuid);
+    }
+
+    /**
      * @OA\Post(path="/api/v1/users",
      *     tags={"User"},
      *     summary="Создать пользователя",
