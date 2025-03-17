@@ -65,7 +65,7 @@ class Test extends BaseModel
 
     public function author(): HasOne
     {
-        return $this->hasOne(User::class, 'author_id');
+        return $this->hasOne(User::class, 'id', 'author_id');
     }
 
     public function subject(): HasOne
