@@ -11,9 +11,10 @@ use Illuminate\Http\Resources\Json\JsonResource;
  *      @OA\Property(property="id", type="string", format="uuid", description="ID теста"),
  *      @OA\Property(property="name", type="string", description="Название теста"),
  *      @OA\Property(property="assigner", type="object", description="Пользователь, назначивший тест", ref="#/components/schemas/User"),
- *      @OA\Property(property="startDate", type="date-time", description="Дата начала"),
- *      @OA\Property(property="endDate", type="date-time", description="Дата окончания"),
+ *      @OA\Property(property="startDate", type="datetime", description="Дата начала"),
+ *      @OA\Property(property="endDate", type="datetime", description="Дата окончания"),
  *      @OA\Property(property="completionStatus", type="string", description="Статус прохождения теста", ref="#/components/schemas/TestCompletionStatus"),
+ *      @OA\Property(property="isAnonymous", type="bool", description="Метка анонимности теста"),
  * })
  */
 class TestShortResource extends JsonResource
@@ -34,6 +35,7 @@ class TestShortResource extends JsonResource
             'startDate' => $this->start_date,
             'endDate' => $this->end_date,
             'completionStatus' => TestCompletionStatus::getLabelFromValue($this->getCompletionStatus($user->id)),
+            'isAnonymous' => $this->is_anonymous,
         ];
     }
 }

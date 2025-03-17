@@ -268,13 +268,13 @@ class TestService
 
         $test = Test::findOrFail($uuid);
 
-        if ($test->start_date > \Carbon\Carbon::now()) {
+        if ($test->start_date > now()) {
             throw new Exception('Тест уже начался', 403);
         }
 
         $test->update($data);
 
-        return $test;
+        return ['message' => 'Тест обновлен'];
     }
 
     /**
@@ -283,7 +283,8 @@ class TestService
      */
     public static function view(string $uuid)
     {
-        return Test::findOrFail($uuid);
+        $test = Test::findOrFail($uuid);
+        return ['test' => $test];
     }
 
     /**

@@ -36,7 +36,8 @@
                                         },
                                         "expirationDate": {
                                             "description": "Дата экспирации токена",
-                                            "type": "date-time"
+                                            "type": "string",
+                                            "format": "date-time"
                                         },
                                         "role": {
                                             "description": "Роль пользователя",
@@ -691,6 +692,31 @@
                     }
                 }
             },
+            "put": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "Обновить профиль пользователя",
+                "operationId": "8491d80e0a6cd85a1ae19eab5e3dd415",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateGroupRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Ответ",
+                        "content": {
+                            "application/json": {}
+                        }
+                    }
+                }
+            },
             "delete": {
                 "tags": [
                     "User"
@@ -816,15 +842,10 @@
                     "employees": {
                         "type": "array",
                         "items": {
-                            "properties": {
-                                "id": {
-                                    "description": "ID пользователя",
-                                    "type": "string",
-                                    "format": "uuid",
-                                    "example": "123e4567-e89b-12d3-a456-426614174000"
-                                }
-                            },
-                            "type": "object"
+                            "description": "ID пользователя",
+                            "type": "string",
+                            "format": "uuid",
+                            "example": "123e4567-e89b-12d3-a456-426614174000"
                         }
                     }
                 },
@@ -877,12 +898,12 @@
                     "startDate": {
                         "description": "Временная метка начала прохождения теста",
                         "type": "string",
-                        "format": "date-time"
+                        "format": "datetime"
                     },
                     "endDate": {
                         "description": "Временная метка окончания прохождения теста",
                         "type": "string",
-                        "format": "date-time"
+                        "format": "datetime"
                     },
                     "subjectId": {
                         "description": "ID пользователя, на оценку которого направлен тест",
@@ -1078,6 +1099,44 @@
                 },
                 "type": "object"
             },
+            "UpdateUserProfile": {
+                "description": "Обновление профиля пользователя",
+                "properties": {
+                    "name": {
+                        "description": "Имя",
+                        "type": "string"
+                    },
+                    "lastname": {
+                        "description": "Фамилия",
+                        "type": "string"
+                    },
+                    "login": {
+                        "description": "Логин",
+                        "type": "string"
+                    },
+                    "password": {
+                        "description": "Пароль",
+                        "type": "string"
+                    },
+                    "email": {
+                        "description": "Email",
+                        "type": "string"
+                    },
+                    "role": {
+                        "description": "Роль",
+                        "type": "string"
+                    },
+                    "groups": {
+                        "type": "array",
+                        "items": {
+                            "description": "ID группы",
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                },
+                "type": "object"
+            },
             "TestShortResource": {
                 "description": "Тест",
                 "properties": {
@@ -1095,14 +1154,20 @@
                     },
                     "startDate": {
                         "description": "Дата начала",
-                        "type": "date-time"
+                        "type": "string",
+                        "format": "date-time"
                     },
                     "endDate": {
                         "description": "Дата окончания",
-                        "type": "date-time"
+                        "type": "string",
+                        "format": "date-time"
                     },
                     "completionStatus": {
                         "$ref": "#/components/schemas/TestCompletionStatus"
+                    },
+                    "isAnonymous": {
+                        "description": "Метка анонимности теста",
+                        "type": "boolean"
                     }
                 },
                 "type": "object"

@@ -10,14 +10,9 @@ use Illuminate\Foundation\Http\FormRequest;
  *      type="object",
  *      description="Тело запроса для обновления группы",
  *      @OA\Property(property="name", type="string", description="Название группы", example="Frontend"),
- *      @OA\Property(
- *         property="employees",
- *         type="array",
- *         @OA\Items(
- *             type="object",
- *             @OA\Property(property="id", type="string", format="uuid", example="123e4567-e89b-12d3-a456-426614174000", description="ID пользователя")
- *         )
- *     )
+ *      @OA\Property(property="employees", type="array",
+ *         @OA\Items(type="string", format="uuid", example="123e4567-e89b-12d3-a456-426614174000", description="ID пользователя")
+ *     ),
  * )
  */
 class UpdateGroupRequest extends FormRequest
@@ -40,7 +35,6 @@ class UpdateGroupRequest extends FormRequest
         return [
             'name' => 'nullable|string',
             'employees' => 'nullable|array',
-            'employees.*.id' => 'required|integer',
         ];
     }
 }

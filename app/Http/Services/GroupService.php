@@ -69,7 +69,7 @@ class GroupService
         $group = Group::findOrFail($uuid);
         $group->update($data);
 
-        return $group;
+        return ['message' => 'Группа обновлена'];
     }
 
     /**
