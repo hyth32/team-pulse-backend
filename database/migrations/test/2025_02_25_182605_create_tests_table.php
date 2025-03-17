@@ -21,6 +21,8 @@ return new class extends Migration
             $table->timestamp('end_date')->nullable();
             $table->uuid('author_id')->nullable();
             $table->foreign('author_id', 'fk-test-author-1')->references('id')->on('users')->onUpdate('no action')->onDelete('no action');
+            $table->uuid('subject_id')->nullable();
+            $table->foreign('subject_id', 'fk-test-subject-1')->references('id')->on('users')->onUpdate('no action')->onDelete('no action');
             $table->integer('status')->default(EntityStatus::Active->value());
             $table->integer('test_status');
 

@@ -1040,8 +1040,8 @@
                         "type": "string",
                         "format": "date-time"
                     },
-                    "assignee_id": {
-                        "description": "ID пользователя, назначившего тест",
+                    "author_id": {
+                        "description": "ID пользователя, создавшего тест",
                         "type": "string",
                         "format": "uuid",
                         "example": "123e4567-e89b-12d3-a456-426614174000"
@@ -1168,7 +1168,7 @@
                         "type": "uuid",
                         "example": "123e4567-e89b-12d3-a456-426614174000"
                     },
-                    "assignee_id": {
+                    "assigner_id": {
                         "description": "ID пользователя, назначившего тест",
                         "type": "string",
                         "format": "uuid",

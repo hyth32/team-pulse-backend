@@ -162,6 +162,7 @@ class TestService
             'frequency' => $data['frequency'],
             'start_date' => Carbon::parse($data['startDate']),
             'end_date' => Carbon::parse($data['endDate']) ?? null,
+            'subject_id' => $data['subjectId'] ?? null,
         ]);
 
         $isAssignToAll = $data['assignToAll'];
@@ -191,7 +192,7 @@ class TestService
             UserTest::firstOrCreate([
                 'user_id' => $userId,
                 'test_id' => $test->id,
-                'assignee_id' => $request->user()->id,
+                'assigner_id' => $request->user()->id,
             ]);
         }
 

@@ -11,7 +11,8 @@ use App\Models\BaseModel;
  *      @OA\Property(property="frequency", type="integer", ref="#/components/schemas/TestFrequency"),
  *      @OA\Property(property="start_date", type="datetime", description="Дата начала теста"),
  *      @OA\Property(property="end_date", type="datetime", description="Дата окончания теста"),
- *      @OA\Property(property="assignee_id", type="string", format="uuid", description="ID пользователя, назначившего тест", example="123e4567-e89b-12d3-a456-426614174000"),
+ *      @OA\Property(property="author_id", type="string", format="uuid", description="ID пользователя, создавшего тест", example="123e4567-e89b-12d3-a456-426614174000"),
+*       @OA\Property(property="subject_id", type="string", format="uuid", description="ID пользователя, на оценку которого направлен тест"),
  * })
  */
 class Test extends BaseModel
@@ -31,8 +32,8 @@ class Test extends BaseModel
         'start_date',
         'status',
         'end_date',
-        'assignee_id',
         'test_status',
         'author_id',
+        'subject_id',
     ];
 }
