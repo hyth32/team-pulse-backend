@@ -2,13 +2,9 @@
 
 namespace App\Http\Controllers\Api\V1;
 
-use App\Enums\User\UserRole;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Services\AuthService;
-use App\Models\User;
-use Illuminate\Auth\Access\AuthorizationException;
-use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {

@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use App\Models\BaseModel;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
@@ -48,5 +50,10 @@ class Test extends BaseModel
     public function subject(): HasOne
     {
         return $this->hasOne(User::class, 'subject_id');
+    }
+
+    public function questions(): BelongsToMany
+    {
+        return $this->belongsToMany(Question::class, 'test_questions', 'test_id', 'question_id');
     }
 }

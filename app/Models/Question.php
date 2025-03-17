@@ -3,6 +3,9 @@
 namespace App\Models;
 
 use App\Models\BaseModel;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
  * @OA\Schema(schema="Question", description="Вопрос", properties={
@@ -18,4 +21,19 @@ class Question extends BaseModel
         'type',
         'topic_id',
     ];
+
+    public function topic(): HasOne
+    {
+        return $this->hasOne(QuestionTopic::class, 'topic_id');
+    }
+
+    public function answer(): HasMany
+    {
+        return $this->hasMany(Answer::class);
+    }
+
+    public function tags(): BelongsToMany
+    {
+        return $this->belongsToMany(Tag::class, 'question_tags', 'question_id', 'tag_id');
+    }
 }

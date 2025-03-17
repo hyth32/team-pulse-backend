@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use App\Models\BaseModel;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
  * @OA\Schema(schema="Answer", description="Ответ", properties={
@@ -18,4 +20,14 @@ class Answer extends BaseModel
         'image_id',
         'question_id',
     ];
+
+    public function image(): HasOne
+    {
+        return $this->hasOne(File::class, 'image_id');
+    }
+
+    public function tagPoints(): HasMany
+    {
+        return $this->hasMany(AnswerTagPoints::class);
+    }
 }

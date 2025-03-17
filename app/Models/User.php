@@ -90,4 +90,9 @@ class User extends Authenticatable
     {
         return $this->status == EntityStatus::Active->value();
     }
+
+    public function notifications()
+    {
+        return $this->hasMany(UserCreateNotification::class);
+    }
 }
