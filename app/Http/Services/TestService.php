@@ -7,6 +7,8 @@ use App\Enums\Test\TestStatus;
 use App\Enums\User\UserRole;
 use App\Http\Requests\Test\AssignTestRequest;
 use App\Http\Requests\Test\CreateTestRequest;
+use App\Http\Requests\Test\ListAssignedGroupsRequest;
+use App\Http\Requests\Test\ListAssignedUsersRequest;
 use App\Http\Requests\Test\ListTestRequest;
 use App\Http\Requests\Test\UpdateTestRequest;
 use App\Http\Resources\GroupShortResource;
@@ -65,14 +67,52 @@ class TestService
     public static function templateList(ListTestRequest $request)
     {
         $query = Test::query()->where(['status' => EntityStatus::Active->value()]);
+
+        $total = $query->count();
         $tests = $query
             ->offset($request['offset'])
             ->limit($request['limit'])
             ->orderBy('created_at', 'desc');
 
         return [
-            'total' => $query->count(),
+            'total' => $total,
             'tests' => TestTemplateShortResource::collection($tests->get()),
+        ];
+    }
+
+    /**
+     * Получение списка назначенных пользователей
+     * @param ListAssignedUsersRequest $request
+     */
+    public static function listAssignedUsers(string $uuid, ListAssignedUsersRequest $request)
+    {
+        $test = Test::findOrFail($uuid);
+        $query = $test->assignedUsers();
+
+        $total = $query->count();
+        $users = $query->offset($request['offset'])->limit([$request['limit']]);
+
+        return [
+            'total' => $total,
+            'users' => UserShortResource::collection($users->get()),
+        ];
+    }
+
+    /**
+     * Получение списка назначенных групп
+     * @param ListAssignedGroupsRequest $request
+     */
+    public static function listAssignedGroups(string $uuid, ListAssignedGroupsRequest $request)
+    {
+        $test = Test::findOrFail($uuid);
+        $query = $test->groups();
+
+        $total = $query->count();
+        $groups = $query->offset($request['offset'])->limit($request['limit']);
+
+        return [
+            'total' => $total,
+            'groups' => GroupShortResource::collection($groups->get()),
         ];
     }
 
@@ -250,17 +290,5 @@ class TestService
         $test->update(['status' => EntityStatus::Deleted->value()]);
 
         return ['message' => 'Тест удален'];
-    }
-
-    public function getAssignedUsers(string $uuid)
-    {
-        $test = Test::findOrFail($uuid);
-        return ['users' => UserShortResource::collection($test->assignedUsers)];
-    }
-
-    public function getAssignedGroups(string $uuid)
-    {
-        $test = Test::findOrFail($uuid);
-        return ['groups' => GroupShortResource::collection($test->groups)];
     }
 }

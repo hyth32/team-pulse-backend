@@ -25,13 +25,15 @@ class UserService
             'status' => EntityStatus::Active->value(),
             'role' => UserRole::Employee->value(),
         ]);
+
+        $total = $query->count();
         $users = $query
             ->offset($request['offset'])
             ->limit($request['limit'])
             ->orderBy('created_at', 'desc');
 
         return [
-            'total' => $query->count(),
+            'total' => $total,
             'users' => UserShortResource::collection($users->get()),
         ];
     }

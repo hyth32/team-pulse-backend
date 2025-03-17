@@ -19,12 +19,14 @@ class GroupService
     public static function list(ListGroupRequest $request)
     {
         $query = Group::query();
+
+        $total = $query->count();
         $groups = $query
             ->offset($request['offset'])
             ->limit($request['limit']);
 
         return [
-            'total' => $query->count(),
+            'total' => $total,
             'groups' => GroupShortResource::collection($groups->get()),
         ];
     }
