@@ -34,6 +34,10 @@
                                             "description": "Access токен",
                                             "type": "string"
                                         },
+                                        "expirationDate": {
+                                            "description": "Дата экспирации токена",
+                                            "type": "date-time"
+                                        },
                                         "role": {
                                             "description": "Роль пользователя",
                                             "type": "string"
@@ -461,6 +465,57 @@
                 }
             }
         },
+        "/api/v1/tests/{uuid}/groups": {
+            "get": {
+                "tags": [
+                    "Test"
+                ],
+                "summary": "Список назначенных групп",
+                "operationId": "2f7985edb2c8a0c49ddf83b6f146a658",
+                "parameters": [
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "description": "Количество записей",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "offset",
+                        "in": "query",
+                        "description": "Смещение",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ответ",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "total": {
+                                            "description": "Общее количество записей",
+                                            "type": "integer"
+                                        },
+                                        "groups": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Group"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/tests/{uuid}": {
             "get": {
                 "tags": [
@@ -851,7 +906,11 @@
                         "type": "string",
                         "example": "New test description"
                     },
-                    "questions": {
+                    "status": {
+                        "$ref": "#/components/schemas/TestStatus"
+                    },
+                    "tests": {
+                        "description": "Список вопросов теста",
                         "type": "array",
                         "items": {
                             "properties": {
@@ -860,42 +919,87 @@
                                     "type": "string",
                                     "example": "default"
                                 },
-                                "text": {
-                                    "description": "Текст вопроса",
-                                    "type": "string",
-                                    "example": "Question 1"
-                                },
-                                "type": {
-                                    "description": "Тип ответа на вопрос",
-                                    "type": "integer",
-                                    "example": 0
-                                },
-                                "tags": {
+                                "questions": {
+                                    "description": "Список вопросов",
                                     "type": "array",
                                     "items": {
+                                        "required": [
+                                            "name",
+                                            "type"
+                                        ],
                                         "properties": {
                                             "name": {
-                                                "description": "Тег вопроса",
-                                                "type": "string",
-                                                "example": "Tag 1"
-                                            },
-                                            "points": {
-                                                "description": "Количество поинтов на тег",
-                                                "type": "integer",
-                                                "example": "8"
-                                            }
-                                        },
-                                        "type": "object"
-                                    }
-                                },
-                                "answers": {
-                                    "type": "array",
-                                    "items": {
-                                        "properties": {
-                                            "text": {
                                                 "description": "Текст вопроса",
                                                 "type": "string",
-                                                "example": "Answer 1"
+                                                "example": "Question 1"
+                                            },
+                                            "type": {
+                                                "description": "Тип ответа на вопрос",
+                                                "type": "integer",
+                                                "example": 0
+                                            },
+                                            "tags": {
+                                                "description": "Список тегов",
+                                                "type": "array",
+                                                "items": {
+                                                    "required": [
+                                                        "name",
+                                                        "points"
+                                                    ],
+                                                    "properties": {
+                                                        "name": {
+                                                            "description": "Тег вопроса",
+                                                            "type": "string",
+                                                            "example": "Tag 1"
+                                                        },
+                                                        "points": {
+                                                            "description": "Количество поинтов на тег",
+                                                            "type": "integer",
+                                                            "example": 8
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                }
+                                            },
+                                            "answers": {
+                                                "description": "Список ответов",
+                                                "type": "array",
+                                                "items": {
+                                                    "required": [
+                                                        "text"
+                                                    ],
+                                                    "properties": {
+                                                        "text": {
+                                                            "description": "Текст ответа",
+                                                            "type": "string",
+                                                            "example": "Answer 1"
+                                                        },
+                                                        "points": {
+                                                            "description": "Список поинтов для ответа",
+                                                            "type": "array",
+                                                            "items": {
+                                                                "required": [
+                                                                    "name",
+                                                                    "points"
+                                                                ],
+                                                                "properties": {
+                                                                    "name": {
+                                                                        "description": "Название тега",
+                                                                        "type": "string",
+                                                                        "example": "Point 1"
+                                                                    },
+                                                                    "points": {
+                                                                        "description": "Количество баллов",
+                                                                        "type": "integer",
+                                                                        "example": 5
+                                                                    }
+                                                                },
+                                                                "type": "object"
+                                                            }
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                }
                                             }
                                         },
                                         "type": "object"
