@@ -4,6 +4,7 @@ namespace App\Http\Services;
 
 use App\Enums\EntityStatus;
 use App\Enums\Test\TestStatus;
+use App\Enums\User\UserRole;
 use App\Http\Requests\Test\AssignTestRequest;
 use App\Http\Requests\Test\CreateTestRequest;
 use App\Http\Requests\Test\ListTestRequest;
@@ -23,7 +24,6 @@ use App\Models\TestQuestion;
 use App\Models\User;
 use App\Models\UserTest;
 use Carbon\Carbon;
-use Exception;
 
 class TestService
 {
@@ -33,8 +33,17 @@ class TestService
      */
     public static function list(ListTestRequest $request)
     {
-        $query = Test::query()->where(['status' => EntityStatus::Active->value()]);
+        $user = $request->user();
+
+        $query = null;
+        if (in_array($user->role, [UserRole::Admin->value(), UserRole::Supervisor->value()])) {
+            $query = Test::query();
+        } else {
+            $query = $user->tests();
+        }
+
         $tests = $query
+            ->where(['status' => EntityStatus::Active->value()])
             ->offset($request['offset'])
             ->limit($request['limit'])
             ->orderBy('created_at', 'desc');
@@ -60,28 +69,6 @@ class TestService
         return [
             'total' => $query->count(),
             'tests' => TestTemplateShortResource::collection($tests->get()),
-        ];
-    }
-
-    /**
-     * Получение списка назначенных тестов по userId
-     * @param ListUserTestsRequest $request
-     */
-    public static function listUserTests(ListUserTestsRequest $request)
-    {
-        $user = User::find($request['userId']);
-        if (!$user->exists()) {
-            throw new Exception('Пользователь не найден');
-        }
-
-        $query = $user->tests()->where(['status' => EntityStatus::Active->value()]);
-        $tests = $query
-            ->offset($request['offset'])
-            ->limit($request['limit']);
-
-        return [
-            'total' => $query->count(),
-            'tests' => TestShortResource::collection($tests->get()),
         ];
     }
 

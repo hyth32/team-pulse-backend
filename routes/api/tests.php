@@ -6,7 +6,6 @@ use Illuminate\Support\Facades\Route;
 Route::controller(TestController::class)->middleware('auth:sanctum')->group(function () {
     Route::get('/tests', 'list');
     Route::get('/tests/templates', 'templateList');
-    Route::get('/tests/user-list', 'userList');
     Route::post('/tests', 'create');
     Route::put('/tests/{uuid}', 'update');
     Route::get('/tests/{uuid}', 'view');
