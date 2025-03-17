@@ -6,6 +6,47 @@
         "version": "1.0.0"
     },
     "paths": {
+        "/api/v1/auth/login": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Вход",
+                "operationId": "a7997e7c1e3bfed64d4e56de82415931",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/LoginRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Ответ",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "token": {
+                                            "description": "Access токен",
+                                            "type": "string"
+                                        },
+                                        "role": {
+                                            "description": "Роль пользователя",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/groups": {
             "get": {
                 "tags": [
@@ -589,6 +630,20 @@
                     "Admin"
                 ],
                 "example": 0
+            },
+            "LoginRequest": {
+                "description": "Тело запроса для назначения теста",
+                "properties": {
+                    "login": {
+                        "description": "Логин",
+                        "type": "string"
+                    },
+                    "password": {
+                        "description": "Пароль",
+                        "type": "string"
+                    }
+                },
+                "type": "object"
             },
             "CreateGroupRequest": {
                 "description": "Тело запроса для создания группы",
@@ -1198,6 +1253,10 @@
         }
     },
     "tags": [
+        {
+            "name": "Auth",
+            "description": "Auth"
+        },
         {
             "name": "Group",
             "description": "Group"

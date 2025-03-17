@@ -4,6 +4,15 @@ namespace App\Http\Requests\Auth;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+/**
+ * @OA\Schema(
+ *      schema="LoginRequest",
+ *      type="object",
+ *      description="Тело запроса для назначения теста",
+ *      @OA\Property(property="login", type="string", description="Логин"),
+ *      @OA\Property(property="password", type="string", description="Пароль"),
+ * )
+ */
 class LoginRequest extends FormRequest
 {
     /**
@@ -23,7 +32,7 @@ class LoginRequest extends FormRequest
     {
         return [
             'login' => 'required|string',
-            'password' => 'required|string|min:6',
+            'password' => 'required|string',
         ];
     }
 }
