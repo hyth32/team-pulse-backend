@@ -163,6 +163,7 @@ class TestService
             'start_date' => Carbon::parse($data['startDate']),
             'end_date' => Carbon::parse($data['endDate']) ?? null,
             'subject_id' => $data['subjectId'] ?? null,
+            'is_anonymous' => $data['isAnonymous'],
         ]);
 
         $isAssignToAll = $data['assignToAll'];

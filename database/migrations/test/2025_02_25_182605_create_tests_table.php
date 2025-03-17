@@ -25,6 +25,7 @@ return new class extends Migration
             $table->foreign('subject_id', 'fk-test-subject-1')->references('id')->on('users')->onUpdate('no action')->onDelete('no action');
             $table->integer('status')->default(EntityStatus::Active->value());
             $table->integer('test_status');
+            $table->boolean('is_anonymous')->default(false);
 
             $table->timestamps();
         });

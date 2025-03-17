@@ -689,6 +689,11 @@
                         "type": "string",
                         "format": "date-time"
                     },
+                    "subjectId": {
+                        "description": "ID пользователя, на оценку которого направлен тест",
+                        "type": "string",
+                        "format": "uuid"
+                    },
                     "assignToAll": {
                         "description": "Метка назначения всем сотрудникам",
                         "type": "boolean"
@@ -709,6 +714,10 @@
                             "format": "uuid",
                             "example": "123e4567-e89b-12d3-a456-426614174000"
                         }
+                    },
+                    "isAnonymous": {
+                        "description": "Метка анонимности",
+                        "type": "boolean"
                     }
                 },
                 "type": "object"
@@ -1045,6 +1054,15 @@
                         "type": "string",
                         "format": "uuid",
                         "example": "123e4567-e89b-12d3-a456-426614174000"
+                    },
+                    "subject_id": {
+                        "description": "ID пользователя, на оценку которого направлен тест",
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "is_anonymous": {
+                        "description": "Метка анонимности",
+                        "type": "boolean"
                     }
                 },
                 "type": "object"

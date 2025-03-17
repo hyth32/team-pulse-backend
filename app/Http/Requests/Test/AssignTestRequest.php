@@ -21,7 +21,8 @@ use Illuminate\Foundation\Http\FormRequest;
 *       ),
 *       @OA\Property(property="employees", type="array",
 *           @OA\Items(type="string", format="uuid", description="ID пользователя", example="123e4567-e89b-12d3-a456-426614174000"),
-*       )
+*       ),
+*       @OA\Property(property="isAnonymous", type="bool", description="Метка анонимности"),
  * )
  */
 class AssignTestRequest extends FormRequest
@@ -47,6 +48,7 @@ class AssignTestRequest extends FormRequest
             'frequency' => 'nullable|string',
             'startDate' => 'required|string',
             'endDate' => 'nullable|string',
+            'isAnonymous' => 'required|boolean',
 
             'subjectId' => 'nullable|string',
             'assignToAll' => 'required|boolean',

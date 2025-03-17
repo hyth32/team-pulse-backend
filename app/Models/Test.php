@@ -13,6 +13,7 @@ use App\Models\BaseModel;
  *      @OA\Property(property="end_date", type="datetime", description="Дата окончания теста"),
  *      @OA\Property(property="author_id", type="string", format="uuid", description="ID пользователя, создавшего тест", example="123e4567-e89b-12d3-a456-426614174000"),
 *       @OA\Property(property="subject_id", type="string", format="uuid", description="ID пользователя, на оценку которого направлен тест"),
+*       @OA\Property(property="is_anonymous", type="bool", description="Метка анонимности"),
  * })
  */
 class Test extends BaseModel
@@ -35,5 +36,6 @@ class Test extends BaseModel
         'test_status',
         'author_id',
         'subject_id',
+        'is_anonymous',
     ];
 }
