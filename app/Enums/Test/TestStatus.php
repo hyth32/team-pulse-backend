@@ -12,7 +12,6 @@ use App\Enums\EnumTrait;
  *          draft - Черновик
  *          done - Готовый тест",
  *      example="draft"
- *
  * )
  */
 enum TestStatus

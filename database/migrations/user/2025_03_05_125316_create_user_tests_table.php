@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\Test\TestCompletionStatus;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -31,6 +32,7 @@ return new class extends Migration
                 ->on('users')
                 ->onDelete('cascade')
                 ->onUpdate('no action');
+            $table->integer('completion_status')->default(TestCompletionStatus::NotPassed->value());
 
             $table->timestamps();
         });
