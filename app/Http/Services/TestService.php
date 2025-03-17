@@ -28,6 +28,7 @@ use App\Models\TestQuestion;
 use App\Models\User;
 use App\Models\UserTest;
 use Carbon\Carbon;
+use Exception;
 
 class TestService
 {
@@ -266,6 +267,11 @@ class TestService
         $data = $request->validated();
 
         $test = Test::findOrFail($uuid);
+
+        if ($test->start_date > \Carbon\Carbon::now()) {
+            throw new Exception('Тест уже начался', 403);
+        }
+
         $test->update($data);
 
         return $test;

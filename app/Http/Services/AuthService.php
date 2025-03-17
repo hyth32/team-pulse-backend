@@ -5,6 +5,7 @@ namespace App\Http\Services;
 use App\Enums\User\UserRole;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Support\Facades\Hash;
 
@@ -29,10 +30,12 @@ class AuthService
         }
 
         $user->tokens()->delete();
-        $token = $user->createToken('access_token')->plainTextToken;
+        $expirationDate = Carbon::now()->addHour();
+        $token = $user->createToken('access_token', ['*'], $expirationDate)->plainTextToken;
 
         return [
             'token' => $token,
+            'expirationDate' => $expirationDate->toDateTimeString(),
             'role' => UserRole::getLabelFromValue($user->role),
         ];
     }
