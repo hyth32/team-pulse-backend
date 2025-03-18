@@ -124,59 +124,49 @@ class TestService extends BaseService
             'author_id' => $request->user()->id,
         ]);
 
-        if (isset($data['tests'])) {
-            $testsData = $data['tests'];
+        foreach ($data['tests'] as $testData) {
+            $topic = Topic::firstOrCreate(['name' => $testData['topic']]);
 
-            foreach ($testsData as $testData) {
-                $topic = Topic::firstOrCreate([
-                    'name' => $testData['topic'],
-                ]);
+            if (isset($testData['questions']) && count($testData['questions']) > 0) {
+                foreach ($testData['questions'] as $questionData) {
+                    $question = Question::create([
+                        'text' => $questionData['name'],
+                        'type' => $questionData['type'],
+                    ]);
 
-                if (isset($testData['questions']) && count($testData['questions']) > 0) {
-                    $questionsData = $testData['questions'];
-                    foreach ($questionsData as $questionData) {
-                        $question = Question::create([
-                            'text' => $questionData['name'],
-                            'type' => $questionData['type'],
-                        ]);
+                    TestQuestion::create([
+                        'test_id' => $test->id,
+                        'question_id' => $question->id,
+                        'topic_id' => $topic->id,
+                    ]);
 
-                        TestQuestion::create([
-                            'test_id' => $test->id,
-                            'question_id' => $question->id,
-                            'topic_id' => $topic->id,
-                        ]);
+                    if (isset($questionData['tags']) && count($questionData['tags']) > 0) {
+                        foreach ($questionData['tags'] as $tagName) {
+                            $tag = Tag::firstOrCreate(['name' => trim($tagName)]);
 
-                        if (isset($questionData['tags']) && count($questionData['tags']) > 0) {
-                            $questionTags = $questionData['tags'];
-                            foreach ($questionTags as $tagName) {
-                                $tag = Tag::firstOrCreate([
-                                    'name' => trim($tagName),
-                                ]);
-
-                                QuestionTag::create([
-                                    'question_id' => $question->id,
-                                    'tag_id' => $tag->id,
-                                ]);
-                            }
+                            QuestionTag::create([
+                                'question_id' => $question->id,
+                                'tag_id' => $tag->id,
+                            ]);
                         }
                     }
+                }
 
-                    if (isset($questionData['answers']) && count($questionData['answers']) > 0) {
-                        $questionAnswers = $questionData['answers'];
-                        foreach ($questionAnswers as $answerData) {
-                            $answer = Answer::create([
-                                'text' => $answerData['text'],
-                                'question_id' => $question->id,
-                            ]);
+                if (isset($questionData['answers']) && count($questionData['answers']) > 0) {
+                    $questionAnswers = $questionData['answers'];
+                    foreach ($questionAnswers as $answerData) {
+                        $answer = Answer::create([
+                            'text' => $answerData['text'],
+                            'question_id' => $question->id,
+                        ]);
 
-                            if (isset($answerData['points']) && count($answerData['points']) > 0) {
-                                foreach ($answerData['points'] as $answerPointsData) {
-                                    AnswerTagPoints::create([
-                                        'answer_id' => $answer->id,
-                                        'tag_id' => $tag->id,
-                                        'point_count' => $answerPointsData['points'],
-                                    ]);
-                                }
+                        if (isset($answerData['points']) && count($answerData['points']) > 0) {
+                            foreach ($answerData['points'] as $answerPointsData) {
+                                AnswerTagPoints::create([
+                                    'answer_id' => $answer->id,
+                                    'tag_id' => $tag->id,
+                                    'point_count' => $answerPointsData['points'],
+                                ]);
                             }
                         }
                     }
@@ -316,9 +306,7 @@ class TestService extends BaseService
         }
 
         $query = $test->questions()
-            ->whereHas('topics', function ($query) use ($topicUuid) {
-                $query->where(['topics.id' => $topicUuid]);
-            });
+            ->whereHas('topics', fn ($query) => $query->where(['topics.id' => $topicUuid]));
 
         $result = self::paginateQuery($query, $request);
 

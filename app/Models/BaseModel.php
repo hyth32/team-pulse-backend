@@ -2,12 +2,16 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use ReflectionClass;
 use Illuminate\Support\Str;
 
 class BaseModel extends Model
 {
+    use HasFactory, HasUuids;
+
     protected $keyType = 'string';
     public $incrementing = false;
     public $timestamps = true;
@@ -32,14 +36,6 @@ class BaseModel extends Model
     protected static function boot()
     {
         parent::boot();
-
-        static::creating(function ($model) {
-            $model->{$model->getKeyName()} = Str::uuid()->toString();
-
-            $model->{$model->getCreatedAtColumn()} = now();
-
-            $model->{$model->getUpdatedAtColumn()} = now();
-        });
 
         static::updating(function ($model) {
             $model->{$model->getUpdatedAtColumn()} = now();

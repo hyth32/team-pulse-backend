@@ -144,7 +144,7 @@ class CreateTestRequest extends FormRequest
             'name' => 'required|string',
             'description' => 'nullable|string',
             'status' => ['required', Rule::in(TestStatus::labels())],
-            'tests' => 'nullable|array',
+            'tests' => 'required|array',
 
             'tests.*.topic' => 'nullable|string|max:255',
             'tests.*.questions' => 'nullable|array',
