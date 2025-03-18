@@ -16,7 +16,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
-class UserService
+class UserService extends BaseService
 {
     /**
      * Получение списка пользователей
@@ -29,15 +29,13 @@ class UserService
             'role' => UserRole::Employee->value(),
         ]);
 
-        $total = $query->count();
-        $users = $query
-            ->offset($request['offset'])
-            ->limit($request['limit'])
-            ->orderBy('created_at', 'desc');
+        $query->orderBy('created_at', 'desc');
+
+        $result = self::paginateQuery($query, $request);
 
         return [
-            'total' => $total,
-            'users' => UserShortResource::collection($users->get()),
+            'total' => $result['total'],
+            'users' => UserShortResource::collection($result['items']->get()),
         ];
     }
 
@@ -104,9 +102,7 @@ class UserService
     public function save(CreateUserRequest $request)
     {
         $data = $request->validated();
-        $existingUser = User::where([
-            'email' => $data['email'],
-        ])->exists();
+        $existingUser = User::where(['email' => $data['email']])->exists();
 
         $generatedPassword = Str::random(20);
 

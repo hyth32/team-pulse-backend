@@ -8,7 +8,7 @@ use App\Http\Requests\Tag\UpdateTagRequest;
 use App\Http\Resources\TagShortResource;
 use App\Models\Tag;
 
-class TagService
+class TagService extends BaseService
 {
     /**
      * Получение списка тегов
@@ -17,15 +17,11 @@ class TagService
     public static function list(ListTagRequest $request)
     {
         $query = Tag::query();
-
-        $total = $query->count();
-        $tags = $query
-            ->offset($request['offset'])
-            ->limit($request['limit']);
+        $result = self::paginateQuery($query, $request);
 
         return [
-            'total' => $total,
-            'tags' => TagShortResource::collection($tags->get()),
+            'total' => $result['total'],
+            'tags' => TagShortResource::collection($result['items']->get()),
         ];
     }
 

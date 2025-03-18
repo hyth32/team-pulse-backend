@@ -10,7 +10,7 @@ use App\Models\Group;
 use App\Models\User;
 use App\Models\UserGroup;
 
-class GroupService
+class GroupService extends BaseService
 {
     /**
      * Получение списка групп
@@ -19,15 +19,11 @@ class GroupService
     public static function list(ListGroupRequest $request)
     {
         $query = Group::query();
-
-        $total = $query->count();
-        $groups = $query
-            ->offset($request['offset'])
-            ->limit($request['limit']);
+        $result = self::paginateQuery($query, $request);
 
         return [
-            'total' => $total,
-            'groups' => GroupShortResource::collection($groups->get()),
+            'total' => $result['total'],
+            'groups' => GroupShortResource::collection($result['items']->get()),
         ];
     }
 
