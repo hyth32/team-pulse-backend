@@ -2,21 +2,22 @@
 
 namespace App\Http\Services;
 
+use App\Http\Requests\BaseListRequest;
 use App\Http\Requests\Group\CreateGroupRequest;
-use App\Http\Requests\Group\ListGroupRequest;
 use App\Http\Requests\Group\UpdateGroupRequest;
 use App\Http\Resources\GroupShortResource;
 use App\Models\Group;
 use App\Models\User;
 use App\Models\UserGroup;
+use Illuminate\Http\Request;
 
 class GroupService extends BaseService
 {
     /**
      * Получение списка групп
-     * @param ListGroupRequest $request
+     * @param BaseListRequest $request
      */
-    public static function list(ListGroupRequest $request)
+    public static function list(BaseListRequest $request)
     {
         $query = Group::query();
         $result = self::paginateQuery($query, $request);
@@ -71,8 +72,9 @@ class GroupService extends BaseService
     /**
      * Удаление группы
      * @param string $uuid
+     * @param Request $request
      */
-    public function delete(string $uuid)
+    public function delete(string $uuid, Request $request)
     {
         $group = Group::findOrFail($uuid);
         if (count($group->users) > 0) {

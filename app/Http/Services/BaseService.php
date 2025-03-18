@@ -2,11 +2,9 @@
 
 namespace App\Http\Services;
 
-use Illuminate\Http\Request;
-
 class BaseService
 {
-    public static function paginateQuery($query, Request $request)
+    public static function paginateQuery($query, $request)
     {
         return [
             'total' => $query->count(),

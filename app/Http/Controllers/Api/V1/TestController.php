@@ -6,9 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\BaseListRequest;
 use App\Http\Requests\Test\AssignTestRequest;
 use App\Http\Requests\Test\CreateTestRequest;
-use App\Http\Requests\Test\ListAssignedGroupsRequest;
-use App\Http\Requests\Test\ListAssignedUsersRequest;
-use App\Http\Requests\Test\ListTestRequest;
 use App\Http\Requests\Test\UpdateTestRequest;
 use App\Http\Services\TestService;
 use Illuminate\Http\Request;
@@ -31,7 +28,7 @@ class TestController extends Controller
      *      ),
      * )
      */
-    public function list(ListTestRequest $request)
+    public function list(BaseListRequest $request)
     {
         return TestService::list($request);
     }
@@ -52,7 +49,7 @@ class TestController extends Controller
      *      ),
      * )
      */
-    public function templateList(ListTestRequest $request)
+    public function templateList(BaseListRequest $request)
     {
         return TestService::templateList($request);
     }
@@ -73,7 +70,7 @@ class TestController extends Controller
      *      ),
      * )
      */
-    public function assignedUsers(string $uuid, ListAssignedUsersRequest $request)
+    public function assignedUsers(string $uuid, BaseListRequest $request)
     {
         return TestService::listAssignedUsers($uuid, $request);
     }
@@ -94,7 +91,7 @@ class TestController extends Controller
      *      ),
      * )
      */
-    public function assignedGroups(string $uuid, ListAssignedGroupsRequest $request)
+    public function assignedGroups(string $uuid, BaseListRequest $request)
     {
         return TestService::listAssignedGroups($uuid, $request);
     }
@@ -176,20 +173,6 @@ class TestController extends Controller
     }
 
     /**
-     * @OA\Delete(path="/api/v1/tests/{uuid}",
-     *      tags={"Test"},
-     *      summary="Удалить тест",
-     *      @OA\Response(response=200, description="Ответ",
-     *         @OA\MediaType(mediaType="application/json"),
-     *      ),
-     * )
-     */
-    public function delete(string $uuid)
-    {
-        return (new TestService)->delete($uuid);
-    }
-
-    /**
      * @OA\Post(path="/api/v1/tests/{uuid}/assign",
      *      tags={"Test"},
      *      summary="Назначить тест",
@@ -205,5 +188,19 @@ class TestController extends Controller
     public function assign(string $uuid, AssignTestRequest $request)
     {
         return (new TestService)->assign($uuid, $request);
+    }
+
+    /**
+     * @OA\Delete(path="/api/v1/tests/{uuid}",
+     *      tags={"Test"},
+     *      summary="Удалить тест",
+     *      @OA\Response(response=200, description="Ответ",
+     *         @OA\MediaType(mediaType="application/json"),
+     *      ),
+     * )
+     */
+    public function delete(string $uuid, Request $request)
+    {
+        return (new TestService)->delete($uuid, $request);
     }
 }

@@ -4,9 +4,9 @@ namespace App\Http\Services;
 
 use App\Enums\EntityStatus;
 use App\Enums\User\UserRole;
+use App\Http\Requests\BaseListRequest;
 use App\Http\Requests\User\UpdateProfileRequest;
 use App\Http\Requests\User\CreateUserRequest;
-use App\Http\Requests\User\ListUserRequest;
 use App\Http\Resources\UserProfileResource;
 use App\Http\Resources\UserShortResource;
 use App\Models\Group;
@@ -20,9 +20,9 @@ class UserService extends BaseService
 {
     /**
      * Получение списка пользователей
-     * @param ListUserRequest $request
+     * @param BaseListRequest $request
      */
-    public static function list(ListUserRequest $request)
+    public static function list(BaseListRequest $request)
     {
         $query = User::query()->where([
             'status' => EntityStatus::Active->value(),
@@ -42,6 +42,7 @@ class UserService extends BaseService
     /**
      * Получение профиля пользователя
      * @param string $uuid
+     * @param Request $request
      */
     public static function profile(string $uuid, Request $request)
     {
@@ -135,8 +136,9 @@ class UserService extends BaseService
     /**
      * Удаление пользователя по id
      * @param int $id
+     * @param Request $request
      */
-    public function delete(string $uuid)
+    public function delete(string $uuid, Request $request)
     {
         $user = User::findOrFail($uuid);
         $user->update(['status' => EntityStatus::Deleted->value()]);

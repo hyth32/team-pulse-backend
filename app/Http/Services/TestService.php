@@ -9,9 +9,6 @@ use App\Enums\User\UserRole;
 use App\Http\Requests\BaseListRequest;
 use App\Http\Requests\Test\AssignTestRequest;
 use App\Http\Requests\Test\CreateTestRequest;
-use App\Http\Requests\Test\ListAssignedGroupsRequest;
-use App\Http\Requests\Test\ListAssignedUsersRequest;
-use App\Http\Requests\Test\ListTestRequest;
 use App\Http\Requests\Test\UpdateTestRequest;
 use App\Http\Resources\GroupShortResource;
 use App\Http\Resources\QuestionResource;
@@ -39,9 +36,9 @@ class TestService extends BaseService
 {
     /**
      * Получение списка тестов
-     * @param ListTestRequest $request
+     * @param BaseListRequest $request
      */
-    public static function list(ListTestRequest $request)
+    public static function list(BaseListRequest $request)
     {
         $user = $request->user();
 
@@ -62,9 +59,9 @@ class TestService extends BaseService
 
     /**
      * Получение списка шаблонов
-     * @param ListTestRequest $request
+     * @param BaseListRequest $request
      */
-    public static function templateList(ListTestRequest $request)
+    public static function templateList(BaseListRequest $request)
     {
         $query = Test::query()->where(['status' => EntityStatus::Active->value()]);
 
@@ -79,9 +76,9 @@ class TestService extends BaseService
 
     /**
      * Получение списка назначенных пользователей
-     * @param ListAssignedUsersRequest $request
+     * @param BaseListRequest $request
      */
-    public static function listAssignedUsers(string $uuid, ListAssignedUsersRequest $request)
+    public static function listAssignedUsers(string $uuid, BaseListRequest $request)
     {
         $test = Test::findOrFail($uuid);
         $query = $test->assignedUsers();
@@ -97,9 +94,9 @@ class TestService extends BaseService
 
     /**
      * Получение списка назначенных групп
-     * @param ListAssignedGroupsRequest $request
+     * @param BaseListRequest $request
      */
-    public static function listAssignedGroups(string $uuid, ListAssignedGroupsRequest $request)
+    public static function listAssignedGroups(string $uuid, BaseListRequest $request)
     {
         $test = Test::findOrFail($uuid);
         $query = $test->groups();
@@ -281,6 +278,7 @@ class TestService extends BaseService
     /**
      * Получение теста по id
      * @param string $uuid
+     * @param Request $request
      */
     public static function view(string $uuid, Request $request)
     {
@@ -298,7 +296,7 @@ class TestService extends BaseService
      * Получение вопросов по ID топика
      * @param string $uuid
      * @param string $topicUuid
-     * @param Request $request
+     * @param BaseListRequest $request
      */
     public static function listTopicQuestions(string $uuid, string $topicUuid, BaseListRequest $request)
     {
@@ -350,8 +348,9 @@ class TestService extends BaseService
     /**
      * Удаление теста по id
      * @param string $uuid
+     * @param Request $request
      */
-    public function delete(string $uuid)
+    public function delete(string $uuid, Request $request)
     {
         $test = Test::findOrFail($uuid);
 

@@ -3,10 +3,11 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\BaseListRequest;
 use App\Http\Requests\Group\CreateGroupRequest;
-use App\Http\Requests\Group\ListGroupRequest;
 use App\Http\Requests\Group\UpdateGroupRequest;
 use App\Http\Services\GroupService;
+use Illuminate\Http\Request;
 
 class GroupController extends Controller
 {
@@ -26,7 +27,7 @@ class GroupController extends Controller
      *     ),
      * )
      */
-    public function list(ListGroupRequest $request)
+    public function list(BaseListRequest $request)
     {
         return GroupService::list($request);
     }
@@ -76,8 +77,8 @@ class GroupController extends Controller
      *     ),
      * )
      */
-    public function delete(string $uuid)
+    public function delete(string $uuid, Request $request)
     {
-        return (new GroupController)->delete($uuid);
+        return (new GroupController)->delete($uuid, $request);
     }
 }

@@ -3,10 +3,11 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\BaseListRequest;
 use App\Http\Requests\Tag\CreateTagRequest;
-use App\Http\Requests\Tag\ListTagRequest;
 use App\Http\Requests\Tag\UpdateTagRequest;
 use App\Http\Services\TagService;
+use Illuminate\Http\Request;
 
 class TagController extends Controller
 {
@@ -26,7 +27,7 @@ class TagController extends Controller
      *     ),
      * )
      */
-    public function list(ListTagRequest $request) {
+    public function list(BaseListRequest $request) {
         return TagService::list($request);
     }
 
@@ -73,7 +74,7 @@ class TagController extends Controller
      *     ),
      * )
      */
-    public function delete(string $uuid) {
-        return (new TagService)->delete($uuid);
+    public function delete(string $uuid, Request $request) {
+        return (new TagService)->delete($uuid, $request);
     }
 }
