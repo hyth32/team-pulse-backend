@@ -21,6 +21,7 @@ class AuthController extends Controller
      *             @OA\Schema(
      *                 @OA\Property(property="token", type="string", description="Access токен"),
      *                 @OA\Property(property="expirationDate", type="integer", format="timestamp", description="Дата экспирации токена"),
+     *                 @OA\Property(property="id", type="string", format="uuid", description="ID пользователя"),
      *                 @OA\Property(property="role", type="string", description="Роль пользователя"),
      *             ),
      *         ),
