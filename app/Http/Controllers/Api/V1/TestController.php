@@ -10,6 +10,7 @@ use App\Http\Requests\Test\ListAssignedUsersRequest;
 use App\Http\Requests\Test\ListTestRequest;
 use App\Http\Requests\Test\UpdateTestRequest;
 use App\Http\Services\TestService;
+use Illuminate\Http\Request;
 
 class TestController extends Controller
 {
@@ -142,9 +143,32 @@ class TestController extends Controller
      *      ),
      * )
      */
-    public function view(string $uuid)
+    public function view(string $uuid, Request $request)
     {
-        return TestService::view($uuid);
+        return TestService::view($uuid, $request);
+    }
+
+    /**
+     * @OA\Get(path="/api/v1/tests/{uuid}/topics/{topicUuid}",
+     *      tags={"Test"},
+     *      summary="Получить вопросы теста по ID топика",
+     *      @OA\Response(response = 200, description="Ответ",
+     *          @OA\MediaType(mediaType="application/json",
+     *              @OA\Schema(
+     *                  @OA\Property(property="questions", type="array", @OA\Items(ref="#/components/schemas/QuestionsResponse"))
+     *              ),
+     *          ),
+     *      ),
+     * )
+     */
+    public function topicQuestions(string $uuid, string $topicUuid, Request $request)
+    {
+        return TestService::listTopicQuestions($uuid, $topicUuid, $request);
+    }
+
+    public function solve(string $uuid, Request $request)
+    {
+        return (new TestService)->solve($uuid, $request);
     }
 
     /**

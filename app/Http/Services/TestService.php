@@ -13,6 +13,7 @@ use App\Http\Requests\Test\ListAssignedUsersRequest;
 use App\Http\Requests\Test\ListTestRequest;
 use App\Http\Requests\Test\UpdateTestRequest;
 use App\Http\Resources\GroupShortResource;
+use App\Http\Resources\QuestionResource;
 use App\Http\Resources\TestShortResource;
 use App\Http\Resources\TestTemplateShortResource;
 use App\Http\Resources\TestViewResource;
@@ -30,6 +31,9 @@ use App\Models\TestQuestion;
 use App\Models\User;
 use App\Models\UserTest;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Nette\NotImplementedException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class TestService
@@ -270,6 +274,7 @@ class TestService
     /**
      * Обновление теста
      * @param UpdateTestRequest $request
+     * @param Request $request
      */
     public function update(string $uuid, UpdateTestRequest $request)
     {
@@ -278,7 +283,7 @@ class TestService
         $test = Test::findOrFail($uuid);
 
         if ($test->start_date->isPast()) {
-            throw new HttpException('Тест уже начался', 403);
+            abort(403, 'Тест уже начался');
         }
 
         $test->update($data);
@@ -290,11 +295,65 @@ class TestService
      * Получение теста по id
      * @param string $uuid
      */
-    public static function view(string $uuid)
+    public static function view(string $uuid, Request $request)
     {
         $test = Test::findOrFail($uuid);
+        $user = $request->user();
+
+        if (!$user->tests()->where(['tests.id' => $test->id])->exists()) {
+            abort(403, 'Тест недоступен для прохождения');
+        }
 
         return ['test' => TestViewResource::make($test)];
+    }
+
+    /**
+     * Получение вопросов по ID топика
+     * @param string $uuid
+     * @param string $topicUuid
+     * @param Request $request
+     */
+    public static function listTopicQuestions(string $uuid, string $topicUuid, Request $request)
+    {
+        $user = $request->user();
+        $test = Test::where('id', $uuid)->first();
+
+        if (!$test) {
+            abort(400, 'Тест не найден');
+        }
+
+        if (!$user->tests()->where(['tests.id' => $test->id])->exists()) {
+            abort(403, 'Тест недоступен для прохождения');
+        }
+
+        if (!$test->topics()->where(['topics.id' => $topicUuid])->exists()) {
+            abort(400, 'Тема не найдена');
+        }
+
+        $questions = $test->questions()
+            ->whereHas('topics', function ($query) use ($topicUuid) {
+                $query->where(['topics.id' => $topicUuid]);
+            })
+            ->get();
+
+        return ['questions' => QuestionResource::collection($questions)];
+    }
+
+    /**
+     * Прохождение теста
+     * @param string $uuid
+     * @param Request $request
+     */
+    public function solve(string $uuid, Request $request)
+    {
+        $test = Test::firstOrFail($uuid);
+        $user = $request->user();
+
+        if (!$user->tests()->where(['tests.id' => $test->id])->exists()) {
+            abort(403, 'Тест недоступен для прохождения');
+        }
+
+        throw new NotImplementedException();
     }
 
     /**
@@ -306,7 +365,7 @@ class TestService
         $test = Test::findOrFail($uuid);
 
         if ($test->start_date->isPast()) {
-            throw new HttpException('Тест уже начался', 403);
+            abort(403, 'Тест уже начался');
         }
 
         $test->update(['status' => EntityStatus::Deleted->value()]);

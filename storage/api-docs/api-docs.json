@@ -39,6 +39,11 @@
                                             "type": "integer",
                                             "format": "timestamp"
                                         },
+                                        "id": {
+                                            "description": "ID пользователя",
+                                            "type": "string",
+                                            "format": "uuid"
+                                        },
                                         "role": {
                                             "description": "Роль пользователя",
                                             "type": "string"
@@ -209,7 +214,7 @@
                                         "tags": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/components/schemas/Group"
+                                                "$ref": "#/components/schemas/Tag"
                                             }
                                         }
                                     },
@@ -568,6 +573,35 @@
                         "description": "Ответ",
                         "content": {
                             "application/json": {}
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/tests/{uuid}/topics/{topicUuid}": {
+            "get": {
+                "tags": [
+                    "Test"
+                ],
+                "summary": "Получить вопросы теста по ID топика",
+                "operationId": "7bf0fe72ce73cf5542140c977bf3397c",
+                "responses": {
+                    "200": {
+                        "description": "Ответ",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "questions": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/QuestionsResponse"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
                         }
                     }
                 }
@@ -1213,21 +1247,14 @@
             "Answer": {
                 "description": "Ответ",
                 "properties": {
+                    "id": {
+                        "description": "ID ответа",
+                        "type": "string",
+                        "format": "uuid"
+                    },
                     "text": {
                         "description": "Текст ответа",
-                        "type": "text"
-                    },
-                    "image_id": {
-                        "description": "ID изображения",
-                        "type": "string",
-                        "format": "uuid",
-                        "example": "123e4567-e89b-12d3-a456-426614174000"
-                    },
-                    "question_id": {
-                        "description": "ID вопроса",
-                        "type": "string",
-                        "format": "uuid",
-                        "example": "123e4567-e89b-12d3-a456-426614174000"
+                        "type": "string"
                     }
                 },
                 "type": "object"
@@ -1251,6 +1278,21 @@
                         "description": "Количество баллов",
                         "type": "integer",
                         "example": "1"
+                    }
+                },
+                "type": "object"
+            },
+            "AnswerTagShort": {
+                "properties": {
+                    "tagId": {
+                        "description": "ID тега",
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "points": {
+                        "description": "Количество баллов",
+                        "type": "number",
+                        "format": "float"
                     }
                 },
                 "type": "object"
@@ -1301,12 +1343,55 @@
                     },
                     "type": {
                         "$ref": "#/components/schemas/AnswerType"
-                    },
-                    "topic_id": {
-                        "description": "ID темы вопроса",
+                    }
+                },
+                "type": "object"
+            },
+            "QuestionsResponse": {
+                "description": "Вопрос",
+                "properties": {
+                    "id": {
+                        "description": "ID вопроса",
                         "type": "string",
-                        "format": "uuid",
-                        "example": "123e4567-e89b-12d3-a456-426614174000"
+                        "format": "uuid"
+                    },
+                    "text": {
+                        "description": "Текст вопроса",
+                        "type": "string"
+                    },
+                    "type": {
+                        "$ref": "#/components/schemas/AnswerType"
+                    },
+                    "tags": {
+                        "description": "Теги вопроса",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Tag"
+                        }
+                    },
+                    "answers": {
+                        "description": "Теги вопроса",
+                        "type": "array",
+                        "items": {
+                            "properties": {
+                                "id": {
+                                    "description": "ID ответа",
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "text": {
+                                    "description": "Текст ответа",
+                                    "type": "string"
+                                },
+                                "tagPoints": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/AnswerTagShort"
+                                    }
+                                }
+                            },
+                            "type": "object"
+                        }
                     }
                 },
                 "type": "object"
@@ -1327,30 +1412,17 @@
                 },
                 "type": "object"
             },
-            "Topic": {
-                "description": "Тема вопроса",
-                "properties": {
-                    "id": {
-                        "description": "ID темы вопроса",
-                        "type": "string"
-                    },
-                    "name": {
-                        "description": "Название темы вопроса",
-                        "type": "string"
-                    }
-                },
-                "type": "object"
-            },
             "Tag": {
                 "description": "Тег",
                 "properties": {
+                    "id": {
+                        "description": "ID тега",
+                        "type": "string",
+                        "format": "uuid"
+                    },
                     "name": {
                         "description": "Название тега",
                         "type": "string"
-                    },
-                    "priority": {
-                        "description": "Приоритет тега",
-                        "type": "integer"
                     }
                 },
                 "type": "object"
@@ -1473,6 +1545,26 @@
                         "type": "string",
                         "format": "uuid",
                         "example": "123e4567-e89b-12d3-a456-426614174000"
+                    },
+                    "topic_id": {
+                        "description": "ID темы",
+                        "type": "string",
+                        "format": "uuid",
+                        "example": "123e4567-e89b-12d3-a456-426614174000"
+                    }
+                },
+                "type": "object"
+            },
+            "Topic": {
+                "description": "Тема вопроса",
+                "properties": {
+                    "id": {
+                        "description": "ID темы вопроса",
+                        "type": "string"
+                    },
+                    "name": {
+                        "description": "Название темы вопроса",
+                        "type": "string"
                     }
                 },
                 "type": "object"

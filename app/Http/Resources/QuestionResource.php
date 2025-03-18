@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class TagShortResource extends JsonResource
+class QuestionResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,7 +16,10 @@ class TagShortResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'name' => $this->name,
+            'text' => $this->text,
+            'type' => $this->type,
+            'tags' => TagShortResource::collection($this->tags),
+            'answers' => AnswerResource::collection($this->answers),
         ];
     }
 }

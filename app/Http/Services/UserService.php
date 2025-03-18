@@ -49,7 +49,7 @@ class UserService
     {
         $currentUser = $request->user();
         if ($uuid !== $currentUser->id && !in_array($currentUser->role, UserRole::adminRoles())) {
-            abort(403);
+            abort(403, 'Страница недоступна');
         }
 
         $user = User::findOrFail($uuid);

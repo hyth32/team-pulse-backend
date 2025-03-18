@@ -8,6 +8,11 @@ namespace App\Models;
  *      @OA\Property(property="tag_id", type="string", format="uuid", description="ID темы вопроса", example="123e4567-e89b-12d3-a456-426614174000"),
  *      @OA\Property(property="point_count", type="integer", description="Количество баллов", example="1"),
  * })
+ *
+ * @OA\Schema(schema="AnswerTagShort", properties={
+ *      @OA\Property(property="tagId", type="string", format="uuid", description="ID тега"),
+ *      @OA\Property(property="points", type="float", description="Количество баллов"),
+ * })
  */
 class AnswerTagPoints extends BaseModel
 {
