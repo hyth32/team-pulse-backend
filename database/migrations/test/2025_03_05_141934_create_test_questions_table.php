@@ -25,6 +25,12 @@ return new class extends Migration
                 ->on('questions')
                 ->onDelete('cascade')
                 ->onUpdate('no action');
+            $table->uuid('topic_id')->nullable();
+            $table->foreign('topic_id', 'fk-question-topic-1')
+                ->references('id')
+                ->on('topics')
+                ->onDelete('set null')
+                ->onUpdate('no action');
 
             $table->timestamps();
         });

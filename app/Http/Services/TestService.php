@@ -22,7 +22,7 @@ use App\Models\AnswerTagPoints;
 use App\Models\Group;
 use App\Models\Question;
 use App\Models\QuestionTag;
-use App\Models\QuestionTopic;
+use App\Models\Topic;
 use App\Models\Tag;
 use App\Models\Test;
 use App\Models\TestGroup;
@@ -140,7 +140,7 @@ class TestService
             $testsData = $data['tests'];
 
             foreach ($testsData as $testData) {
-                $topic = QuestionTopic::firstOrCreate([
+                $topic = Topic::firstOrCreate([
                     'name' => $testData['topic'],
                 ]);
 
@@ -150,12 +150,12 @@ class TestService
                         $question = Question::create([
                             'text' => $questionData['name'],
                             'type' => $questionData['type'],
-                            'topic_id' => $topic->id,
                         ]);
 
                         TestQuestion::create([
                             'test_id' => $test->id,
                             'question_id' => $question->id,
+                            'topic_id' => $topic->id,
                         ]);
 
                         if (isset($questionData['tags']) && count($questionData['tags']) > 0) {

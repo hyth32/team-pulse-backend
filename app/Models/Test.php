@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\BaseModel;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Support\Facades\Log;
 
 /**
  * @OA\Schema(schema="Test", description="Тест", properties={
@@ -24,7 +25,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  *      @OA\Property(property="name", type="string", description="Название теста"),
  *      @OA\Property(property="description", type="text", description="Описание теста"),
  *      @OA\Property(property="testSubject", type="object", description="Пользователь, на оценку которого направлен тест"),
- *      @OA\Property(property="topics", type="array", @OA\Items(ref="#/components/schemas/QuestionTopic"))
+ *      @OA\Property(property="topics", type="array", @OA\Items(ref="#/components/schemas/Topic"))
  * })
  */
 class Test extends BaseModel
@@ -72,6 +73,16 @@ class Test extends BaseModel
         );
     }
 
+    public function topics()
+    {
+        return $this->belongsToMany(
+            Topic::class,
+            TestQuestion::class,
+            'test_id',
+            'topic_id',
+        );
+    }
+
     public function author(): HasOne
     {
         return $this->hasOne(User::class, 'id', 'author_id');
@@ -79,7 +90,7 @@ class Test extends BaseModel
 
     public function subject(): HasOne
     {
-        return $this->hasOne(User::class, 'subject_id');
+        return $this->hasOne(User::class, 'id', 'subject_id');
     }
 
     public function questions(): BelongsToMany

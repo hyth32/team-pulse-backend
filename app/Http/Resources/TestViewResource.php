@@ -14,6 +14,12 @@ class TestViewResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return parent::toArray($request);
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+            'description' => $this->description,
+            'testSubject' => $this->subject ? UserShortResource::make($this->subject) : null,
+            'topics' => TopicShortResource::collection($this->topics),
+        ];
     }
 }

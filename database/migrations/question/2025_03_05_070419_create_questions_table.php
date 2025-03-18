@@ -15,12 +15,6 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->text('text')->nullable();
             $table->integer('type')->nullable();
-            $table->uuid('topic_id')->nullable();
-            $table->foreign('topic_id', 'fk-question-topic-1')
-                ->references('id')
-                ->on('question_topics')
-                ->onDelete('set null')
-                ->onUpdate('no action');
 
             $table->timestamps();
         });
