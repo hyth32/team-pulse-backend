@@ -106,4 +106,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(UserCreateNotification::class);
     }
+
+    public function getCompletionStatus($testId)
+    {
+        return $this->hasOne(UserTest::class)->where(['test_id' => $testId])->first()->completion_status;
+    }
 }

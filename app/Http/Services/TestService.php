@@ -96,7 +96,9 @@ class TestService
 
         return [
             'total' => $total,
-            'users' => UserTestCompletionResource::collection($users->get())->additional(['testId' => $test->id]),
+            'users' => UserTestCompletionResource::collection($users->get()->map(function ($user) use ($test) {
+                return new UserTestCompletionResource($user, $test->id);
+            })),
         ];
     }
 
