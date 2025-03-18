@@ -3,6 +3,7 @@
 namespace App\Http\Services;
 
 use App\Enums\EntityStatus;
+use App\Enums\Test\TestCompletionStatus;
 use App\Enums\Test\TestStatus;
 use App\Enums\User\UserRole;
 use App\Http\Requests\Test\AssignTestRequest;
@@ -252,6 +253,7 @@ class TestService
                 'user_id' => $userId,
                 'test_id' => $test->id,
                 'assigner_id' => $request->user()->id,
+                'completion_status' => TestCompletionStatus::NotPassed->value(),
             ]);
         }
 
