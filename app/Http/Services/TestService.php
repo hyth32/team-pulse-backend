@@ -15,6 +15,7 @@ use App\Http\Requests\Test\UpdateTestRequest;
 use App\Http\Resources\GroupShortResource;
 use App\Http\Resources\TestShortResource;
 use App\Http\Resources\TestTemplateShortResource;
+use App\Http\Resources\TestViewResource;
 use App\Http\Resources\UserTestCompletionResource;
 use App\Models\Answer;
 use App\Models\AnswerTagPoints;
@@ -292,7 +293,8 @@ class TestService
     public static function view(string $uuid)
     {
         $test = Test::findOrFail($uuid);
-        return ['test' => $test];
+
+        return ['test' => TestViewResource::make($test)];
     }
 
     /**

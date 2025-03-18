@@ -36,8 +36,8 @@
                                         },
                                         "expirationDate": {
                                             "description": "Дата экспирации токена",
-                                            "type": "string",
-                                            "format": "date-time"
+                                            "type": "integer",
+                                            "format": "timestamp"
                                         },
                                         "role": {
                                             "description": "Роль пользователя",
@@ -528,7 +528,16 @@
                     "200": {
                         "description": "Ответ",
                         "content": {
-                            "application/json": {}
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "test": {
+                                            "$ref": "#/components/schemas/TestView"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
                         }
                     }
                 }
@@ -1321,6 +1330,10 @@
             "QuestionTopic": {
                 "description": "Тема вопроса",
                 "properties": {
+                    "id": {
+                        "description": "ID темы вопроса",
+                        "type": "string"
+                    },
                     "name": {
                         "description": "Название темы вопроса",
                         "type": "string"
@@ -1345,6 +1358,11 @@
             "Test": {
                 "description": "Тест",
                 "properties": {
+                    "id": {
+                        "description": "ID теста",
+                        "type": "string",
+                        "format": "uuid"
+                    },
                     "name": {
                         "description": "Название теста",
                         "type": "string"
@@ -1380,6 +1398,35 @@
                     "is_anonymous": {
                         "description": "Метка анонимности",
                         "type": "boolean"
+                    }
+                },
+                "type": "object"
+            },
+            "TestView": {
+                "description": "Главная страница теста",
+                "properties": {
+                    "id": {
+                        "description": "ID теста",
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "name": {
+                        "description": "Название теста",
+                        "type": "string"
+                    },
+                    "description": {
+                        "description": "Описание теста",
+                        "type": "text"
+                    },
+                    "testSubject": {
+                        "description": "Пользователь, на оценку которого направлен тест",
+                        "type": "object"
+                    },
+                    "topics": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/QuestionTopic"
+                        }
                     }
                 },
                 "type": "object"

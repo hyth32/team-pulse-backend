@@ -4,6 +4,7 @@ namespace App\Models;
 
 /**
  * @OA\Schema(schema="QuestionTopic", description="Тема вопроса", properties={
+ *      @OA\Property(property="id", type="string", description="ID темы вопроса"),
  *      @OA\Property(property="name", type="string", description="Название темы вопроса"),
  * })
  */

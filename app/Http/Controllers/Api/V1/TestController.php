@@ -133,8 +133,12 @@ class TestController extends Controller
      * @OA\Get(path="/api/v1/tests/{uuid}",
      *      tags={"Test"},
      *      summary="Получить тест",
-     *      @OA\Response(response=200, description="Ответ",
-     *         @OA\MediaType(mediaType="application/json"),
+     *      @OA\Response(response = 200, description="Ответ",
+     *          @OA\MediaType(mediaType="application/json",
+     *              @OA\Schema(
+     *                 @OA\Property(property="test", type="object", ref="#/components/schemas/TestView")
+     *              ),
+     *          ),
      *      ),
      * )
      */

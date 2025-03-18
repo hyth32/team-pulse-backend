@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
  * @OA\Schema(schema="Test", description="Тест", properties={
+ *      @OA\Property(property="id", type="string", format="uuid", description="ID теста"),
  *      @OA\Property(property="name", type="string", description="Название теста"),
  *      @OA\Property(property="description", type="text", description="Описание теста"),
  *      @OA\Property(property="frequency", type="integer", ref="#/components/schemas/TestFrequency"),
@@ -16,6 +17,14 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  *      @OA\Property(property="author_id", type="string", format="uuid", description="ID пользователя, создавшего тест", example="123e4567-e89b-12d3-a456-426614174000"),
 *       @OA\Property(property="subject_id", type="string", format="uuid", description="ID пользователя, на оценку которого направлен тест"),
 *       @OA\Property(property="is_anonymous", type="bool", description="Метка анонимности"),
+ * })
+ *
+ * @OA\Schema(schema="TestView", description="Главная страница теста", properties={
+ *      @OA\Property(property="id", type="string", format="uuid", description="ID теста"),
+ *      @OA\Property(property="name", type="string", description="Название теста"),
+ *      @OA\Property(property="description", type="text", description="Описание теста"),
+ *      @OA\Property(property="testSubject", type="object", description="Пользователь, на оценку которого направлен тест"),
+ *      @OA\Property(property="topics", type="array", @OA\Items(ref="#/components/schemas/QuestionTopic"))
  * })
  */
 class Test extends BaseModel
