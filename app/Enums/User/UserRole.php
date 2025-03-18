@@ -40,4 +40,9 @@ enum UserRole
             self::Admin => 'admin',
         };
     }
+
+    public static function adminRoles(): array
+    {
+        return [self::Admin->value(), self::Supervisor->value()];
+    }
 }

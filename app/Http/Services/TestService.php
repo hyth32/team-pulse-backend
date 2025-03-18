@@ -42,7 +42,7 @@ class TestService
         $user = $request->user();
 
         $query = null;
-        if (in_array($user->role, [UserRole::Admin->value(), UserRole::Supervisor->value()])) {
+        if (in_array($user->role, UserRole::adminRoles())) {
             $query = Test::withoutGlobalScopes()->whereHas('assignedUsers');
         } else {
             $query = $user->tests();
@@ -223,7 +223,11 @@ class TestService
         $isAssignToAll = $data['assignToAll'];
 
         $usersToAssign = $isAssignToAll
-            ? User::where(['status' => EntityStatus::Active->value()])->pluck('id')->toArray()
+            ? User::query()
+                ->where(['status' => EntityStatus::Active->value()])
+                ->whereIn('role', UserRole::adminRoles())
+                ->pluck('id')
+                ->toArray()
             : [];
 
         if (isset($data['groups']) && !$isAssignToAll) {

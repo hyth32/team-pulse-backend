@@ -28,7 +28,7 @@ class TestShortResource extends JsonResource
     public function toArray(Request $request): array
     {
         $user = $request->user();
-        $isAdmin = in_array($user->role, [UserRole::Admin->value(), UserRole::Supervisor->value()]);
+        $isAdmin = in_array($user->role, UserRole::adminRoles());
 
         return [
             'id' => $this->id,
