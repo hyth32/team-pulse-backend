@@ -12,6 +12,7 @@ use App\Http\Resources\UserShortResource;
 use App\Models\Group;
 use App\Models\User;
 use App\Models\UserGroup;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
@@ -44,8 +45,13 @@ class UserService
      * Получение профиля пользователя
      * @param string $uuid
      */
-    public static function profile(string $uuid)
+    public static function profile(string $uuid, Request $request)
     {
+        $currentUser = $request->user();
+        if ($uuid !== $currentUser->id && !in_array($currentUser->role, UserRole::adminRoles())) {
+            abort(403);
+        }
+
         $user = User::findOrFail($uuid);
         return ['user' => UserProfileResource::make($user)];
     }

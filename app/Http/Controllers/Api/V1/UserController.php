@@ -7,6 +7,7 @@ use App\Http\Requests\User\UpdateProfileRequest;
 use App\Http\Requests\User\CreateUserRequest;
 use App\Http\Requests\User\ListUserRequest;
 use App\Http\Services\UserService;
+use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
@@ -44,9 +45,9 @@ class UserController extends Controller
      *     ),
      * )
      */
-    public function profile(string $uuid)
+    public function profile(string $uuid, Request $request)
     {
-        return UserService::profile($uuid);
+        return UserService::profile($uuid, $request);
     }
 
     /**
