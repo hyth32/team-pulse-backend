@@ -15,7 +15,7 @@ use App\Http\Requests\Test\UpdateTestRequest;
 use App\Http\Resources\GroupShortResource;
 use App\Http\Resources\TestShortResource;
 use App\Http\Resources\TestTemplateShortResource;
-use App\Http\Resources\UserShortResource;
+use App\Http\Resources\UserTestCompletionResource;
 use App\Models\Answer;
 use App\Models\AnswerTagPoints;
 use App\Models\Group;
@@ -29,7 +29,7 @@ use App\Models\TestQuestion;
 use App\Models\User;
 use App\Models\UserTest;
 use Carbon\Carbon;
-use Exception;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class TestService
 {
@@ -96,7 +96,7 @@ class TestService
 
         return [
             'total' => $total,
-            'users' => UserShortResource::collection($users->get()),
+            'users' => UserTestCompletionResource::collection($users->get())->additional(['testId' => $test->id]),
         ];
     }
 
@@ -274,8 +274,8 @@ class TestService
 
         $test = Test::findOrFail($uuid);
 
-        if ($test->start_date > now()) {
-            throw new Exception('Тест уже начался', 403);
+        if ($test->start_date->isPast()) {
+            throw new HttpException('Тест уже начался', 403);
         }
 
         $test->update($data);
@@ -300,6 +300,11 @@ class TestService
     public function delete(string $uuid)
     {
         $test = Test::findOrFail($uuid);
+
+        if ($test->start_date->isPast()) {
+            throw new HttpException('Тест уже начался', 403);
+        }
+
         $test->update(['status' => EntityStatus::Deleted->value()]);
 
         return ['message' => 'Тест удален'];
