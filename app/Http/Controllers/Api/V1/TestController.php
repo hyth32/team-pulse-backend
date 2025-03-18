@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\BaseListRequest;
 use App\Http\Requests\Test\AssignTestRequest;
 use App\Http\Requests\Test\CreateTestRequest;
 use App\Http\Requests\Test\ListAssignedGroupsRequest;
@@ -152,16 +153,19 @@ class TestController extends Controller
      * @OA\Get(path="/api/v1/tests/{uuid}/topics/{topicUuid}",
      *      tags={"Test"},
      *      summary="Получить вопросы теста по ID топика",
+     *      @OA\Parameter(name="limit", @OA\Schema(type="integer"), description="Количество записей", in="query"),
+     *      @OA\Parameter(name="offset", @OA\Schema(type="integer"), description="Смещение", in="query"),
      *      @OA\Response(response = 200, description="Ответ",
      *          @OA\MediaType(mediaType="application/json",
      *              @OA\Schema(
+     *                  @OA\Property(property="total", type="integer", description="Общее количество записей"),
      *                  @OA\Property(property="questions", type="array", @OA\Items(ref="#/components/schemas/QuestionsResponse"))
      *              ),
      *          ),
      *      ),
      * )
      */
-    public function topicQuestions(string $uuid, string $topicUuid, Request $request)
+    public function topicQuestions(string $uuid, string $topicUuid, BaseListRequest $request)
     {
         return TestService::listTopicQuestions($uuid, $topicUuid, $request);
     }

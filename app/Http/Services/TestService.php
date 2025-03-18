@@ -6,6 +6,7 @@ use App\Enums\EntityStatus;
 use App\Enums\Test\TestCompletionStatus;
 use App\Enums\Test\TestStatus;
 use App\Enums\User\UserRole;
+use App\Http\Requests\BaseListRequest;
 use App\Http\Requests\Test\AssignTestRequest;
 use App\Http\Requests\Test\CreateTestRequest;
 use App\Http\Requests\Test\ListAssignedGroupsRequest;
@@ -32,11 +33,9 @@ use App\Models\User;
 use App\Models\UserTest;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use Nette\NotImplementedException;
-use Symfony\Component\HttpKernel\Exception\HttpException;
 
-class TestService
+class TestService extends BaseService
 {
     /**
      * Получение списка тестов
@@ -46,24 +45,18 @@ class TestService
     {
         $user = $request->user();
 
-        $query = null;
-        if (in_array($user->role, UserRole::adminRoles())) {
-            $query = Test::withoutGlobalScopes()->whereHas('assignedUsers');
-        } else {
-            $query = $user->tests();
-        }
+        $query = in_array($user->role, UserRole::adminRoles())
+            ? Test::withoutGlobalScopes()->whereHas('assignedUsers')
+            : $user->tests();
 
-        $total = $query->count();
-        $tests = $query
-            ->where(['status' => EntityStatus::Active->value()])
-            ->offset($request['offset'])
-            ->limit($request['limit'])
-            ->orderBy('created_at', 'desc')
-            ->get();
+        $query->where(['status' => EntityStatus::Active->value()]);
+
+        $result = self::paginateQuery($query, $request);
+        $tests = $result['items']->orderBy('created_at', 'desc');
 
         return [
-            'total' => $total,
-            'tests' => TestShortResource::collection($tests),
+            'total' => $result['total'],
+            'tests' => TestShortResource::collection($tests->get()),
         ];
     }
 
@@ -75,14 +68,11 @@ class TestService
     {
         $query = Test::query()->where(['status' => EntityStatus::Active->value()]);
 
-        $total = $query->count();
-        $tests = $query
-            ->offset($request['offset'])
-            ->limit($request['limit'])
-            ->orderBy('created_at', 'desc');
+        $result = self::paginateQuery($query, $request);
+        $tests = $result['items']->orderBy('created_at', 'desc');
 
         return [
-            'total' => $total,
+            'total' => $result['total'],
             'tests' => TestTemplateShortResource::collection($tests->get()),
         ];
     }
@@ -96,14 +86,12 @@ class TestService
         $test = Test::findOrFail($uuid);
         $query = $test->assignedUsers();
 
-        $total = $query->count();
-        $users = $query->offset($request['offset'])->limit([$request['limit']]);
+        $result = self::paginateQuery($query, $request);
 
         return [
-            'total' => $total,
-            'users' => UserTestCompletionResource::collection($users->get()->map(function ($user) use ($test) {
-                return new UserTestCompletionResource($user, $test->id);
-            })),
+            'total' => $result['total'],
+            'users' => UserTestCompletionResource::collection($result['items']->get()
+                ->map(fn ($user) => new UserTestCompletionResource($user, $test->id))),
         ];
     }
 
@@ -116,12 +104,11 @@ class TestService
         $test = Test::findOrFail($uuid);
         $query = $test->groups();
 
-        $total = $query->count();
-        $groups = $query->offset($request['offset'])->limit($request['limit']);
+        $result = self::paginateQuery($query, $request);
 
         return [
-            'total' => $total,
-            'groups' => GroupShortResource::collection($groups->get()),
+            'total' => $result['total'],
+            'groups' => GroupShortResource::collection($result['items']->get()),
         ];
     }
 
@@ -313,7 +300,7 @@ class TestService
      * @param string $topicUuid
      * @param Request $request
      */
-    public static function listTopicQuestions(string $uuid, string $topicUuid, Request $request)
+    public static function listTopicQuestions(string $uuid, string $topicUuid, BaseListRequest $request)
     {
         $user = $request->user();
         $test = Test::where('id', $uuid)->first();
@@ -330,13 +317,17 @@ class TestService
             abort(400, 'Тема не найдена');
         }
 
-        $questions = $test->questions()
+        $query = $test->questions()
             ->whereHas('topics', function ($query) use ($topicUuid) {
                 $query->where(['topics.id' => $topicUuid]);
-            })
-            ->get();
+            });
 
-        return ['questions' => QuestionResource::collection($questions)];
+        $result = self::paginateQuery($query, $request);
+
+        return [
+            'total' => $result['total'],
+            'questions' => QuestionResource::collection($result['items']->get()),
+        ];
     }
 
     /**

@@ -585,6 +585,24 @@
                 ],
                 "summary": "Получить вопросы теста по ID топика",
                 "operationId": "7bf0fe72ce73cf5542140c977bf3397c",
+                "parameters": [
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "description": "Количество записей",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "offset",
+                        "in": "query",
+                        "description": "Смещение",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "Ответ",
@@ -592,6 +610,10 @@
                             "application/json": {
                                 "schema": {
                                     "properties": {
+                                        "total": {
+                                            "description": "Общее количество записей",
+                                            "type": "integer"
+                                        },
                                         "questions": {
                                             "type": "array",
                                             "items": {
