@@ -35,7 +35,7 @@ class AuthService
 
         return [
             'token' => $token,
-            'expirationDate' => $expirationDate->toDateTimeString(),
+            'expirationDate' => $expirationDate->timestamp,
             'role' => UserRole::getLabelFromValue($user->role),
         ];
     }
