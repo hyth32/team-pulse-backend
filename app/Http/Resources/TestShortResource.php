@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use App\Enums\Test\TestCompletionStatus;
+use App\Enums\User\UserRole;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -27,6 +28,7 @@ class TestShortResource extends JsonResource
     public function toArray(Request $request): array
     {
         $user = $request->user();
+        $isAdmin = in_array($user->role, [UserRole::Admin->value(), UserRole::Supervisor->value()]);
 
         return [
             'id' => $this->id,
@@ -34,7 +36,7 @@ class TestShortResource extends JsonResource
             'assigner' => UserShortResource::make($this->assigner),
             'startDate' => $this->start_date,
             'endDate' => $this->end_date,
-            'completionStatus' => TestCompletionStatus::getLabelFromValue($this->getCompletionStatus($user->id)),
+            'completionStatus' => !$isAdmin ? TestCompletionStatus::getLabelFromValue($this->getCompletionStatus($user->id)) : null,
             'isAnonymous' => $this->is_anonymous,
         ];
     }

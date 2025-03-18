@@ -43,7 +43,7 @@ class TestService
 
         $query = null;
         if (in_array($user->role, [UserRole::Admin->value(), UserRole::Supervisor->value()])) {
-            $query = Test::query()->whereHas('assignedUsers');
+            $query = Test::withoutGlobalScopes()->whereHas('assignedUsers');
         } else {
             $query = $user->tests();
         }
