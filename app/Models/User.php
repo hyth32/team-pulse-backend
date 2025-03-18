@@ -42,14 +42,6 @@ class User extends Authenticatable
     {
         parent::boot();
 
-        static::creating(function ($model) {
-            $model->{$model->getKeyName()} = Str::uuid()->toString();
-
-            $model->{$model->getCreatedAtColumn()} = now();
-
-            $model->{$model->getUpdatedAtColumn()} = now();
-        });
-
         static::updating(function ($model) {
             $model->{$model->getUpdatedAtColumn()} = now();
         });
@@ -91,7 +83,7 @@ class User extends Authenticatable
 
     public function tests(): BelongsToMany
     {
-        return $this->belongsToMany(Test::class, 'user_tests', 'user_id', 'test_id');
+        return $this->belongsToMany(Test::class, UserTest::class)->withPivot('completion_status');
     }
 
     /**

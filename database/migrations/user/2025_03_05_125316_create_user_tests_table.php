@@ -14,14 +14,14 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('user_tests', function (Blueprint $table) {
-            $table->uuid('id')->primary()->default(Uuid::uuid7()->toString());
+            $table->primary(['user_id', 'test_id']);
             $table->uuid('user_id');
             $table->foreign('user_id', 'fk-user-test-1')
                 ->references('id')
                 ->on('users')
                 ->onDelete('cascade')
                 ->onUpdate('no action');
-            $table->uuid('test_id')->nullable();
+            $table->uuid('test_id');
             $table->foreign('test_id', 'fk-user-test-2')
                 ->references('id')
                 ->on('tests')

@@ -25,6 +25,6 @@ class Group extends BaseModel
 
     public function tests(): BelongsToMany
     {
-        return $this->belongsToMany(Test::class, 'test_groups', 'group_id', 'test_id');
+        return $this->belongsToMany(Test::class, TestGroup::class);
     }
 }

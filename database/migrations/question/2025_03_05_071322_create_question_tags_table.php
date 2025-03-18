@@ -13,7 +13,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('question_tags', function (Blueprint $table) {
-            $table->uuid('id')->primary()->default(Uuid::uuid7()->toString());
+            $table->primary(['question_id', 'tag_id']);
             $table->uuid('question_id')->nullable();
             $table->foreign('question_id', 'fk-question-tag-1')
                 ->references('id')
@@ -26,7 +26,6 @@ return new class extends Migration
                 ->on('tags')
                 ->onDelete('set null')
                 ->onUpdate('no action');
-            $table->float('point_count')->nullable();
 
             $table->timestamps();
         });

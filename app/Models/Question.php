@@ -35,12 +35,12 @@ class Question extends BaseModel
 
     public function topics()
     {
-        return $this->belongsToMany(
-            Topic::class,
-            'test_questions',
-            'question_id',
-            'topic_id'
-        );
+        return $this->belongsToMany(Topic::class, TestQuestion::class, 'question_id', 'topic_id')->distinct();
+    }
+
+    public function tests()
+    {
+        return $this->belongsToMany(Test::class, TestQuestion::class, 'question_id', 'test_id')->distinct();
     }
 
     public function answers(): HasMany
@@ -50,6 +50,6 @@ class Question extends BaseModel
 
     public function tags(): BelongsToMany
     {
-        return $this->belongsToMany(Tag::class, 'question_tags', 'question_id', 'tag_id');
+        return $this->belongsToMany(Tag::class, QuestionTag::class);
     }
 }

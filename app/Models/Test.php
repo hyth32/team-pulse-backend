@@ -3,9 +3,9 @@
 namespace App\Models;
 
 use App\Models\BaseModel;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
-use Illuminate\Support\Facades\Log;
 
 /**
  * @OA\Schema(schema="Test", description="Тест", properties={
@@ -53,39 +53,17 @@ class Test extends BaseModel
 
     public function assignedUsers(): BelongsToMany
     {
-        return $this->belongsToMany(User::class, 'user_tests', 'test_id', 'user_id');
+        return $this->belongsToMany(User::class, UserTest::class)->withPivot(['assigner_id', 'completion_status']);
     }
 
-    public function getCompletionStatus($userId)
+    public function assigners()
     {
-        return $this->hasOne(UserTest::class)->where(['user_id' => $userId])->first()->completion_status;
+        return $this->belongsToMany(User::class, UserTest::class, 'test_id', 'assigner_id')->distinct();
     }
 
-    public function assigner()
+    public function author(): BelongsTo
     {
-        return $this->hasOneThrough(
-            User::class,
-            UserTest::class,
-            'test_id',
-            'id',
-            'id',
-            'assigner_id',
-        );
-    }
-
-    public function topics()
-    {
-        return $this->belongsToMany(
-            Topic::class,
-            TestQuestion::class,
-            'test_id',
-            'topic_id',
-        );
-    }
-
-    public function author(): HasOne
-    {
-        return $this->hasOne(User::class, 'id', 'author_id');
+        return $this->belongsTo(User::class, 'author_id');
     }
 
     public function subject(): HasOne
@@ -95,11 +73,16 @@ class Test extends BaseModel
 
     public function questions(): BelongsToMany
     {
-        return $this->belongsToMany(Question::class, 'test_questions', 'test_id', 'question_id');
+        return $this->belongsToMany(Question::class, TestQuestion::class, 'test_id', 'question_id');
+    }
+
+    public function topics()
+    {
+        return $this->belongsToMany(Topic::class, TestQuestion::class, 'test_id', 'topic_id')->distinct();
     }
 
     public function groups(): BelongsToMany
     {
-        return $this->belongsToMany(Group::class, 'test_groups', 'test_id', 'group_id');
+        return $this->belongsToMany(Group::class, TestGroup::class);
     }
 }

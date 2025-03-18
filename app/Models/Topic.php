@@ -13,4 +13,14 @@ class Topic extends BaseModel
     protected $fillable = [
         'name',
     ];
+
+    public function tests()
+    {
+        $this->belongsToMany(Test::class, TestQuestion::class, 'topic_id', 'test_id');
+    }
+
+    public function questions()
+    {
+        $this->belongsToMany(Question::class, TestQuestion::class, 'topic_id', 'question_id');
+    }
 }

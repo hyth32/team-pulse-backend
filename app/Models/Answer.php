@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\BaseModel;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
@@ -25,8 +26,8 @@ class Answer extends BaseModel
         return $this->hasOne(File::class, 'image_id');
     }
 
-    public function tagPoints(): HasMany
+    public function tags(): BelongsToMany
     {
-        return $this->hasMany(AnswerTagPoints::class);
+        return $this->belongsToMany(Tag::class, AnswerTagPoints::class)->withPivot('point_count');
     }
 }

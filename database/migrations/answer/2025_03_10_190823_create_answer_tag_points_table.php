@@ -3,7 +3,6 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-use Ramsey\Uuid\Uuid;
 
 return new class extends Migration
 {
@@ -13,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('answer_tag_points', function (Blueprint $table) {
-            $table->uuid('id')->primary()->default(Uuid::uuid7()->toString());
+            $table->primary(['answer_id', 'tag_id']);
             $table->uuid('answer_id');
             $table->foreign('answer_id', 'fk-points-answer-1')
                 ->references('id')
@@ -26,7 +25,7 @@ return new class extends Migration
                 ->on('tags')
                 ->onUpdate('no action')
                 ->onDelete('cascade');
-            $table->float('point_count');
+            $table->float('point_count')->default(0);
 
             $table->timestamps();
         });

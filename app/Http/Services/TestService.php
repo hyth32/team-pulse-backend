@@ -129,16 +129,10 @@ class TestService extends BaseService
 
             if (isset($testData['questions']) && count($testData['questions']) > 0) {
                 foreach ($testData['questions'] as $questionData) {
-                    $question = Question::create([
+                    $question = $test->questions()->create([
                         'text' => $questionData['name'],
                         'type' => $questionData['type'],
-                    ]);
-
-                    TestQuestion::create([
-                        'test_id' => $test->id,
-                        'question_id' => $question->id,
-                        'topic_id' => $topic->id,
-                    ]);
+                    ], ['topic_id' => $topic->id]);
 
                     if (isset($questionData['tags']) && count($questionData['tags']) > 0) {
                         foreach ($questionData['tags'] as $tagName) {

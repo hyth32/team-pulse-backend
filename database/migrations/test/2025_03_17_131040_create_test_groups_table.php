@@ -13,7 +13,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('test_groups', function (Blueprint $table) {
-            $table->uuid('id')->primary()->default(Uuid::uuid7()->toString());
+            $table->primary(['test_id', 'group_id']);
             $table->uuid('test_id');
             $table->foreign('test_id', 'fk-test-1')
                 ->references('id')
