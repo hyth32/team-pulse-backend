@@ -15,7 +15,7 @@ class TagPointsResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'tagId' => $this->id,
+            'tag' => TagShortResource::make($this),
             'points' => $this->pivot->point_count,
         ];
     }
