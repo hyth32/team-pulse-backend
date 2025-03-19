@@ -26,8 +26,6 @@ return new class extends Migration
                 ->on('tags')
                 ->onDelete('set null')
                 ->onUpdate('no action');
-
-            $table->timestamps();
         });
     }
 

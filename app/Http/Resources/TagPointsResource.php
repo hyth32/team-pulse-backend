@@ -15,8 +15,8 @@ class TagPointsResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'tagId' => $this->tag_id,
-            'points' => $this->point_count,
+            'tagId' => $this->id,
+            'points' => $this->pivot->point_count,
         ];
     }
 }

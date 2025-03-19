@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\BaseModel;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * @OA\Schema(schema="Group", description="Группа", properties={
@@ -13,9 +14,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  */
 class Group extends BaseModel
 {
+    use SoftDeletes;
+
     protected $fillable = [
         'name',
-        'priority',
     ];
 
     public function users(): BelongsToMany

@@ -81,7 +81,7 @@ class User extends Authenticatable
 
     public function tests(): BelongsToMany
     {
-        return $this->belongsToMany(Test::class, UserTest::class)->withPivot('completion_status');
+        return $this->belongsToMany(Test::class, UserTest::class)->withPivot(['assigner_id', 'completion_status']);
     }
 
     public function notifications()

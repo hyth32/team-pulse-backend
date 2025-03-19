@@ -31,8 +31,6 @@ return new class extends Migration
                 ->on('topics')
                 ->onDelete('set null')
                 ->onUpdate('no action');
-
-            $table->timestamps();
         });
     }
 

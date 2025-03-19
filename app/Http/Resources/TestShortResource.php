@@ -29,14 +29,17 @@ class TestShortResource extends JsonResource
     {
         $user = $request->user();
         $isAdmin = in_array($user->role, UserRole::adminRoles());
+        $userTestCompletionStatus = !$isAdmin
+            ? $this->assignedUsers()->where(['id' => $user->id])->first()->pivot->completion_status
+            : null;
 
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'assigner' => UserShortResource::make($this->assigner),
+            'assigner' => UserShortResource::make($this->assigners()->first()),
             'startDate' => $this->start_date,
             'endDate' => $this->end_date,
-            'completionStatus' => !$isAdmin ? TestCompletionStatus::getLabelFromValue($this->getCompletionStatus($user->id)) : null,
+            'completionStatus' => !$isAdmin ? TestCompletionStatus::getLabelFromValue($userTestCompletionStatus) : null,
             'isAnonymous' => $this->is_anonymous,
         ];
     }

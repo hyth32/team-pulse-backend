@@ -16,18 +16,10 @@ use App\Http\Resources\TestShortResource;
 use App\Http\Resources\TestTemplateShortResource;
 use App\Http\Resources\TestViewResource;
 use App\Http\Resources\UserTestCompletionResource;
-use App\Models\Answer;
-use App\Models\AnswerTagPoints;
-use App\Models\Group;
-use App\Models\Question;
-use App\Models\QuestionTag;
 use App\Models\Topic;
 use App\Models\Tag;
 use App\Models\Test;
-use App\Models\TestGroup;
-use App\Models\TestQuestion;
 use App\Models\User;
-use App\Models\UserTest;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Nette\NotImplementedException;
@@ -45,15 +37,13 @@ class TestService extends BaseService
         $query = in_array($user->role, UserRole::adminRoles())
             ? Test::withoutGlobalScopes()->whereHas('assignedUsers')
             : $user->tests();
-
-        $query->where(['status' => EntityStatus::Active->value()]);
+        $query->orderBy('created_at', 'desc');
 
         $result = self::paginateQuery($query, $request);
-        $tests = $result['items']->orderBy('created_at', 'desc');
 
         return [
             'total' => $result['total'],
-            'tests' => TestShortResource::collection($tests->get()),
+            'tests' => TestShortResource::collection($result['items']->get()),
         ];
     }
 
@@ -63,7 +53,7 @@ class TestService extends BaseService
      */
     public static function templateList(BaseListRequest $request)
     {
-        $query = Test::query()->where(['status' => EntityStatus::Active->value()]);
+        $query = Test::query();
 
         $result = self::paginateQuery($query, $request);
         $tests = $result['items']->orderBy('created_at', 'desc');
@@ -81,14 +71,13 @@ class TestService extends BaseService
     public static function listAssignedUsers(string $uuid, BaseListRequest $request)
     {
         $test = Test::findOrFail($uuid);
-        $query = $test->assignedUsers();
+        $query = $test->assignedUsers()->whereHas('tests', fn ($q) => $q->where(['test_id' => $test->id]));
 
         $result = self::paginateQuery($query, $request);
 
         return [
             'total' => $result['total'],
-            'users' => UserTestCompletionResource::collection($result['items']->get()
-                ->map(fn ($user) => new UserTestCompletionResource($user, $test->id))),
+            'users' => UserTestCompletionResource::collection($result['items']->get()),
         ];
     }
 
@@ -127,116 +116,46 @@ class TestService extends BaseService
         foreach ($data['tests'] as $testData) {
             $topic = Topic::firstOrCreate(['name' => $testData['topic']]);
 
-            if (isset($testData['questions']) && count($testData['questions']) > 0) {
+            if (isset($testData['questions']) && filled($testData['questions'])) {
                 foreach ($testData['questions'] as $questionData) {
                     $question = $test->questions()->create([
                         'text' => $questionData['name'],
                         'type' => $questionData['type'],
                     ], ['topic_id' => $topic->id]);
 
-                    if (isset($questionData['tags']) && count($questionData['tags']) > 0) {
-                        foreach ($questionData['tags'] as $tagName) {
-                            $tag = Tag::firstOrCreate(['name' => trim($tagName)]);
+                    if (isset($questionData['tags']) && filled($questionData['tags'])) {
+                        $tags = collect($questionData['tags'])->map(function ($tagName) {
+                            return Tag::firstOrCreate(['name' => trim($tagName)]);
+                        });
 
-                            QuestionTag::create([
-                                'question_id' => $question->id,
-                                'tag_id' => $tag->id,
-                            ]);
-                        }
+                        $question->tags()->sync($tags->pluck('id'));
                     }
                 }
 
-                if (isset($questionData['answers']) && count($questionData['answers']) > 0) {
-                    $questionAnswers = $questionData['answers'];
-                    foreach ($questionAnswers as $answerData) {
-                        $answer = Answer::create([
+                if (isset($questionData['answers']) && filled($questionData['answers'])) {
+                    $answers = collect($questionData['answers'])->map(function ($answerData) use ($question) {
+                        return $question->answers()->create([
                             'text' => $answerData['text'],
-                            'question_id' => $question->id,
                         ]);
+                    });
 
-                        if (isset($answerData['points']) && count($answerData['points']) > 0) {
-                            foreach ($answerData['points'] as $answerPointsData) {
-                                AnswerTagPoints::create([
-                                    'answer_id' => $answer->id,
-                                    'tag_id' => $tag->id,
-                                    'point_count' => $answerPointsData['points'],
-                                ]);
-                            }
+                    $answers->each(function ($answer, $index) use ($questionData) {
+                        $answerData = $questionData['answers'];
+                        if (isset($answerData[$index]['points']) && filled($answerData[$index]['points'])) {
+                            $points = collect($answerData[$index]['points'])
+                                ->mapWithKeys(function ($pointData) {
+                                    $tag = Tag::firstOrCreate(['name' => $pointData['name']]);
+                                    return [$tag->id => ['point_count' => $pointData['points']]];
+                                });
+
+                            $answer->tags()->sync($points);
                         }
-                    }
+                    });
                 }
             }
         }
 
         return ['message' => 'Тест создан'];
-    }
-
-    /**
-     * Назначение теста
-     * @param string $uuid
-     * @param AssignTestRequest $request
-     */
-    public function assign(string $uuid, AssignTestRequest $request)
-    {
-        $test = Test::findOrFail($uuid);
-        if (!$test) {
-            return ['message' => 'Тест не существует'];
-        }
-
-        $data = $request->validated();
-
-        $test->update([
-            'name' => $data['name'],
-            'description' => $data['description'],
-            'frequency' => $data['frequency'],
-            'start_date' => Carbon::parse($data['startDate']),
-            'end_date' => Carbon::parse($data['endDate']) ?? null,
-            'subject_id' => $data['subjectId'] ?? null,
-            'is_anonymous' => $data['isAnonymous'],
-        ]);
-
-        $isAssignToAll = $data['assignToAll'];
-
-        $usersToAssign = $isAssignToAll
-            ? User::query()
-                ->where(['status' => EntityStatus::Active->value()])
-                ->whereIn('role', UserRole::adminRoles())
-                ->pluck('id')
-                ->toArray()
-            : [];
-
-        if (isset($data['groups']) && !$isAssignToAll) {
-            $groups = $data['groups'];
-            foreach ($groups as $groupId) {
-                $group = Group::find($groupId);
-                TestGroup::firstOrCreate([
-                    'test_id' => $test->id,
-                    'group_id' => $group->id,
-                ]);
-
-                foreach ($group->users as $user) {
-                    $usersToAssign[] = $user->id;
-                }
-            }
-        }
-
-        if (isset($data['employees']) && !$isAssignToAll) {
-            $employees = $data['employees'];
-            foreach ($employees as $employeeId) {
-                $usersToAssign[] = $employeeId;
-            }
-        }
-
-        foreach ($usersToAssign as $userId) {
-            UserTest::firstOrCreate([
-                'user_id' => $userId,
-                'test_id' => $test->id,
-                'assigner_id' => $request->user()->id,
-                'completion_status' => TestCompletionStatus::NotPassed->value(),
-            ]);
-        }
-
-        return ['message' => 'Тест назначен'];
     }
 
     /**
@@ -250,13 +169,116 @@ class TestService extends BaseService
 
         $test = Test::findOrFail($uuid);
 
-        if ($test->start_date->isPast()) {
+        if ($test->start_date && Carbon::parse($test->start_date) < now()) {
             abort(403, 'Тест уже начался');
         }
 
-        $test->update($data);
+        $test->update([
+            'name' => $data['name'],
+            'description' => $data['description'] ?? null,
+            'test_status' => TestStatus::getValueFromLabel($data['status']),
+            'author_id' => $request->user()->id,
+        ]);
+
+        foreach ($data['tests'] as $testData) {
+            $topic = Topic::firstOrCreate(['name' => $testData['topic']]);
+
+            if (isset($testData['questions']) && filled($testData['questions'])) {
+                foreach ($testData['questions'] as $questionData) {
+                    $question = $test->questions()->findOrCreate([
+                        'text' => $questionData['name'],
+                        'type' => $questionData['type'],
+                    ], ['topic_id' => $topic->id]);
+
+                    if (isset($questionData['tags']) && filled($questionData['tags'])) {
+                        $tags = collect($questionData['tags'])->map(function ($tagName) {
+                            return Tag::firstOrCreate(['name' => trim($tagName)]);
+                        });
+
+                        $question->tags()->sync($tags->pluck('id'));
+                    } else {
+                        $question->tags()->detach();
+                    }
+                }
+
+                if (isset($questionData['answers']) && filled($questionData['answers'])) {
+                    $answers = collect($questionData['answers'])->map(function ($answerData) use ($question) {
+                        return $question->answers()->findOrCreate([
+                            'text' => $answerData['text'],
+                        ]);
+                    });
+
+                    $answers->each(function ($answer, $index) use ($questionData) {
+                        $answerData = $questionData['answers'];
+                        if (isset($answerData[$index]['points']) && filled($answerData[$index]['points'])) {
+                            $points = collect($answerData[$index]['points'])
+                                ->mapWithKeys(function ($pointData) {
+                                    $tag = Tag::firstOrCreate(['name' => $pointData['name']]);
+                                    return [$tag->id => ['point_count' => $pointData['points']]];
+                                });
+
+                            $answer->tags()->sync($points);
+                        } else {
+                            $answer->tags()->detach();
+                        }
+                    });
+                } else {
+                    $question->answers()->detach();
+                }
+            }
+        }
 
         return ['message' => 'Тест обновлен'];
+    }
+
+    /**
+     * Назначение теста
+     * @param string $uuid
+     * @param AssignTestRequest $request
+     */
+    public function assign(string $uuid, AssignTestRequest $request)
+    {
+        $test = Test::findOrFail($uuid);
+        $data = $request->validated();
+
+        $test->update([
+            'name' => $data['name'],
+            'description' => $data['description'],
+            'frequency' => $data['frequency'],
+            'start_date' => Carbon::parse($data['startDate']),
+            'end_date' => Carbon::parse($data['endDate']) ?? null,
+            'subject_id' => $data['subjectId'] ?? null,
+            'is_anonymous' => $data['isAnonymous'],
+        ]);
+
+        if ($data['assignToAll']) {
+            $usersQuery = User::where(['role' => UserRole::Employee->value()]);
+        } else {
+            $usersQuery = User::query()
+                ->when(isset($data['groups']) && filled($data['groups']), function ($q) use ($data) {
+                    $q->whereHas('groups', fn ($q) => $q->whereIn('id', $data['groups']));
+                })
+                ->when(isset($data['employees']) && filled($data['employees']), function ($q) use ($data) {
+                    $q->whereIn('id', $data['employees']);
+                });
+        }
+
+        $test->assignedUsers()->sync(
+            $usersQuery->pluck('id')->mapWithKeys(fn ($id) => [
+                $id => [
+                    'assigner_id' => $request->user()->id,
+                    'completion_status' => TestCompletionStatus::NotPassed->value(),
+                ],
+            ])
+        );
+
+        if (isset($data['groups']) && filled($data['groups']) && !$data['assignToAll']) {
+            $test->groups()->sync($data['groups']);
+        } else {
+            $test->groups()->detach();
+        }
+
+        return ['message' => 'Тест назначен'];
     }
 
     /**
@@ -267,9 +289,8 @@ class TestService extends BaseService
     public static function view(string $uuid, Request $request)
     {
         $test = Test::findOrFail($uuid);
-        $user = $request->user();
 
-        if (!$user->tests()->where(['tests.id' => $test->id])->exists()) {
+        if (!$request->user()->tests()->where(['tests.id' => $test->id])->exists()) {
             abort(403, 'Тест недоступен для прохождения');
         }
 
@@ -284,14 +305,13 @@ class TestService extends BaseService
      */
     public static function listTopicQuestions(string $uuid, string $topicUuid, BaseListRequest $request)
     {
-        $user = $request->user();
-        $test = Test::where('id', $uuid)->first();
+        $test = Test::where(['id' => $uuid])->first();
 
         if (!$test) {
             abort(400, 'Тест не найден');
         }
 
-        if (!$user->tests()->where(['tests.id' => $test->id])->exists()) {
+        if (!$request->user()->tests()->where(['tests.id' => $test->id])->exists()) {
             abort(403, 'Тест недоступен для прохождения');
         }
 
@@ -336,11 +356,11 @@ class TestService extends BaseService
     {
         $test = Test::findOrFail($uuid);
 
-        if ($test->start_date->isPast()) {
+        if (Carbon::parse($test->start_date) < now()) {
             abort(403, 'Тест уже начался');
         }
 
-        $test->update(['status' => EntityStatus::Deleted->value()]);
+        $test->delete();
 
         return ['message' => 'Тест удален'];
     }

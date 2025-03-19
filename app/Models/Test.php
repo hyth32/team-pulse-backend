@@ -6,6 +6,7 @@ use App\Models\BaseModel;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * @OA\Schema(schema="Test", description="Тест", properties={
@@ -30,6 +31,8 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  */
 class Test extends BaseModel
 {
+    use SoftDeletes;
+
     protected $dates = [
         'created_at',
         'updated_at',
@@ -43,7 +46,6 @@ class Test extends BaseModel
         'type',
         'frequency',
         'start_date',
-        'status',
         'end_date',
         'test_status',
         'author_id',

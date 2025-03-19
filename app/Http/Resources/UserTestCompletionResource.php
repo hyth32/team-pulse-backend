@@ -8,14 +8,6 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class UserTestCompletionResource extends JsonResource
 {
-    protected $testId;
-
-    public function __construct($resource, $testId = null)
-    {
-        parent::__construct($resource);
-        $this->testId = $testId;
-    }
-
     /**
      * Transform the resource into an array.
      *
@@ -28,7 +20,7 @@ class UserTestCompletionResource extends JsonResource
             'name' => $this->name,
             'lastname' => $this->lastname,
             'login' => $this->login,
-            'completionStatus' => TestCompletionStatus::getLabelFromValue($this->getCompletionStatus($this->testId)),
+            'completionStatus' => TestCompletionStatus::getLabelFromValue($this->pivot->completion_status),
         ];
     }
 }

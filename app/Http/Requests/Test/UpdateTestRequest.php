@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests\Test;
 
+use App\Enums\Test\TestStatus;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 /**
  * @OA\Schema(
@@ -30,17 +32,23 @@ class UpdateTestRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'nullable',
-            'description' => 'nullable',
-            'type' => 'nullable',
+            'name' => 'required|string',
+            'description' => 'nullable|string',
+            'status' => ['required', Rule::in(TestStatus::labels())],
+            'tests' => 'required|array',
 
-            'questions' => 'nullable|array',
-            'questions.*.topic' => 'nullable|string|max:255',
-            'questions.*.text' => 'nullable|string|max:255',
-            'questions.*.type' => 'nullable|integer',
+            'tests.*.topic' => 'nullable|string|max:255',
+            'tests.*.questions' => 'nullable|array',
+            'tests.*.questions.*.name' => 'required|string|max:255',
+            'tests.*.questions.*.type' => 'required|integer',
 
-            'questions.*.answers' => 'nullable|array',
-            'questions.*.answers.*.text' => 'nullable|string|max:1000',
+            'tests.*.questions.*.tags' => 'nullable|array',
+
+            'tests.*.questions.*.answers' => 'nullable|array',
+            'tests.*.questions.*.answers.*.text' => 'required|string|max:1000',
+            'tests.*.questions.*.answers.*.points' => 'nullable|array',
+            'tests.*.questions.*.answers.*.points.*.name' => 'required|string|max:255',
+            'tests.*.questions.*.answers.*.points.*.points' => 'required|integer',
         ];
     }
 }

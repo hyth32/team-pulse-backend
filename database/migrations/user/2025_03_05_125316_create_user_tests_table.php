@@ -34,8 +34,6 @@ return new class extends Migration
                 ->onDelete('cascade')
                 ->onUpdate('no action');
             $table->integer('completion_status')->default(TestCompletionStatus::NotPassed->value());
-
-            $table->timestamps();
         });
     }
 

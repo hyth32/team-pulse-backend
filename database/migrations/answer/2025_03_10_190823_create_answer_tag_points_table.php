@@ -26,8 +26,6 @@ return new class extends Migration
                 ->onUpdate('no action')
                 ->onDelete('cascade');
             $table->float('point_count')->default(0);
-
-            $table->timestamps();
         });
     }
 

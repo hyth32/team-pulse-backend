@@ -26,7 +26,6 @@ return new class extends Migration
                 ->on('groups')
                 ->onUpdate('no action')
                 ->onDelete('cascade');
-            $table->timestamps();
         });
     }
 
