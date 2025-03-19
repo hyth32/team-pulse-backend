@@ -23,7 +23,6 @@ class UserShortResource extends JsonResource
             'login' => $this->login,
             'email' => $this->email,
             'role' => UserRole::getLabelFromValue($this->role),
-            'status' => EntityStatus::getLabelFromValue($this->status),
             'createdAt' => $this->created_at,
         ];
     }

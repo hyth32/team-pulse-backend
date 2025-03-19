@@ -20,7 +20,7 @@ class AuthService
         $data = $request->validated();
 
         $user = User::where('login', $data['login'])->first();
-        if (!$user || !$user->isActive()) {
+        if (!$user) {
             throw new AuthorizationException('Пользователь не существует');
         }
 

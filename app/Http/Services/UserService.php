@@ -2,16 +2,13 @@
 
 namespace App\Http\Services;
 
-use App\Enums\EntityStatus;
 use App\Enums\User\UserRole;
 use App\Http\Requests\BaseListRequest;
 use App\Http\Requests\User\UpdateProfileRequest;
 use App\Http\Requests\User\CreateUserRequest;
 use App\Http\Resources\UserProfileResource;
 use App\Http\Resources\UserShortResource;
-use App\Models\Group;
 use App\Models\User;
-use App\Models\UserGroup;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -24,12 +21,9 @@ class UserService extends BaseService
      */
     public static function list(BaseListRequest $request)
     {
-        $query = User::query()->where([
-            'status' => EntityStatus::Active->value(),
-            'role' => UserRole::Employee->value(),
-        ]);
-
-        $query->orderBy('created_at', 'desc');
+        $query = User::query()
+            ->where(['role' => UserRole::Employee->value()])
+            ->orderBy('created_at', 'desc');
 
         $result = self::paginateQuery($query, $request);
 
@@ -69,25 +63,8 @@ class UserService extends BaseService
             $data['password'] = Hash::make($data['password']);
         }
 
-        if (isset($data['groups']) && count($data['groups']) > 0) {
-            $currentGroupIds = $user->groups()->pluck('groups.id')->toArray();
-
-            $newGroupIds = array_diff($data['groups'], $currentGroupIds);
-            $groupIdsToRemove = array_diff($currentGroupIds, $data['groups']);
-
-            foreach ($newGroupIds as $groupId) {
-                UserGroup::create([
-                    'user_id' => $user->id,
-                    'group_id' => $groupId,
-                ]);
-            }
-
-            if (!empty($groupIdsToRemove)) {
-                UserGroup::query()
-                    ->where('user_id', $user->id)
-                    ->whereIn('group_id', $groupIdsToRemove)
-                    ->delete();
-            }
+        if (isset($data['groups']) && filled($data['groups'])) {
+            $user->groups()->sync($data['groups']);
             unset($data['groups']);
         }
 
@@ -103,31 +80,20 @@ class UserService extends BaseService
     public function save(CreateUserRequest $request)
     {
         $data = $request->validated();
-        $existingUser = User::where(['email' => $data['email']])->exists();
 
         $generatedPassword = Str::random(20);
 
-        if (!$existingUser) {
-            $user = User::create([
-                'name' => $data['name'],
-                'lastname' => $data['lastname'],
-                'email' => $data['email'],
-                'login' => $data['login'],
-                'password' => Hash::make($generatedPassword),
-                'role' => UserRole::getValueFromLabel($data['role']),
-                'status' => EntityStatus::Active->value(),
-            ]);
+        $user = User::create([
+            'name' => $data['name'],
+            'lastname' => $data['lastname'],
+            'email' => $data['email'],
+            'login' => $data['login'],
+            'password' => Hash::make($generatedPassword),
+            'role' => UserRole::getValueFromLabel($data['role']),
+        ]);
 
-            if (isset($data['groups']) && count($data['groups']) > 0) {
-                foreach ($data['groups'] as $groupId) {
-                    $group = Group::find($groupId);
-
-                    UserGroup::create([
-                        'user_id' => $user->id,
-                        'group_id' => $group->id,
-                    ]);
-                }
-            }
+        if (isset($data['groups']) && filled($data['groups'])) {
+            $user->groups()->sync($data['groups']);
         }
 
         return ['message' => $generatedPassword];
@@ -140,9 +106,7 @@ class UserService extends BaseService
      */
     public function delete(string $uuid, Request $request)
     {
-        $user = User::findOrFail($uuid);
-        $user->update(['status' => EntityStatus::Deleted->value()]);
-
+        User::findOrFail($uuid)->delete();
         return ['message' => 'Пользователь удален'];
     }
 }

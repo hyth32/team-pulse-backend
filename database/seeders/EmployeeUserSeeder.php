@@ -23,7 +23,6 @@ class EmployeeUserSeeder extends Seeder
             'login' => 'employee',
             'password' => Hash::make('password'),
             'role' => UserRole::Employee->value(),
-            'status' => EntityStatus::Active->value(),
         ]);
 
         $this->command->info('Employee user created.');

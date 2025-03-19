@@ -2,15 +2,14 @@
 
 namespace App\Models;
 
-use App\Enums\EntityStatus;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
-use Illuminate\Support\Str;
 
 /**
  * @OA\Schema(schema="User", description="Пользователь", properties={
@@ -36,7 +35,7 @@ use Illuminate\Support\Str;
  */
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable, HasUuids;
+    use HasApiTokens, HasFactory, Notifiable, HasUuids, SoftDeletes;
 
     protected static function boot()
     {
@@ -59,7 +58,6 @@ class User extends Authenticatable
         'login',
         'password',
         'role',
-        'status',
         'image_id',
     ];
 
@@ -84,14 +82,6 @@ class User extends Authenticatable
     public function tests(): BelongsToMany
     {
         return $this->belongsToMany(Test::class, UserTest::class)->withPivot('completion_status');
-    }
-
-    /**
-     * Определение статуса пользователя
-     */
-    public function isActive()
-    {
-        return $this->status == EntityStatus::Active->value();
     }
 
     public function notifications()

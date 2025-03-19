@@ -27,7 +27,6 @@ class AdminUserSeeder extends Seeder
                 'login' => 'admin',
                 'password' => Hash::make('password'),
                 'role' => UserRole::Admin->value(),
-                'status' => EntityStatus::Active->value(),
             ]);
 
             $this->command->info('Admin user created');

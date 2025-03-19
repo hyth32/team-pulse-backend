@@ -35,7 +35,7 @@ class GroupService extends BaseService
         $data = $request->validated();
         $group = Group::firstOrCreate(['name' => $data['name']]);
 
-        if (filled($data['employees'])) {
+        if (isset($data['employees']) && filled($data['employees'])) {
             $group->users()->sync($data['employees']);
         }
 

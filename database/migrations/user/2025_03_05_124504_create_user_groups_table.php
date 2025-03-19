@@ -13,7 +13,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('user_groups', function (Blueprint $table) {
-            $table->uuid('id')->primary()->default(Uuid::uuid7()->toString());
+            $table->primary(['user_id', 'group_id']);
             $table->uuid('user_id')->nullable();
             $table->foreign('user_id', 'fk-user-group-1')
                 ->references('id')
@@ -26,8 +26,6 @@ return new class extends Migration
                 ->on('groups')
                 ->onDelete('cascade')
                 ->onUpdate('no action');
-
-            $table->timestamps();
         });
     }
 
