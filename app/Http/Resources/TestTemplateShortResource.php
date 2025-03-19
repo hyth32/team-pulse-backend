@@ -29,7 +29,7 @@ class TestTemplateShortResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'status' => TestStatus::getLabelFromValue($this->test_status),
-            'author' => UserShortResource::make($this->author),
+            'author' => UserResource::make($this->author),
             'createdAt' => $this->created_at,
             'updatedAt' => $this->updated_at,
         ];

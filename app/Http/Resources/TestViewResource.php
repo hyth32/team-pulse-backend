@@ -18,7 +18,7 @@ class TestViewResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'description' => $this->description,
-            'testSubject' => $this->subject ? UserShortResource::make($this->subject) : null,
+            'testSubject' => $this->subject ? UserResource::make($this->subject) : null,
             'topics' => TopicShortResource::collection($this->topics),
         ];
     }

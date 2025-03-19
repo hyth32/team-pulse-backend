@@ -36,7 +36,7 @@ class TestShortResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'assigner' => UserShortResource::make($this->assigners()->first()),
+            'assigner' => UserResource::make($this->assigners()->first()),
             'startDate' => $this->start_date,
             'endDate' => $this->end_date,
             'completionStatus' => !$isAdmin ? TestCompletionStatus::getLabelFromValue($userTestCompletionStatus) : null,

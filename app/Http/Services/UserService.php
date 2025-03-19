@@ -6,8 +6,7 @@ use App\Enums\User\UserRole;
 use App\Http\Requests\BaseListRequest;
 use App\Http\Requests\User\UpdateProfileRequest;
 use App\Http\Requests\User\CreateUserRequest;
-use App\Http\Resources\UserProfileResource;
-use App\Http\Resources\UserShortResource;
+use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -29,12 +28,12 @@ class UserService extends BaseService
 
         return [
             'total' => $result['total'],
-            'users' => UserShortResource::collection($result['items']->get()),
+            'users' => UserResource::collection($result['items']->get()),
         ];
     }
 
     /**
-     * Получение профиля пользователя
+     * Получение профиля пользователя по ID
      * @param string $uuid
      * @param Request $request
      */
@@ -46,7 +45,17 @@ class UserService extends BaseService
         }
 
         $user = User::findOrFail($uuid);
-        return ['user' => UserProfileResource::make($user)];
+        return ['user' => UserResource::make($user)];
+    }
+
+    /**
+     * Получение профиля пользователя
+     * @param Request $request
+     */
+    public static function me(Request $request)
+    {
+        $user = User::findOrFail($request->user()->id);
+        return ['user' => UserResource::make($user)];
     }
 
     /**

@@ -2,12 +2,11 @@
 
 namespace App\Http\Resources;
 
-use App\Enums\EntityStatus;
 use App\Enums\User\UserRole;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class UserShortResource extends JsonResource
+class UserResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -18,11 +17,14 @@ class UserShortResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'name' => $this->name,
-            'lastname' => $this->lastname,
+            'fullName' => [
+                'firstName' => $this->name,
+                'lastName' => $this->lastname,
+            ],
             'login' => $this->login,
             'email' => $this->email,
             'role' => UserRole::getLabelFromValue($this->role),
+            'groups' => GroupShortResource::collection($this->groups),
             'createdAt' => $this->created_at,
         ];
     }
