@@ -14,8 +14,7 @@ return new class extends Migration
     {
         Schema::create('tags', function (Blueprint $table) {
             $table->uuid('id')->primary()->default(Uuid::uuid7()->toString());
-            $table->string('name')->nullable();
-            $table->integer('priority')->default(1);
+            $table->string('name')->unique();
 
             $table->timestamps();
         });

@@ -38,7 +38,6 @@ class CreateTagRequest extends FormRequest
     {
         return [
             'tags' => 'required|array',
-            'tags.*.name' => 'required|string',
         ];
     }
 }

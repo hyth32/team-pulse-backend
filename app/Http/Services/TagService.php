@@ -32,12 +32,8 @@ class TagService extends BaseService
      */
     public static function save(CreateTagRequest $request)
     {
-        $data = $request->validated();
-        foreach ($data['tags'] as $tagData) {
-            Tag::firstOrCreate([
-                'name' => trim($tagData['name']),
-            ]);
-        }
+        $tags = array_map(fn ($tagName) => ['name' => trim($tagName)], $request->validated()['tags']);
+        Tag::upsert($tags, ['name']);
 
         return ['message' => 'Тег создан'];
     }
@@ -49,12 +45,8 @@ class TagService extends BaseService
      */
     public static function update(string $uuid, UpdateTagRequest $request)
     {
-        $data = $request->validated();
-
-        $tag = Tag::findOrFail($uuid);
-        $tag->update($data);
-
-        return $tag;
+        Tag::findOrFail($uuid)->update($request->validated());
+        return ['message' => 'Тег обновлен'];
     }
 
     /**

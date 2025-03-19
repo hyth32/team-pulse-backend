@@ -7,8 +7,6 @@ use App\Http\Requests\Group\CreateGroupRequest;
 use App\Http\Requests\Group\UpdateGroupRequest;
 use App\Http\Resources\GroupShortResource;
 use App\Models\Group;
-use App\Models\User;
-use App\Models\UserGroup;
 use Illuminate\Http\Request;
 
 class GroupService extends BaseService
@@ -35,21 +33,10 @@ class GroupService extends BaseService
     public function save(CreateGroupRequest $request)
     {
         $data = $request->validated();
+        $group = Group::firstOrCreate(['name' => $data['name']]);
 
-        $group = Group::firstOrCreate([
-            'name' => $data['name'],
-        ]);
-
-        if (isset($data['employees']) && count($data['employees']) > 0) {
-            foreach ($data['employees'] as $userId) {
-                $userExists = User::find($userId)->exists();
-                if ($userExists) {
-                    UserGroup::firstOrCreate([
-                        'user_id' => $userId,
-                        'group_id' => $group->id,
-                    ]);
-                }
-            }
+        if (filled($data['employees'])) {
+            $group->users()->sync($data['employees']);
         }
 
         return ['message' => 'Группа создана'];
@@ -61,10 +48,8 @@ class GroupService extends BaseService
      */
     public function update(string $uuid, UpdateGroupRequest $request)
     {
-        $data = $request->validated();
-
-        $group = Group::findOrFail($uuid);
-        $group->update($data);
+        Group::findOrFail($uuid)
+            ->update($request->validated());
 
         return ['message' => 'Группа обновлена'];
     }
@@ -77,7 +62,7 @@ class GroupService extends BaseService
     public function delete(string $uuid, Request $request)
     {
         $group = Group::findOrFail($uuid);
-        if (count($group->users) > 0) {
+        if ($group->users()->exists()) {
             $message = 'Невозможно удалить группу с активными сотрудниками.';
         } else {
             $group->delete();
