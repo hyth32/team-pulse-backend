@@ -6,14 +6,13 @@ use App\Enums\Test\TemplateStatus;
 use App\Http\Requests\BaseListRequest;
 use App\Http\Requests\Template\TemplateCreate;
 use App\Http\Requests\Template\TemplateUpdate;
-use App\Http\Resources\Question\QuestionResource;
 use App\Http\Resources\Template\TemplateResource;
+use App\Http\Resources\Topic\TopicResource;
 use App\Models\Tag;
 use App\Models\Template;
 use App\Models\Topic;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 
 class TemplateService extends BaseService
 {
@@ -48,19 +47,12 @@ class TemplateService extends BaseService
             abort(400, 'Тест не найден');
         }
 
-        $topic = $template->topics()->where(['topics.id' => $topicUuid])->first();
-        if (!$topic) {
+        $topic = $template->topics()->where(['topics.id' => $topicUuid]);
+        if (!$topic->exists()) {
             abort(400, 'Тема не найдена');
         }
 
-        $query = $topic->questions();
-
-        $result = self::paginateQuery($query, $request);
-
-        return [
-            'total' => $result['total'],
-            'questions' => QuestionResource::collection($result['items']->get()),
-        ];
+        return ['topic' => TopicResource::make($topic->first()),];
     }
 
     /**
