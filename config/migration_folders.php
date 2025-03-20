@@ -12,4 +12,5 @@ return [
     'group',
     'topic',
     'tag',
+    'question',
 ];
