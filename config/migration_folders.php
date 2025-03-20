@@ -13,4 +13,5 @@ return [
     'topic',
     'tag',
     'question',
+    'answer',
 ];
