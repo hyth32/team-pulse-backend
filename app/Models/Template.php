@@ -8,9 +8,16 @@ class Template extends BaseModel
 {
     use SoftDeletes;
 
-    public function questions()
+    protected $fillable = [
+        'name',
+        'description',
+        'status',
+        'author_id',
+    ];
+
+    public function topics()
     {
-        return $this->belongsToMany(Question::class, 'template_questions');
+        return $this->belongsToMany(Topic::class, 'template_topics');
     }
 
     public function author()

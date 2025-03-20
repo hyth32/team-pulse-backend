@@ -10,14 +10,12 @@ class UserCreate extends FormRequest
 {
     public function rules(): array
     {
-        $userId = request()->user()->id;
-
         return [
             'fullName' => 'required|array',
             'fullName.firstName' => 'required|string',
             'fullName.lastName' => 'required|string',
-            'email' => ['required', Rule::unique('users', 'email')->ignore($userId)],
-            'login' => ['required', Rule::unique('users', 'login')->ignore($userId)],
+            'email' => ['required', Rule::unique('users', 'email')],
+            'login' => ['required', Rule::unique('users', 'login')],
             'role' => ['required', Rule::in(UserRole::labels())],
         ];
     }

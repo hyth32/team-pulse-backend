@@ -8,16 +8,17 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('template_questions', function (Blueprint $table) {
-            $table->primary(['template_id', 'question_id']);
+        Schema::create('topic_questions', function (Blueprint $table) {
+            $table->primary(['template_id', 'question_id', 'topic_id']);
 
             $table->foreignUuid('template_id')->constrained()->onDelete('cascade');
+            $table->foreignUuid('topic_id')->constrained()->onDelete('cascade');
             $table->foreignUuid('question_id')->constrained()->onDelete('cascade');
         });
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('template_questions');
+        Schema::dropIfExists('topic_questions');
     }
 };

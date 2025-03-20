@@ -4,9 +4,14 @@ namespace App\Models;
 
 class Question extends BaseModel
 {
+    protected $fillable = [
+        'text',
+        'answer_type',
+    ];
+
     public function topics()
     {
-        return $this->belongsToMany(Topic::class, 'question_topics');
+        return $this->belongsToMany(Topic::class, 'topic_questions');
     }
 
     public function tags()
