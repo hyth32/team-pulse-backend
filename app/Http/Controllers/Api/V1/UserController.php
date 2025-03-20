@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\BaseListRequest;
 use App\Http\Requests\User\UpdateProfileRequest;
 use App\Http\Requests\User\CreateUserRequest;
+use App\Http\Requests\User\UserCreate;
 use App\Http\Services\UserService;
 use Illuminate\Http\Request;
 
@@ -99,7 +100,7 @@ class UserController extends Controller
      *     ),
      * )
      */
-    public function create(CreateUserRequest $request)
+    public function create(UserCreate $request)
     {
         return (new UserService)->save($request);
     }

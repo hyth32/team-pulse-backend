@@ -19,6 +19,11 @@ class AssignedTest extends Model
         return $this->belongsToMany(User::class, 'assigned_test_users');
     }
 
+    public function subject()
+    {
+        return $this->hasOne(User::class, 'subject_id');
+    }
+
     public function groups()
     {
         return $this->belongsToMany(Group::class, 'assigned_test_users')->distinct();

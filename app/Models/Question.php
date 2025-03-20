@@ -11,6 +11,11 @@ class Question extends BaseModel
 
     public function tags()
     {
-        return $this->belongsToMany(Tag::class, 'question_tags');
+        return $this->belongsToMany(Tag::class, 'question_tags')->distinct();
+    }
+
+    public function answers()
+    {
+        return $this->hasMany(Answer::class);
     }
 }

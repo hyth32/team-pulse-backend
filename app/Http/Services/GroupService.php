@@ -38,8 +38,8 @@ class GroupService extends BaseService
         $data = $request->validated();
         $group = Group::firstOrCreate(['name' => $data['name']]);
 
-        if (isset($data['employees']) && filled($data['employees'])) {
-            $group->users()->sync($data['employees']);
+        if (isset($data['employeeIds']) && filled($data['employeeIds'])) {
+            $group->users()->sync($data['employeeIds']);
         }
 
         return ['message' => 'Группа создана'];
@@ -54,9 +54,9 @@ class GroupService extends BaseService
         $data = $request->validated();
         $group = Group::findOrFail($uuid);
         
-        if (isset($data['employees']) && filled($data['employees'])) {
-            $group->users()->sync($data['employees']);
-            unset($data['employees']);
+        if (isset($data['employeeIds']) && filled($data['employeeIds'])) {
+            $group->users()->sync($data['employeeIds']);
+            unset($data['employeeIds']);
         }
 
         $group->update($data);

@@ -106,24 +106,6 @@ class TemplateController extends Controller
     }
 
     /**
-     * @OA\Get(path="/api/v1/templates/{uuid}",
-     *      tags={"Test"},
-     *      summary="Получить тест",
-     *      @OA\Response(response = 200, description="Ответ",
-     *          @OA\MediaType(mediaType="application/json",
-     *              @OA\Schema(
-     *                 @OA\Property(property="test", type="object", ref="#/components/schemas/TestView")
-     *              ),
-     *          ),
-     *      ),
-     * )
-     */
-    public function view(string $uuid, Request $request)
-    {
-        return TemplateService::view($uuid, $request);
-    }
-
-    /**
      * @OA\Delete(path="/api/v1/templates/{uuid}",
      *      tags={"Test"},
      *      summary="Удалить тест",

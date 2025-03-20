@@ -3,27 +3,17 @@
 namespace App\Http\Services;
 
 use App\Enums\Test\TestCompletionStatus;
-use App\Enums\Test\TestStatus;
 use App\Enums\User\UserRole;
 use App\Http\Requests\BaseListRequest;
 use App\Http\Requests\Template\TemplateAssign;
-use App\Http\Requests\Test\AssignTestRequest;
-use App\Http\Requests\Test\CreateTestRequest;
-use App\Http\Requests\Test\UpdateTestRequest;
+use App\Http\Resources\AssignedTest\AssignedTestResource;
+use App\Http\Resources\Group\GroupResource;
 use App\Http\Resources\GroupShortResource;
-use App\Http\Resources\QuestionResource;
 use App\Http\Resources\TestResource;
-use App\Http\Resources\TestTemplateResource;
-use App\Http\Resources\TestViewResource;
 use App\Http\Resources\UserTestCompletionResource;
 use App\Models\AssignedTest;
-use App\Models\Topic;
-use App\Models\Tag;
-use App\Models\Test;
 use App\Models\User;
 use Carbon\Carbon;
-use Illuminate\Http\Request;
-use Nette\NotImplementedException;
 
 class TestService extends BaseService
 {
@@ -44,7 +34,7 @@ class TestService extends BaseService
 
         return [
             'total' => $result['total'],
-            'tests' => TestResource::collection($result['items']->get()),
+            'tests' => AssignedTestResource::collection($result['items']->get()),
         ];
     }
 
@@ -55,7 +45,7 @@ class TestService extends BaseService
     public static function listAssignedUsers(string $uuid, BaseListRequest $request)
     {
         $test = AssignedTest::findOrFail($uuid);
-        $query = $test->assignedUsers()->whereHas('tests', fn ($q) => $q->where(['test_id' => $test->id]));
+        $query = $test->users();
 
         $result = self::paginateQuery($query, $request);
 
@@ -78,7 +68,7 @@ class TestService extends BaseService
 
         return [
             'total' => $result['total'],
-            'groups' => GroupShortResource::collection($result['items']->get()),
+            'groups' => GroupResource::collection($result['items']->get()),
         ];
     }
 

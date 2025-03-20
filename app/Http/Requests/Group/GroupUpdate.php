@@ -10,7 +10,7 @@ class GroupUpdate extends FormRequest
     {
         return [
             'name' => 'nullable|string',
-            'employees' => 'nullable|array',
+            'employeeIds' => 'nullable|array',
         ];
     }
 }

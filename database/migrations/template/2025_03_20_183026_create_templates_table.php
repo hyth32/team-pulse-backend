@@ -14,6 +14,7 @@ return new class extends Migration
             $table->string('name');
             $table->text('description')->nullable();
             $table->integer('status');
+            $table->foreignUuid('author_id')->constrained('users')->onDelete('set null');
 
             $table->softDeletes();
             $table->timestamps();

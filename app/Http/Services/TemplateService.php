@@ -6,6 +6,7 @@ use App\Enums\Test\TemplateStatus;
 use App\Http\Requests\BaseListRequest;
 use App\Http\Requests\Template\TemplateCreate;
 use App\Http\Requests\Template\TemplateUpdate;
+use App\Http\Resources\Question\QuestionResource;
 use App\Http\Resources\Template\TemplateResource;
 use App\Models\Tag;
 use App\Models\Template;
@@ -196,22 +197,6 @@ class TemplateService extends BaseService
         }
 
         return ['message' => 'Тест обновлен'];
-    }
-
-    /**
-     * Получение шаблона по id
-     * @param string $uuid
-     * @param Request $request
-     */
-    public static function view(string $uuid, Request $request)
-    {
-        $test = Template::findOrFail($uuid);
-
-        if (!$request->user()->tests()->where(['tests.id' => $test->id])->exists()) {
-            abort(403, 'Тест недоступен для прохождения');
-        }
-
-        return ['test' => TestViewResource::make($test)];
     }
 
     /**

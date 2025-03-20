@@ -12,6 +12,7 @@ return new class extends Migration
         Schema::create('answers', function (Blueprint $table) {
             $table->uuid('id')->primary()->default(Uuid::uuid7()->toString());
             $table->text('text');
+            $table->foreignUuid('question_id')->constrained()->onDelete('cascade');
 
             $table->timestamps();
         });

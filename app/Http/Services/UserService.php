@@ -5,12 +5,11 @@ namespace App\Http\Services;
 use App\Enums\User\UserRole;
 use App\Http\Requests\BaseListRequest;
 use App\Http\Requests\User\UpdateProfileRequest;
-use App\Http\Requests\User\CreateUserRequest;
-use App\Http\Resources\UserResource;
+use App\Http\Requests\User\UserCreate;
+use App\Http\Resources\User\UserResource;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class UserService extends BaseService
@@ -85,9 +84,9 @@ class UserService extends BaseService
 
     /**
      * Сохранение пользователя
-     * @param CreateUserRequest $request
+     * @param UserCreate $request
      */
-    public function save(CreateUserRequest $request)
+    public function save(UserCreate $request)
     {
         $data = $request->validated();
         $generatedPassword = Str::random(20);

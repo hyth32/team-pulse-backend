@@ -10,7 +10,7 @@ class GroupCreate extends FormRequest
     {
         return [
             'name' => 'required|string',
-            'employees' => 'nullable|array',
+            'employeeIds' => 'nullable|array',
         ];
     }
 }

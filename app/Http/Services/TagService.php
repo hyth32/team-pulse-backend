@@ -5,8 +5,7 @@ namespace App\Http\Services;
 use App\Http\Requests\BaseListRequest;
 use App\Http\Requests\Tag\TagCreate;
 use App\Http\Requests\Tag\TagUpdate;
-use App\Http\Requests\Tag\UpdateTagRequest;
-use App\Http\Resources\Tag\TagResource;
+use App\Http\Resources\Tag\TagShortResource;
 use App\Models\Tag;
 use Illuminate\Http\Request;
 
@@ -23,7 +22,7 @@ class TagService extends BaseService
 
         return [
             'total' => $result['total'],
-            'tags' => TagResource::collection($result['items']->get()),
+            'tags' => TagShortResource::collection($result['items']->get()),
         ];
     }
 
@@ -34,7 +33,7 @@ class TagService extends BaseService
     public static function save(TagCreate $request)
     {
         $data = $request->validated();
-        Tag::findOrCreate(['name' => $data['name']]);
+        Tag::firstOrCreate(['name' => $data['name']]);
 
         return ['message' => 'Тег создан'];
     }
