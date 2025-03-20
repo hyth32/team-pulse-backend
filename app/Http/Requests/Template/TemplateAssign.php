@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Http\Requests\Tag;
+namespace App\Http\Requests\Template;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class TagCreate extends FormRequest
+class TemplateAssign extends FormRequest
 {
     public function rules(): array
     {
         return [
-            'name' => 'required|string',
+            //
         ];
     }
 }

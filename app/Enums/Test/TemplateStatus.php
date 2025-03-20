@@ -14,7 +14,7 @@ use App\Enums\EnumTrait;
  *      example="draft"
  * )
  */
-enum TestStatus
+enum TemplateStatus
 {
     use EnumTrait;
 

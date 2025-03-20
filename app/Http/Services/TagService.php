@@ -33,8 +33,8 @@ class TagService extends BaseService
      */
     public static function save(TagCreate $request)
     {
-        $tags = array_map(fn ($tagName) => ['name' => trim($tagName)], $request->validated()['tags']);
-        Tag::upsert($tags, ['name']);
+        $data = $request->validated();
+        Tag::findOrCreate(['name' => $data['name']]);
 
         return ['message' => 'Тег создан'];
     }
