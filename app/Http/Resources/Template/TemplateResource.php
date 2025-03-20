@@ -16,8 +16,8 @@ class TemplateResource extends JsonResource
             'name' => $this->name,
             'description' => $this->description,
             'status' => TemplateStatus::getLabelFromValue($this->status),
-            'authorLogin' => $this->author->name,
-            'topics' => TopicShortResource::collection($this->questions->topics),
+            'authorLogin' => $this->author->login,
+            'topics' => TopicShortResource::collection($this->topics),
             'createdAt' => $this->created_at,
             'updatedAt' => $this->updated_at,
         ];
