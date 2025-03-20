@@ -34,8 +34,7 @@ class TestTemplateResource extends JsonResource
             'description' => $this->description,
             'topics' => !$isAdmin ? TopicShortResource::collection($this->topics) : [],
             'status' => TestStatus::getLabelFromValue($this->test_status),
-            // 'completionStatus' => $this->completionStatus,
-            'author' => UserResource::make($this->author),
+            'authorLogin' => $this->author->login,
             'createdAt' => $this->created_at,
             'updatedAt' => $this->updated_at,
         ];

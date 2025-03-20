@@ -11,7 +11,7 @@ use App\Http\Requests\Test\CreateTestRequest;
 use App\Http\Requests\Test\UpdateTestRequest;
 use App\Http\Resources\GroupShortResource;
 use App\Http\Resources\QuestionResource;
-use App\Http\Resources\TestShortResource;
+use App\Http\Resources\TestResource;
 use App\Http\Resources\TestTemplateResource;
 use App\Http\Resources\TestViewResource;
 use App\Http\Resources\UserTestCompletionResource;
@@ -19,10 +19,8 @@ use App\Models\Topic;
 use App\Models\Tag;
 use App\Models\Test;
 use App\Models\User;
-use App\Models\UserTest;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use Nette\NotImplementedException;
 
 class TestService extends BaseService
@@ -44,7 +42,7 @@ class TestService extends BaseService
 
         return [
             'total' => $result['total'],
-            'tests' => TestShortResource::collection($result['items']->get()),
+            'tests' => TestResource::collection($result['items']->get()),
         ];
     }
 

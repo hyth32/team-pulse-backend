@@ -47,11 +47,6 @@ class User extends Authenticatable
         });
     }
 
-    public function avatar(): HasOne
-    {
-        return $this->hasOne(File::class, 'image_id');
-    }
-
     protected $fillable = [
         'name',
         'lastname',
@@ -59,7 +54,6 @@ class User extends Authenticatable
         'login',
         'password',
         'role',
-        'image_id',
     ];
 
     protected $hidden = [
