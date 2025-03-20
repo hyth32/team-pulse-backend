@@ -90,9 +90,6 @@ class UserService extends BaseService
     public function save(CreateUserRequest $request)
     {
         $data = $request->validated();
-        $file = $request->file('photo');
-        Log::info(json_encode($file));
-
         $generatedPassword = Str::random(20);
 
         $user = User::create([
