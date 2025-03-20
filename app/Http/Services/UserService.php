@@ -93,8 +93,8 @@ class UserService extends BaseService
         $generatedPassword = Str::random(20);
 
         $user = User::create([
-            'name' => $data['name'],
-            'lastname' => $data['lastname'],
+            'name' => $data['fullName']['firstName'],
+            'lastname' => $data['fullName']['lastName'],
             'email' => $data['email'],
             'login' => $data['login'],
             'password' => Hash::make($generatedPassword),

@@ -39,8 +39,9 @@ class CreateUserRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string',
-            'lastname' => 'required|string',
+            'fullName' => 'required|array',
+            'fullName.firstName' => 'required|string',
+            'fullName.lastName' => 'required|string',
             'login' => 'required|string|unique:users',
             'email' => 'required|string|unique:users',
             'role' => ['required', Rule::in(UserRole::labels())],
