@@ -14,4 +14,5 @@ return [
     'tag',
     'question',
     'answer',
+    'template',
 ];
