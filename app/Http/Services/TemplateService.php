@@ -42,22 +42,18 @@ class TemplateService extends BaseService
      */
     public static function listTopicQuestions(string $uuid, string $topicUuid, BaseListRequest $request)
     {
-        $test = Template::where(['id' => $uuid])->first();
+        $template = Template::where(['id' => $uuid])->first();
 
-        if (!$test) {
+        if (!$template) {
             abort(400, 'Тест не найден');
         }
 
-        if (!$request->user()->tests()->where(['tests.id' => $test->id])->exists()) {
-            abort(403, 'Тест недоступен для прохождения');
-        }
-
-        if (!$test->topics()->where(['topics.id' => $topicUuid])->exists()) {
+        $topic = $template->topics()->where(['topics.id' => $topicUuid])->first();
+        if (!$topic) {
             abort(400, 'Тема не найдена');
         }
 
-        $query = $test->questions()
-            ->whereHas('topics', fn ($query) => $query->where(['topics.id' => $topicUuid]));
+        $query = $topic->questions();
 
         $result = self::paginateQuery($query, $request);
 
