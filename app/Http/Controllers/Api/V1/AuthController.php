@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Auth\LoginRequest;
+use App\Http\Requests\Auth\Login;
 use App\Http\Services\AuthService;
 
 class AuthController extends Controller
@@ -28,7 +28,7 @@ class AuthController extends Controller
      *     ),
      * )
      */
-    public function login(LoginRequest $request)
+    public function login(Login $request)
     {
         return (new AuthService)->login($request);
     }

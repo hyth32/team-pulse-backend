@@ -4,7 +4,10 @@ namespace App\Http\Services;
 
 use App\Http\Requests\BaseListRequest;
 use App\Http\Requests\Group\CreateGroupRequest;
+use App\Http\Requests\Group\GroupCreate;
+use App\Http\Requests\Group\GroupUpdate;
 use App\Http\Requests\Group\UpdateGroupRequest;
+use App\Http\Resources\Group\GroupResource;
 use App\Http\Resources\GroupShortResource;
 use App\Models\Group;
 use Illuminate\Http\Request;
@@ -22,7 +25,7 @@ class GroupService extends BaseService
 
         return [
             'total' => $result['total'],
-            'groups' => GroupShortResource::collection($result['items']->get()),
+            'groups' => GroupResource::collection($result['items']->get()),
         ];
     }
 
@@ -30,7 +33,7 @@ class GroupService extends BaseService
      * Сохранение группы
      * @param CreateGroupRequest $request
      */
-    public function save(CreateGroupRequest $request)
+    public function save(GroupCreate $request)
     {
         $data = $request->validated();
         $group = Group::firstOrCreate(['name' => $data['name']]);
@@ -44,12 +47,19 @@ class GroupService extends BaseService
 
     /**
      * Обновление группы
-     * @param UpdateGroupRequest $request
+     * @param GroupUpdate $request
      */
-    public function update(string $uuid, UpdateGroupRequest $request)
+    public function update(string $uuid, GroupUpdate $request)
     {
-        Group::findOrFail($uuid)
-            ->update($request->validated());
+        $data = $request->validated();
+        $group = Group::findOrFail($uuid);
+        
+        if (isset($data['employees']) && filled($data['employees'])) {
+            $group->users()->sync($data['employees']);
+            unset($data['employees']);
+        }
+
+        $group->update($data);
 
         return ['message' => 'Группа обновлена'];
     }

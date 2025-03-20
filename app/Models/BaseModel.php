@@ -10,7 +10,7 @@ use Illuminate\Support\Str;
 
 class BaseModel extends Model
 {
-    use HasFactory, HasUuids;
+    use HasUuids;
 
     protected $keyType = 'string';
     public $incrementing = false;

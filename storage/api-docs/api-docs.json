@@ -328,12 +328,6 @@
                                         "total": {
                                             "description": "Общее количество записей",
                                             "type": "integer"
-                                        },
-                                        "tests": {
-                                            "type": "array",
-                                            "items": {
-                                                "$ref": "#/components/schemas/TestShortResource"
-                                            }
                                         }
                                     },
                                     "type": "object"
@@ -839,10 +833,11 @@
                 "example": 0
             },
             "TestCompletionStatus": {
-                "description": "Статус прохождения теста\n *          not_passed - Не пройден\n *          passed - Пройден,\n *          expired - Просрочен",
+                "description": "Статус прохождения теста\n *          not_passed - Не пройден\n *          in_progress - Выполняется\n *          passed - Пройден,\n *          expired - Просрочен",
                 "type": "string",
                 "enum": [
                     "NotPassed",
+                    "InProgress",
                     "Passed",
                     "Expired"
                 ],
@@ -1224,41 +1219,6 @@
                             "type": "string",
                             "format": "uuid"
                         }
-                    }
-                },
-                "type": "object"
-            },
-            "TestShortResource": {
-                "description": "Тест",
-                "properties": {
-                    "id": {
-                        "description": "ID теста",
-                        "type": "string",
-                        "format": "uuid"
-                    },
-                    "name": {
-                        "description": "Название теста",
-                        "type": "string"
-                    },
-                    "assigner": {
-                        "$ref": "#/components/schemas/User"
-                    },
-                    "startDate": {
-                        "description": "Дата начала",
-                        "type": "string",
-                        "format": "date-time"
-                    },
-                    "endDate": {
-                        "description": "Дата окончания",
-                        "type": "string",
-                        "format": "date-time"
-                    },
-                    "completionStatus": {
-                        "$ref": "#/components/schemas/TestCompletionStatus"
-                    },
-                    "isAnonymous": {
-                        "description": "Метка анонимности теста",
-                        "type": "boolean"
                     }
                 },
                 "type": "object"
@@ -1744,6 +1704,12 @@
                     },
                     "assigner_id": {
                         "description": "ID пользователя, назначившего тест",
+                        "type": "string",
+                        "format": "uuid",
+                        "example": "123e4567-e89b-12d3-a456-426614174000"
+                    },
+                    "topic_id": {
+                        "description": "ID темы",
                         "type": "string",
                         "format": "uuid",
                         "example": "123e4567-e89b-12d3-a456-426614174000"

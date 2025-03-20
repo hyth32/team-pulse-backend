@@ -6,5 +6,7 @@
  */
 return [
     'primary',
+    'pivot',
     'user',
+    'group',
 ];

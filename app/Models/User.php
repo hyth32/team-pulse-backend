@@ -35,4 +35,9 @@ class User extends Authenticatable
     {
         return in_array($this->role, UserRole::adminRoles());
     }
+
+    public function groups()
+    {
+        return $this->belongsToMany(Group::class, 'user_groups');
+    }
 }

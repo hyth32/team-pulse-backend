@@ -3,7 +3,7 @@
 namespace App\Http\Services;
 
 use App\Enums\User\UserRole;
-use App\Http\Requests\Auth\LoginRequest;
+use App\Http\Requests\Auth\Login;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Auth\Access\AuthorizationException;
@@ -13,9 +13,9 @@ class AuthService
 {
     /**
      * Вход в систему
-     * @param LoginRequest $request
+     * @param Login $request
      */
-    public function login(LoginRequest $request)
+    public function login(Login $request)
     {
         $data = $request->validated();
 

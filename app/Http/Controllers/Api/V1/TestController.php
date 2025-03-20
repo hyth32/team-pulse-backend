@@ -22,7 +22,6 @@ class TestController extends Controller
      *          @OA\MediaType(mediaType="application/json",
      *              @OA\Schema(
      *                 @OA\Property(property="total", type="integer", description="Общее количество записей"),
-     *                  @OA\Property(property="tests", type="array", @OA\Items(ref="#/components/schemas/TestResource"))
      *              ),
      *          ),
      *      ),

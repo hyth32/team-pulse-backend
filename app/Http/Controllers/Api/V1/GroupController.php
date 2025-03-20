@@ -4,7 +4,8 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\BaseListRequest;
-use App\Http\Requests\Group\CreateGroupRequest;
+use App\Http\Requests\Group\GroupCreate;
+use App\Http\Requests\Group\GroupUpdate;
 use App\Http\Requests\Group\UpdateGroupRequest;
 use App\Http\Services\GroupService;
 use Illuminate\Http\Request;
@@ -45,7 +46,7 @@ class GroupController extends Controller
      *     ),
      * )
      */
-    public function create(CreateGroupRequest $request)
+    public function create(GroupCreate $request)
     {
         return (new GroupService)->save($request);
     }
@@ -63,7 +64,7 @@ class GroupController extends Controller
      *     ),
      * )
      */
-    public function update(string $uuid, UpdateGroupRequest $request)
+    public function update(string $uuid, GroupUpdate $request)
     {
         return (new GroupService)->update($uuid, $request);
     }
