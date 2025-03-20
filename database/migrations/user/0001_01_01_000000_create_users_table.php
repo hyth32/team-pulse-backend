@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\User\UserRole;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -17,10 +18,9 @@ return new class extends Migration
             $table->string('name');
             $table->string('lastname');
             $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
             $table->string('login')->unique();
             $table->string('password');
-            $table->integer('role')->default(0);
+            $table->integer('role')->default(UserRole::Employee->value());
 
             $table->softDeletes();
             $table->rememberToken();

@@ -18,7 +18,6 @@ class EmployeeUserSeeder extends Seeder
             'name' => 'Employee',
             'lastname' => 'Employee',
             'email' => 'employee@employee.com',
-            'email_verified_at' => now(),
             'login' => 'employee',
             'password' => Hash::make('password'),
             'role' => UserRole::Employee->value(),

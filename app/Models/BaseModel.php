@@ -32,13 +32,4 @@ class BaseModel extends Model
 
         return Str::snake(Str::plural($className));
     }
-
-    protected static function boot()
-    {
-        parent::boot();
-
-        static::updating(function ($model) {
-            $model->{$model->getUpdatedAtColumn()} = now();
-        });
-    }
 }
