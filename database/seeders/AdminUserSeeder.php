@@ -2,10 +2,8 @@
 
 namespace Database\Seeders;
 
-use App\Enums\EntityStatus;
 use App\Enums\User\UserRole;
 use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 

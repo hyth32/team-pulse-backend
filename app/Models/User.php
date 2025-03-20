@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\User\UserRole;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -81,7 +82,7 @@ class User extends Authenticatable
 
     public function tests(): BelongsToMany
     {
-        return $this->belongsToMany(Test::class, UserTest::class)->withPivot(['assigner_id', 'completion_status']);
+        return $this->belongsToMany(Test::class, UserTest::class)->withPivot(['assigner_id', 'completion_status', 'topic_id']);
     }
 
     public function notifications()
@@ -89,8 +90,8 @@ class User extends Authenticatable
         return $this->hasMany(UserCreateNotification::class);
     }
 
-    public function getCompletionStatus($testId)
+    public function isAdmin(): bool
     {
-        return $this->hasOne(UserTest::class)->where(['test_id' => $testId])->first()->completion_status;
+        return in_array($this->role, UserRole::adminRoles());
     }
 }

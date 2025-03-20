@@ -2,7 +2,6 @@
 
 namespace App\Http\Services;
 
-use App\Enums\EntityStatus;
 use App\Enums\Test\TestCompletionStatus;
 use App\Enums\Test\TestStatus;
 use App\Enums\User\UserRole;
@@ -13,15 +12,17 @@ use App\Http\Requests\Test\UpdateTestRequest;
 use App\Http\Resources\GroupShortResource;
 use App\Http\Resources\QuestionResource;
 use App\Http\Resources\TestShortResource;
-use App\Http\Resources\TestTemplateShortResource;
+use App\Http\Resources\TestTemplateResource;
 use App\Http\Resources\TestViewResource;
 use App\Http\Resources\UserTestCompletionResource;
 use App\Models\Topic;
 use App\Models\Tag;
 use App\Models\Test;
 use App\Models\User;
+use App\Models\UserTest;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Nette\NotImplementedException;
 
 class TestService extends BaseService
@@ -60,7 +61,7 @@ class TestService extends BaseService
 
         return [
             'total' => $result['total'],
-            'tests' => TestTemplateShortResource::collection($tests->get()),
+            'tests' => TestTemplateResource::collection($tests->get()),
         ];
     }
 
@@ -263,14 +264,21 @@ class TestService extends BaseService
                 });
         }
 
-        $test->assignedUsers()->sync(
-            $usersQuery->pluck('id')->mapWithKeys(fn ($id) => [
-                $id => [
+        $userIds = $usersQuery->pluck('id')->toArray();
+        $topicIds = $test->topics()->pluck('id')->toArray();
+
+        $syncData = [];
+        foreach ($userIds as $userId) {
+            foreach ($topicIds as $topicId) {
+                $syncData[] = [
+                    'user_id' => $userId,
                     'assigner_id' => $request->user()->id,
+                    'topic_id' => $topicId,
                     'completion_status' => TestCompletionStatus::NotPassed->value(),
-                ],
-            ])
-        );
+                ];
+            }
+        }
+        $test->assignedUsers()->sync($syncData);
 
         if (isset($data['groups']) && filled($data['groups']) && !$data['assignToAll']) {
             $test->groups()->sync($data['groups']);

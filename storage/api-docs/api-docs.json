@@ -408,7 +408,7 @@
                                         "tests": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/components/schemas/TestTemplateShortResource"
+                                                "$ref": "#/components/schemas/TestTemplateResource"
                                             }
                                         }
                                     },
@@ -737,7 +737,7 @@
                 "tags": [
                     "User"
                 ],
-                "summary": "Профиль пользователя",
+                "summary": "Профиль запрашиваемого пользователя",
                 "operationId": "fce2aeb440b63cda409b80c08a6a2ac2",
                 "responses": {
                     "200": {
@@ -747,7 +747,7 @@
                                 "schema": {
                                     "properties": {
                                         "user": {
-                                            "$ref": "#/components/schemas/UserProfile"
+                                            "$ref": "#/components/schemas/User"
                                         }
                                     },
                                     "type": "object"
@@ -793,6 +793,32 @@
                         "description": "Ответ",
                         "content": {
                             "application/json": {}
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/users/me": {
+            "get": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "Профиль пользователя",
+                "operationId": "c57dbbea6a72a4207669562d0892f0e8",
+                "responses": {
+                    "200": {
+                        "description": "Ответ",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "user": {
+                                            "$ref": "#/components/schemas/User"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
                         }
                     }
                 }
@@ -1237,7 +1263,7 @@
                 },
                 "type": "object"
             },
-            "TestTemplateShortResource": {
+            "TestTemplateResource": {
                 "description": "Шаблон теста",
                 "properties": {
                     "id": {

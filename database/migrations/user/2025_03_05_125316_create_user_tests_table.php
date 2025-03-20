@@ -4,7 +4,6 @@ use App\Enums\Test\TestCompletionStatus;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-use Ramsey\Uuid\Uuid;
 
 return new class extends Migration
 {
@@ -14,7 +13,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('user_tests', function (Blueprint $table) {
-            $table->primary(['user_id', 'test_id']);
+            $table->primary(['user_id', 'test_id', 'topic_id']);
             $table->uuid('user_id');
             $table->foreign('user_id', 'fk-user-test-1')
                 ->references('id')
@@ -31,6 +30,12 @@ return new class extends Migration
             $table->foreign('assigner_id', 'fk-test-assigner-1')
                 ->references('id')
                 ->on('users')
+                ->onDelete('cascade')
+                ->onUpdate('no action');
+            $table->uuid('topic_id');
+            $table->foreign('topic_id', 'fk-test-topic-1')
+                ->references('id')
+                ->on('topics')
                 ->onDelete('cascade')
                 ->onUpdate('no action');
             $table->integer('completion_status')->default(TestCompletionStatus::NotPassed->value());

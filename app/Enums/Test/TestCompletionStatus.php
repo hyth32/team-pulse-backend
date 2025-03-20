@@ -10,6 +10,7 @@ use App\Enums\EnumTrait;
  *      type="string",
  *      description="Статус прохождения теста
  *          not_passed - Не пройден
+ *          in_progress - Выполняется
  *          passed - Пройден,
  *          expired - Просрочен",
  *      example="not_passed"
@@ -20,6 +21,7 @@ enum TestCompletionStatus
     use EnumTrait;
 
     case NotPassed;
+    case InProgress;
     case Passed;
     case Expired;
 
@@ -27,8 +29,9 @@ enum TestCompletionStatus
     {
         return match ($this) {
             self::NotPassed => 0,
-            self::Passed => 1,
-            self::Expired => 2,
+            self::InProgress => 1,
+            self::Passed => 2,
+            self::Expired => 3,
         };
     }
 
@@ -36,6 +39,7 @@ enum TestCompletionStatus
     {
         return match ($this) {
             self::NotPassed => 'not_passed',
+            self::InProgress => 'in_progress',
             self::Passed => 'passed',
             self::Expired => 'expired',
         };

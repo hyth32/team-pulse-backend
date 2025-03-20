@@ -55,7 +55,7 @@ class Test extends BaseModel
 
     public function assignedUsers(): BelongsToMany
     {
-        return $this->belongsToMany(User::class, UserTest::class)->withPivot(['assigner_id', 'completion_status']);
+        return $this->belongsToMany(User::class, UserTest::class)->withPivot(['assigner_id', 'topic_id', 'completion_status']);
     }
 
     public function assigners()
