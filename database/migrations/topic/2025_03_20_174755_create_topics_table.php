@@ -9,7 +9,7 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('groups', function (Blueprint $table) {
+        Schema::create('topics', function (Blueprint $table) {
             $table->uuid('id')->primary()->default(Uuid::uuid7()->toString());
             $table->string('name')->unique();
 
@@ -19,6 +19,6 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::dropIfExists('groups');
+        Schema::dropIfExists('topics');
     }
 };

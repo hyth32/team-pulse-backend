@@ -7,6 +7,8 @@
 return [
     'primary',
     'pivot',
+
     'user',
     'group',
+    'topic',
 ];
