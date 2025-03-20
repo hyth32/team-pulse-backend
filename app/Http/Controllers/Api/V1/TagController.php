@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\BaseListRequest;
 use App\Http\Requests\Tag\CreateTagRequest;
+use App\Http\Requests\Tag\TagCreate;
+use App\Http\Requests\Tag\TagUpdate;
 use App\Http\Requests\Tag\UpdateTagRequest;
 use App\Http\Services\TagService;
 use Illuminate\Http\Request;
@@ -44,7 +46,7 @@ class TagController extends Controller
      *     ),
      * )
      */
-    public function create(CreateTagRequest $request) {
+    public function create(TagCreate $request) {
         return (new TagService)->save($request);
     }
 
@@ -61,7 +63,7 @@ class TagController extends Controller
      *     ),
      * )
      */
-    public function update(string $uuid, UpdateTagRequest $request) {
+    public function update(string $uuid, TagUpdate $request) {
         return (new TagService)->update($uuid, $request);
     }
 

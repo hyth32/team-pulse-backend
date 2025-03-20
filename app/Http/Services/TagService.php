@@ -3,9 +3,10 @@
 namespace App\Http\Services;
 
 use App\Http\Requests\BaseListRequest;
-use App\Http\Requests\Tag\CreateTagRequest;
+use App\Http\Requests\Tag\TagCreate;
+use App\Http\Requests\Tag\TagUpdate;
 use App\Http\Requests\Tag\UpdateTagRequest;
-use App\Http\Resources\TagShortResource;
+use App\Http\Resources\Tag\TagResource;
 use App\Models\Tag;
 use Illuminate\Http\Request;
 
@@ -22,15 +23,15 @@ class TagService extends BaseService
 
         return [
             'total' => $result['total'],
-            'tags' => TagShortResource::collection($result['items']->get()),
+            'tags' => TagResource::collection($result['items']->get()),
         ];
     }
 
     /**
      * Сохранение тега
-     * @param CreateTagRequest $request
+     * @param TagCreate $request
      */
-    public static function save(CreateTagRequest $request)
+    public static function save(TagCreate $request)
     {
         $tags = array_map(fn ($tagName) => ['name' => trim($tagName)], $request->validated()['tags']);
         Tag::upsert($tags, ['name']);
@@ -41,9 +42,9 @@ class TagService extends BaseService
     /**
      * Обновление тега
      * @param string $uuid
-     * @param UpdateTagRequest $request
+     * @param TagUpdate $request
      */
-    public static function update(string $uuid, UpdateTagRequest $request)
+    public static function update(string $uuid, TagUpdate $request)
     {
         Tag::findOrFail($uuid)->update($request->validated());
         return ['message' => 'Тег обновлен'];
