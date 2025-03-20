@@ -15,4 +15,5 @@ return [
     'question',
     'answer',
     'template',
+    'assignedTest',
 ];
