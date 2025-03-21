@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\AssignedTest\AssignedUserTest;
 use App\Http\Requests\BaseListRequest;
 use App\Http\Requests\Template\TemplateAssign;
+use App\Http\Requests\Test\TestSolution;
 use App\Http\Services\TestService;
 
 class TestController extends Controller
@@ -88,5 +88,10 @@ class TestController extends Controller
     public function topicQuestions(string $uuid, string $topicUuid, BaseListRequest $request)
     {
         return TestService::listTopicQuestions($uuid, $topicUuid, $request);
+    }
+
+    public function solve(TestSolution $request)
+    {
+        return (new TestService)->saveSolution($request);
     }
 }

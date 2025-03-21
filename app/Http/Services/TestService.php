@@ -3,18 +3,16 @@
 namespace App\Http\Services;
 
 use App\Enums\Test\TopicCompletionStatus;
-use App\Enums\User\UserRole;
 use App\Http\Requests\BaseListRequest;
 use App\Http\Requests\Template\TemplateAssign;
+use App\Http\Requests\Test\TestSolution;
 use App\Http\Resources\AssignedTest\AssignedTestResource;
 use App\Http\Resources\Topic\TopicResource;
 use App\Http\Resources\User\TestCompletionResource;
-use App\Http\Resources\User\UserTestCompletionResource;
 use App\Models\AssignedTest;
 use App\Models\Template;
 use App\Models\User;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Log;
 
 class TestService extends BaseService
 {
@@ -130,5 +128,14 @@ class TestService extends BaseService
         }
 
         return ['message' => 'Тест назначен'];
+    }
+
+    public function saveSolution(TestSolution $request)
+    {
+        $data = $request->validated();
+
+        $test = AssignedTest::where(['id' => $data['testId']])->first();
+
+        return ['message' => 'Результаты сохранены'];
     }
 }
