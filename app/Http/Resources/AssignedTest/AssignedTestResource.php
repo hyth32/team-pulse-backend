@@ -2,7 +2,7 @@
 
 namespace App\Http\Resources\AssignedTest;
 
-use App\Http\Resources\Topic\TopicShortResource;
+use App\Http\Resources\Topic\TopicCompletionResource;
 use App\Http\Resources\User\UserFullNameResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -28,7 +28,7 @@ class AssignedTestResource extends JsonResource
         }
 
         return array_merge($baseData, [
-            'topics' => TopicShortResource::collection($this->template->topics),
+            'topics' => TopicCompletionResource::collection($this->topicCompletion),
         ]);
     }
 }

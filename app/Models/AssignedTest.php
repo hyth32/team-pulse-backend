@@ -40,4 +40,12 @@ class AssignedTest extends BaseModel
     {
         return $this->hasOne(User::class, 'id', 'assigner_id');
     }
+
+    public function topicCompletion()
+    {
+        return $this->belongsToMany(
+            Topic::class,
+            'user_test_completions',
+        )->withPivot(['user_id','completion_status'])->distinct();
+    }
 }

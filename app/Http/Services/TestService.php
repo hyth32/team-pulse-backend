@@ -46,6 +46,7 @@ class TestService extends BaseService
     public static function listAssignedUsers(string $uuid, BaseListRequest $request)
     {
         $test = AssignedTest::findOrFail($uuid);
+
         $query = $test->users();
 
         $result = self::paginateQuery($query, $request);
