@@ -7,6 +7,7 @@ use App\Enums\User\UserRole;
 use App\Http\Requests\BaseListRequest;
 use App\Http\Requests\Template\TemplateAssign;
 use App\Http\Resources\AssignedTest\AssignedTestResource;
+use App\Http\Resources\Topic\TopicResource;
 use App\Http\Resources\User\UserTestCompletionResource;
 use App\Models\AssignedTest;
 use App\Models\Template;
@@ -32,7 +33,10 @@ class TestService extends BaseService
 
         $result = self::paginateQuery($query, $request);
 
-        return ['tests' => AssignedTestResource::collection($result['items']->get())];
+        return [
+            'total' => $result['total'],
+            'tests' => AssignedTestResource::collection($result['items']->get()),
+        ];
     }
 
     /**
@@ -50,6 +54,28 @@ class TestService extends BaseService
             'total' => $result['total'],
             'users' => UserTestCompletionResource::collection($result['items']->get()),
         ];
+    }
+
+    /**
+     * Получение вопросов по ID топика
+     * @param string $uuid
+     * @param string $topicUuid
+     * @param BaseListRequest $request
+     */
+    public static function listTopicQuestions(string $uuid, string $topicUuid, BaseListRequest $request)
+    {
+        $test = AssignedTest::where(['id' => $uuid])->first();
+
+        if (!$test) {
+            abort(400, 'Тест не найден');
+        }
+
+        $topic = $test->template()->topics()->where(['topics.id' => $topicUuid]);
+        if (!$topic->exists()) {
+            abort(400, 'Тема не найдена');
+        }
+
+        return ['topic' => TopicResource::make($topic->first()),];
     }
 
     /**
