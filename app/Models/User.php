@@ -51,6 +51,6 @@ class User extends Authenticatable
         return $this->belongsToMany(
             AssignedTest::class,
             'user_test_completions',
-        )->withPivot('topic_id', 'completion_status');
+        )->distinct();
     }
 }
