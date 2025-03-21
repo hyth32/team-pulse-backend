@@ -36,11 +36,6 @@ class AssignedTest extends BaseModel
         return $this->hasOne(User::class, 'id', 'subject_id');
     }
 
-    public function groups()
-    {
-        return $this->belongsToMany(Group::class, 'assigned_test_groups');
-    }
-
     public function assigner()
     {
         return $this->hasOne(User::class, 'id', 'assigner_id');

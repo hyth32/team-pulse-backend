@@ -11,6 +11,7 @@ class QuestionResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
+            'id' => $this->id,
             'text' => $this->text,
             'answerType' => $this->answer_type,
             'answers' => AnswerResource::collection($this->answers),

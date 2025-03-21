@@ -11,7 +11,7 @@ class AnswerResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'answer' => $this->text,
+            'text' => $this->text,
             'points' => AnswerTagPointsResource::collection($this->tags),
         ];
     }

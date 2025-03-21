@@ -6,7 +6,7 @@ use App\Enums\Test\TopicCompletionStatus;
 use App\Enums\User\UserRole;
 use App\Http\Requests\BaseListRequest;
 use App\Http\Requests\Template\TemplateAssign;
-use App\Http\Resources\Group\GroupResource;
+use App\Http\Resources\AssignedTest\AssignedTestResource;
 use App\Http\Resources\User\UserTestCompletionResource;
 use App\Models\AssignedTest;
 use App\Models\Template;
@@ -21,7 +21,18 @@ class TestService extends BaseService
      */
     public static function list(BaseListRequest $request)
     {
-        //
+        $user = $request->user();
+        $isAdmin = $user->isAdmin();
+
+        if ($isAdmin) {
+            $query = AssignedTest::query();
+        } else {
+            $query = $user->assignedTests();
+        }
+
+        $result = self::paginateQuery($query, $request);
+
+        return ['tests' => AssignedTestResource::collection($result['items']->get())];
     }
 
     /**
@@ -38,23 +49,6 @@ class TestService extends BaseService
         return [
             'total' => $result['total'],
             'users' => UserTestCompletionResource::collection($result['items']->get()),
-        ];
-    }
-
-    /**
-     * Получение списка назначенных групп
-     * @param BaseListRequest $request
-     */
-    public static function listAssignedGroups(string $uuid, BaseListRequest $request)
-    {
-        $test = AssignedTest::findOrFail($uuid);
-        $query = $test->groups();
-
-        $result = self::paginateQuery($query, $request);
-
-        return [
-            'total' => $result['total'],
-            'groups' => GroupResource::collection($result['items']->get()),
         ];
     }
 
@@ -103,12 +97,6 @@ class TestService extends BaseService
                     'completion_status' => TopicCompletionStatus::NotPassed->value(),
                 ]);
             }
-        }
-
-        if (isset($data['groups']) && filled($data['groups']) && !$data['assignToAll']) {
-            $test->groups()->sync($data['groups']);
-        } else {
-            $test->groups()->detach();
         }
 
         return ['message' => 'Тест назначен'];
