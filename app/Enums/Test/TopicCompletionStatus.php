@@ -6,7 +6,7 @@ use App\Enums\EnumTrait;
 
 /**
  * @OA\Schema(
- *      schema="TestCompletionStatus",
+ *      schema="TopicCompletionStatus",
  *      type="string",
  *      description="Статус прохождения теста
  *          not_passed - Не пройден
@@ -16,7 +16,7 @@ use App\Enums\EnumTrait;
  *      example="not_passed"
  * )
  */
-enum TestCompletionStatus
+enum TopicCompletionStatus
 {
     use EnumTrait;
 

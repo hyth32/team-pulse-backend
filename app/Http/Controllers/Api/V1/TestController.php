@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\AssignedTest\AssignedUserTest;
 use App\Http\Requests\BaseListRequest;
+use App\Http\Requests\Template\TemplateAssign;
 use App\Http\Services\TestService;
 
 class TestController extends Controller
@@ -26,6 +28,24 @@ class TestController extends Controller
     public function list(BaseListRequest $request)
     {
         return TestService::list($request);
+    }
+
+    /**
+     * @OA\Post(path="/api/v1/tests/assign",
+     *      tags={"Test"},
+     *      summary="Назначить шаблон",
+     *      @OA\RequestBody(
+     *        required=true,
+     *        @OA\JsonContent(ref="#/components/schemas/AssignTestRequest"),
+     *      ),
+     *      @OA\Response(response=200, description="Ответ",
+     *         @OA\MediaType(mediaType="application/json"),
+     *      ),
+     * )
+     */
+    public function assign(TemplateAssign $request)
+    {
+        return (new TestService)->assign($request);
     }
 
     /**

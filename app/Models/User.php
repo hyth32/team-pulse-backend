@@ -45,4 +45,12 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(AssignedTest::class, 'assigned_test_users');
     }
+
+    public function assignedTests()
+    {
+        return $this->belongsToMany(
+            AssignedTest::class,
+            'user_test_completions',
+        )->withPivot('topic_id', 'completion_status');
+    }
 }

@@ -67,24 +67,6 @@ class TemplateController extends Controller
     }
 
     /**
-     * @OA\Post(path="/api/v1/templates/{uuid}/assign",
-     *      tags={"Test"},
-     *      summary="Назначить шаблон",
-     *      @OA\RequestBody(
-     *        required=true,
-     *        @OA\JsonContent(ref="#/components/schemas/AssignTestRequest"),
-     *      ),
-     *      @OA\Response(response=200, description="Ответ",
-     *         @OA\MediaType(mediaType="application/json"),
-     *      ),
-     * )
-     */
-    public function assign(string $uuid, TemplateAssign $request)
-    {
-        return (new TestService)->assign($uuid, $request);
-    }
-
-    /**
      * @OA\Get(path="/api/v1/templates/{uuid}/topics/{topicUuid}",
      *      tags={"Test"},
      *      summary="Получить вопросы теста по ID топика",

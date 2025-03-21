@@ -6,18 +6,24 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+    /**
+     * Run the migrations.
+     */
     public function up(): void
     {
-        Schema::create('assigned_test_users', function (Blueprint $table) {
-            $table->primary(['assigned_test_id', 'user_id']);
+        Schema::create('assigned_test_groups', function (Blueprint $table) {
+            $table->primary(['assigned_test_id', 'group_id']);
 
             $table->foreignUuid('assigned_test_id')->constrained()->onDelete('cascade');
-            $table->foreignUuid('user_id')->constrained()->onDelete('cascade');
+            $table->foreignUuid('group_id')->constrained()->onDelete('cascade');
         });
     }
 
+    /**
+     * Reverse the migrations.
+     */
     public function down(): void
     {
-        Schema::dropIfExists('assigned_test_users');
+        Schema::dropIfExists('assigned_test_groups');
     }
 };

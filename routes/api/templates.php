@@ -8,8 +8,6 @@ Route::controller(TemplateController::class)->middleware('auth:sanctum')->group(
     Route::post('/templates', 'create');
     Route::put('/templates/{uuid}', 'update');
 
-    Route::post('/templates/{uuid}/assign', 'assign');
-    
     Route::get('/templates/{uuid}/topics/{topicUuid}', 'topicQuestions');
 
     Route::delete('/templates/{uuid}', 'delete');

@@ -13,10 +13,7 @@ class UserResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'fullName' => [
-                'firstName' => $this->name,
-                'lastName' => $this->lastname,
-            ],
+            'fullName' => UserFullNameResource::make($this),
             'login' => $this->login,
             'email' => $this->email,
             'role' => UserRole::getLabelFromValue($this->role),

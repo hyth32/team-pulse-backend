@@ -2,16 +2,14 @@
 
 namespace App\Http\Services;
 
-use App\Enums\Test\TestCompletionStatus;
+use App\Enums\Test\TopicCompletionStatus;
 use App\Enums\User\UserRole;
 use App\Http\Requests\BaseListRequest;
 use App\Http\Requests\Template\TemplateAssign;
-use App\Http\Resources\AssignedTest\AssignedTestResource;
 use App\Http\Resources\Group\GroupResource;
-use App\Http\Resources\GroupShortResource;
-use App\Http\Resources\TestResource;
-use App\Http\Resources\UserTestCompletionResource;
+use App\Http\Resources\User\UserTestCompletionResource;
 use App\Models\AssignedTest;
+use App\Models\Template;
 use App\Models\User;
 use Carbon\Carbon;
 
@@ -23,19 +21,7 @@ class TestService extends BaseService
      */
     public static function list(BaseListRequest $request)
     {
-        $user = $request->user();
-
-        $query = in_array($user->role, UserRole::adminRoles())
-            ? AssignedTest::withoutGlobalScopes()->whereHas('assignedUsers')
-            : $user->tests();
-        $query->orderBy('created_at', 'desc');
-
-        $result = self::paginateQuery($query, $request);
-
-        return [
-            'total' => $result['total'],
-            'tests' => AssignedTestResource::collection($result['items']->get()),
-        ];
+        //
     }
 
     /**
@@ -74,15 +60,15 @@ class TestService extends BaseService
 
     /**
      * Назначение шаблона
-     * @param string $uuid
      * @param TemplateAssign $request
      */
-    public function assign(string $uuid, TemplateAssign $request)
+    public function assign(TemplateAssign $request)
     {
-        $test = AssignedTest::findOrFail($uuid);
         $data = $request->validated();
+        $template = Template::findOrFail($data['templateId']);
 
-        $test->update([
+        $test = AssignedTest::firstOrCreate([
+            'template_id' => $template->id,
             'name' => $data['name'],
             'description' => $data['description'],
             'frequency' => $data['frequency'],
@@ -90,35 +76,34 @@ class TestService extends BaseService
             'end_date' => Carbon::parse($data['endDate']) ?? null,
             'subject_id' => $data['subjectId'] ?? null,
             'is_anonymous' => $data['isAnonymous'],
+            'late_result' => $data['lateResult'],
+            'assigner_id' => $request->user()->id,
         ]);
 
         if ($data['assignToAll']) {
             $usersQuery = User::where(['role' => UserRole::Employee->value()]);
         } else {
             $usersQuery = User::query()
-                ->when(isset($data['groups']) && filled($data['groups']), function ($q) use ($data) {
-                    $q->whereHas('groups', fn ($q) => $q->whereIn('id', $data['groups']));
+                ->when(isset($data['groupIds']) && filled($data['groupIds']), function ($q) use ($data) {
+                    $q->whereHas('groups', fn ($q) => $q->whereIn('id', $data['groupIds']));
                 })
-                ->when(isset($data['employees']) && filled($data['employees']), function ($q) use ($data) {
-                    $q->whereIn('id', $data['employees']);
+                ->when(isset($data['employeeIds']) && filled($data['employeeIds']), function ($q) use ($data) {
+                    $q->whereIn('id', $data['employeeIds']);
                 });
         }
 
-        $userIds = $usersQuery->pluck('id')->toArray();
-        $topicIds = $test->topics()->pluck('id')->toArray();
-
-        $syncData = [];
-        foreach ($userIds as $userId) {
+        $users = $usersQuery->get();
+        
+        foreach ($users as $user) {
+            $topicIds = $template->topics()->pluck('id')->toArray();
+        
             foreach ($topicIds as $topicId) {
-                $syncData[] = [
-                    'user_id' => $userId,
-                    'assigner_id' => $request->user()->id,
+                $user->assignedTests()->attach($test->id, [
                     'topic_id' => $topicId,
-                    'completion_status' => TestCompletionStatus::NotPassed->value(),
-                ];
+                    'completion_status' => TopicCompletionStatus::NotPassed->value(),
+                ]);
             }
         }
-        $test->assignedUsers()->sync($syncData);
 
         if (isset($data['groups']) && filled($data['groups']) && !$data['assignToAll']) {
             $test->groups()->sync($data['groups']);

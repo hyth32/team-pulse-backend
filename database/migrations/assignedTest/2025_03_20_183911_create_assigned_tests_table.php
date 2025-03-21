@@ -12,13 +12,16 @@ return new class extends Migration
         Schema::create('assigned_tests', function (Blueprint $table) {
             $table->uuid('id')->primary()->default(Uuid::uuid7()->toString());
             $table->string('name');
+            $table->string('frequency')->nullable();
             $table->text('description')->nullable();
             $table->boolean('is_anonymous');
+            $table->boolean('late_result');
             $table->dateTime('start_date');
             $table->dateTime('end_date');
 
             $table->foreignUuid('template_id')->constrained()->onDelete('cascade');
-            $table->foreignUuid('subject_id')->constrained('users')->onDelete('cascade');
+            $table->foreignUuid('subject_id')->nullable()->constrained('users')->onDelete('cascade');
+            $table->foreignUuid('assigner_id')->constrained('users')->onDelete('cascade');
 
             $table->softDeletes();
             $table->timestamps();
