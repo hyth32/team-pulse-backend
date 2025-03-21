@@ -20,9 +20,7 @@ class UserService extends BaseService
      */
     public static function list(BaseListRequest $request)
     {
-        $query = User::query()
-            ->where(['role' => UserRole::Employee->value()])
-            ->orderBy('created_at', 'desc');
+        $query = User::query()->orderBy('created_at', 'desc');
 
         $result = self::paginateQuery($query, $request);
 
