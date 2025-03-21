@@ -28,7 +28,12 @@ class AssignedTestResource extends JsonResource
         }
 
         return array_merge($baseData, [
-            'topics' => TopicCompletionResource::collection($this->topicCompletion),
+            'topics' => TopicCompletionResource::collection(
+                collect($this->topicCompletion()
+                    ->where([
+                        'assigned_test_id' => $this->id,
+                        'user_id' => $request->user()->id,
+                    ])->get())),
         ]);
     }
 }

@@ -8,11 +8,13 @@ use App\Http\Requests\BaseListRequest;
 use App\Http\Requests\Template\TemplateAssign;
 use App\Http\Resources\AssignedTest\AssignedTestResource;
 use App\Http\Resources\Topic\TopicResource;
+use App\Http\Resources\User\TestCompletionResource;
 use App\Http\Resources\User\UserTestCompletionResource;
 use App\Models\AssignedTest;
 use App\Models\Template;
 use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class TestService extends BaseService
 {
@@ -45,7 +47,7 @@ class TestService extends BaseService
      */
     public static function listAssignedUsers(string $uuid, BaseListRequest $request)
     {
-        $test = AssignedTest::findOrFail($uuid);
+        $test = AssignedTest::findOrFail($uuid)->with('topicCompletion')->first();
 
         $query = $test->users();
 
@@ -53,7 +55,7 @@ class TestService extends BaseService
 
         return [
             'total' => $result['total'],
-            'users' => UserTestCompletionResource::collection($result['items']->get()),
+            'users' => TestCompletionResource::collection($result['items']->get()),
         ];
     }
 
@@ -99,12 +101,13 @@ class TestService extends BaseService
             'is_anonymous' => $data['isAnonymous'],
             'late_result' => $data['lateResult'],
             'assigner_id' => $request->user()->id,
+            'test_status' => TopicCompletionStatus::NotPassed->value(),
         ]);
 
-        if ($data['assignToAll']) {
-            $usersQuery = User::where(['role' => UserRole::Employee->value()]);
-        } else {
-            $usersQuery = User::query()
+        $usersQuery = User::query();
+
+        if (!$data['assignToAll']) {
+            $usersQuery = $usersQuery
                 ->when(isset($data['groupIds']) && filled($data['groupIds']), function ($q) use ($data) {
                     $q->whereHas('groups', fn ($q) => $q->whereIn('id', $data['groupIds']));
                 })

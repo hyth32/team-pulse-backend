@@ -18,6 +18,7 @@ return new class extends Migration
             $table->boolean('late_result');
             $table->dateTime('start_date');
             $table->dateTime('end_date');
+            $table->integer('test_status');
 
             $table->foreignUuid('template_id')->constrained()->onDelete('cascade');
             $table->foreignUuid('subject_id')->nullable()->constrained('users')->onDelete('cascade');

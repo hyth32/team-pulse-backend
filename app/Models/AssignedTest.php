@@ -19,6 +19,7 @@ class AssignedTest extends BaseModel
         'assigner_id',
         'is_anonymous',
         'late_result',
+        'test_status',
     ];
 
     public function template()
@@ -28,7 +29,7 @@ class AssignedTest extends BaseModel
 
     public function users()
     {
-        return $this->belongsToMany(User::class, 'user_test_completions')->withPivot(['completion_status', 'topic_id']);
+        return $this->belongsToMany(User::class, 'user_test_completions')->withPivot(['completion_status', 'topic_id'])->distinct('user_id');
     }
 
     public function subject()
@@ -46,6 +47,6 @@ class AssignedTest extends BaseModel
         return $this->belongsToMany(
             Topic::class,
             'user_test_completions',
-        )->withPivot(['user_id','completion_status'])->distinct();
+        )->withPivot(['user_id','completion_status']);
     }
 }
