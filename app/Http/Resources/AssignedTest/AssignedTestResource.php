@@ -18,7 +18,7 @@ class AssignedTestResource extends JsonResource
             'name' => $this->name,
             'description' => $this->description,
             'isAnonymous' => $this->is_anonymous,
-            'subjectFullname' => UserFullNameResource::make($this->subject),
+            'subjectFullName' => UserFullNameResource::make($this->subject),
             'startDate' => $this->start_date,
             'endDate' => $this->end_date,
         ];
