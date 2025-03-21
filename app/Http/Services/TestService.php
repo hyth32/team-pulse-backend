@@ -70,7 +70,7 @@ class TestService extends BaseService
             abort(400, 'Тест не найден');
         }
 
-        $topic = $test->template()->topics()->where(['topics.id' => $topicUuid]);
+        $topic = $test->template->topics()->where(['topics.id' => $topicUuid]);
         if (!$topic->exists()) {
             abort(400, 'Тема не найдена');
         }

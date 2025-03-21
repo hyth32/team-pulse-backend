@@ -34,28 +34,6 @@ class TemplateService extends BaseService
     }
 
     /**
-     * Получение вопросов по ID топика
-     * @param string $uuid
-     * @param string $topicUuid
-     * @param BaseListRequest $request
-     */
-    public static function listTopicQuestions(string $uuid, string $topicUuid, BaseListRequest $request)
-    {
-        $template = Template::where(['id' => $uuid])->first();
-
-        if (!$template) {
-            abort(400, 'Тест не найден');
-        }
-
-        $topic = $template->topics()->where(['topics.id' => $topicUuid]);
-        if (!$topic->exists()) {
-            abort(400, 'Тема не найдена');
-        }
-
-        return ['topic' => TopicResource::make($topic->first()),];
-    }
-
-    /**
      * Создание шаблона
      * @param TemplateCreate $request
      */

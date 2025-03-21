@@ -15,7 +15,7 @@ class TemplateController extends Controller
 {
     /**
      * @OA\Get(path="/api/v1/templates",
-     *      tags={"Test"},
+     *      tags={"Template"},
      *      summary="Список шаблонов",
      *      @OA\Parameter(name="limit", @OA\Schema(type="integer"), description="Количество записей", in="query"),
      *      @OA\Parameter(name="offset", @OA\Schema(type="integer"), description="Смещение", in="query"),
@@ -36,7 +36,7 @@ class TemplateController extends Controller
 
     /**
      * @OA\Post(path="/api/v1/templates",
-     *      tags={"Test"},
+     *      tags={"Template"},
      *      summary="Создать шаблон",
      *      @OA\RequestBody(
      *        required=true,
@@ -54,7 +54,7 @@ class TemplateController extends Controller
 
     /**
      * @OA\Put(path="/api/v1/templates/{uuid}",
-     *      tags={"Test"},
+     *      tags={"Template"},
      *      summary="Обновить шаблон",
      *      @OA\Response(response=200, description="Ответ",
      *         @OA\MediaType(mediaType="application/json"),
@@ -67,29 +67,8 @@ class TemplateController extends Controller
     }
 
     /**
-     * @OA\Get(path="/api/v1/templates/{uuid}/topics/{topicUuid}",
-     *      tags={"Test"},
-     *      summary="Получить вопросы теста по ID топика",
-     *      @OA\Parameter(name="limit", @OA\Schema(type="integer"), description="Количество записей", in="query"),
-     *      @OA\Parameter(name="offset", @OA\Schema(type="integer"), description="Смещение", in="query"),
-     *      @OA\Response(response = 200, description="Ответ",
-     *          @OA\MediaType(mediaType="application/json",
-     *              @OA\Schema(
-     *                  @OA\Property(property="total", type="integer", description="Общее количество записей"),
-     *                  @OA\Property(property="questions", type="array", @OA\Items(ref="#/components/schemas/QuestionsResponse"))
-     *              ),
-     *          ),
-     *      ),
-     * )
-     */
-    public function topicQuestions(string $uuid, string $topicUuid, BaseListRequest $request)
-    {
-        return TemplateService::listTopicQuestions($uuid, $topicUuid, $request);
-    }
-
-    /**
      * @OA\Delete(path="/api/v1/templates/{uuid}",
-     *      tags={"Test"},
+     *      tags={"Template"},
      *      summary="Удалить тест",
      *      @OA\Response(response=200, description="Ответ",
      *         @OA\MediaType(mediaType="application/json"),

@@ -8,6 +8,8 @@ Route::controller(TestController::class)->middleware('auth:sanctum')->group(func
 
     Route::post('/tests/assign', 'assign');
 
+    Route::get('tests/{uuid}/{topicUuid}', 'topicQuestions');
+
     Route::get('/tests/{uuid}/users', 'assignedUsers');
     Route::get('/tests/{uuid}/groups', 'assignedGroups');
 });
