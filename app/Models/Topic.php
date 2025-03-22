@@ -10,6 +10,6 @@ class Topic extends BaseModel
 
     public function questions()
     {
-        return $this->belongsToMany(Question::class, 'topic_questions');
+        return $this->hasMany(Question::class);
     }
 }

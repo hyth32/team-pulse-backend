@@ -55,7 +55,7 @@ class TemplateService extends BaseService
                 $question = $topic->questions()->create([
                     'text' => $questionData['text'],
                     'answer_type' => $questionData['answerType'],
-                ], ['template_id' => $template->id]);
+                ]);
 
                 if (isset($questionData['tags']) && filled($questionData['tags'])) {
                     $tags = collect($questionData['tags'])->map(fn ($tagName) => Tag::firstOrCreate(['name' => $tagName]));

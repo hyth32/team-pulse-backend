@@ -13,6 +13,7 @@ return new class extends Migration
             $table->uuid('id')->primary()->default(Uuid::uuid7()->toString());
             $table->text('text');
             $table->integer('answer_type');
+            $table->foreignUuid('topic_id')->constrained()->cascadeOnDelete();
 
             $table->timestamps();
         });

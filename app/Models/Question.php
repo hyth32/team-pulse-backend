@@ -9,9 +9,9 @@ class Question extends BaseModel
         'answer_type',
     ];
 
-    public function topics()
+    public function topic()
     {
-        return $this->belongsToMany(Topic::class, 'topic_questions');
+        return $this->belongsTo(Topic::class);
     }
 
     public function tags()
