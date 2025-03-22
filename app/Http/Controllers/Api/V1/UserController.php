@@ -5,8 +5,8 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\BaseListRequest;
 use App\Http\Requests\User\UpdateProfileRequest;
-use App\Http\Requests\User\CreateUserRequest;
 use App\Http\Requests\User\UserCreate;
+use App\Http\Requests\User\UserImport;
 use App\Http\Services\UserService;
 use Illuminate\Http\Request;
 
@@ -117,5 +117,10 @@ class UserController extends Controller
     public function delete(string $uuid, Request $request)
     {
         return (new UserService)->delete($uuid, $request);
+    }
+
+    public function importUsers(UserImport $request)
+    {
+        return (new UserService)->import($request);
     }
 }

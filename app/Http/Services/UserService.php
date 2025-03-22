@@ -6,11 +6,11 @@ use App\Enums\User\UserRole;
 use App\Http\Requests\BaseListRequest;
 use App\Http\Requests\User\UpdateProfileRequest;
 use App\Http\Requests\User\UserCreate;
+use App\Http\Requests\User\UserImport;
 use App\Http\Resources\User\UserResource;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
 
 class UserService extends BaseService
 {
@@ -87,14 +87,13 @@ class UserService extends BaseService
     public function save(UserCreate $request)
     {
         $data = $request->validated();
-        $generatedPassword = Str::random(20);
 
         $user = User::create([
             'name' => $data['fullName']['firstName'],
             'lastname' => $data['fullName']['lastName'],
             'email' => $data['email'],
             'login' => $data['login'],
-            'password' => Hash::make($generatedPassword),
+            'password' => User::generatePasswordHash(),
             'role' => UserRole::getValueFromLabel($data['role']),
         ]);
 
@@ -102,7 +101,7 @@ class UserService extends BaseService
             $user->groups()->sync($data['groups']);
         }
 
-        return ['message' => $generatedPassword];
+        return ['message' => 'Пользователь создан'];
     }
 
     /**
@@ -114,5 +113,47 @@ class UserService extends BaseService
     {
         User::findOrFail($uuid)->delete();
         return ['message' => 'Пользователь удален'];
+    }
+
+    public function import(UserImport $request)
+    {
+        $data = $request->validated();
+
+        $importData = collect($data['users'])->map(function ($user) {
+            return [
+                'name' => $user['name'],
+                'lastname' => $user['lastname'],
+                'login' => $user['login'],
+                'email' => $user['email'],
+                'role' => UserRole::getValueFromLabel($user['role']),
+            ];
+        });
+
+        $errors = [];
+        foreach ($importData as $userData) {
+            $existingUser = User::query()
+                ->where(['login' => $userData['login']])
+                ->orWhere(['email' => $userData['email']])
+                ->first();
+
+            if ($existingUser) {
+                $errors[] = [
+                    'error' => 'Пользователь с таким login или email уже существует',
+                    'data' => $userData,
+                ];
+            } else {
+                $userData['password'] = User::generatePasswordHash();
+                User::create($userData);
+            }
+        }
+
+        if (filled($errors)) {
+            return [
+                'success' => false,
+                'errors' => $errors,
+            ];
+        }
+
+        return ['success' => true];
     }
 }

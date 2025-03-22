@@ -6,7 +6,9 @@ use App\Enums\User\UserRole;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Support\Facades\Hash;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Support\Str;
 
 class User extends Authenticatable
 {
@@ -56,5 +58,11 @@ class User extends Authenticatable
         ->whereHas('topicCompletions', function ($topicCompletionsQuery) {
             $topicCompletionsQuery->where(['user_id' => $this->id]);
         });
+    }
+
+    public static function generatePasswordHash()
+    {
+        $generatedPassword = Str::random(20);
+        return Hash::make($generatedPassword);
     }
 }
