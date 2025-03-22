@@ -12,8 +12,8 @@ class TestSolution extends FormRequest
             'testId' => 'required|string',
             'topicId' => 'required|string',
             'questions' => 'required|array',
-            'questions.*.questionId' => 'requred|string',
-            'questions.*.answer' => 'requred|array',
+            'questions.*.questionId' => 'required|string',
+            'questions.*.answer' => 'required|array',
         ];
     }
 }
