@@ -7,6 +7,7 @@ use App\Http\Resources\Topic\TopicCompletionResource;
 use App\Http\Resources\User\UserFullNameResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Log;
 
 class AssignedTestResource extends JsonResource
 {
@@ -30,12 +31,13 @@ class AssignedTestResource extends JsonResource
 
         return array_merge($baseData, [
             'topics' => TopicCompletionResource::collection(
-                collect($this->topicCompletion()
+                collect($this->topicCompletions()
                     ->where([
                         'assigned_test_id' => $this->id,
                         'user_id' => $request->user()->id,
                         'completion_status' => TopicCompletionStatus::NotPassed->value(),
-                    ])->get())),
+                    ])
+                    ->get())),
         ]);
     }
 }

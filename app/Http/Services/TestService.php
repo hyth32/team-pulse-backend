@@ -12,6 +12,7 @@ use App\Http\Resources\User\TestCompletionResource;
 use App\Models\AssignedTest;
 use App\Models\Template;
 use App\Models\User;
+use App\Models\UserTestCompletion;
 use Carbon\Carbon;
 
 class TestService extends BaseService
@@ -45,7 +46,7 @@ class TestService extends BaseService
      */
     public static function listAssignedUsers(string $uuid, BaseListRequest $request)
     {
-        $test = AssignedTest::findOrFail($uuid)->with('topicCompletion')->first();
+        $test = AssignedTest::findOrFail($uuid)->with('topicCompletions')->first();
 
         $query = $test->users();
 
@@ -120,10 +121,13 @@ class TestService extends BaseService
             $topicIds = $template->topics()->pluck('id')->toArray();
         
             foreach ($topicIds as $topicId) {
-                $user->assignedTests()->attach($test->id, [
-                    'topic_id' => $topicId,
-                    'completion_status' => TopicCompletionStatus::NotPassed->value(),
-                ]);
+                UserTestCompletion::updateOrCreate([
+                        'user_id' => $user->id,
+                        'assigned_test_id' => $test->id,
+                        'topic_id' => $topicId,
+                    ],
+                    ['completion_status' => TopicCompletionStatus::NotPassed->value()]
+                );
             }
         }
 
@@ -134,8 +138,8 @@ class TestService extends BaseService
     {
         $data = $request->validated();
 
-        $test = AssignedTest::where(['id' => $data['testId']])->with('topicCompletion')->first();
-        $topic = $test->topicCompletion()
+        $test = AssignedTest::where(['id' => $data['testId']])->with('topicCompletions')->first();
+        $topic = $test->topicCompletions()
             ->where([
                 'user_id' => $request->user()->id,
                 'topic_id' => $data['topicId'],

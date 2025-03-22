@@ -6,6 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class UserTestCompletion extends Model
 {
+    public $primaryKey = ['user_id', 'assigned_test_id', 'topic_id'];
+    public $incrementing = false;
+    public $timestamps = false;
+
     protected $fillable = [
         'user_id',
         'assigned_test_id',

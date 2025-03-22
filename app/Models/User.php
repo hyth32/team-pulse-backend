@@ -50,7 +50,11 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(
             AssignedTest::class,
-            'user_test_completions',
-        )->with('topicCompletion')->distinct();
+            UserTestCompletion::class,
+        )
+        ->distinct()
+        ->whereHas('topicCompletions', function ($topicCompletionsQuery) {
+            $topicCompletionsQuery->where(['user_id' => $this->id]);
+        });
     }
 }

@@ -10,7 +10,7 @@ class TestCompletionResource extends JsonResource
 {
     public function toArray(Request $request): array
     {
-        $topicCompletions = $this->assignedTests()->where(['id' => $this->pivot->assigned_test_id])->first()->topicCompletion->toArray();
+        $topicCompletions = $this->assignedTests()->where(['id' => $this->pivot->assigned_test_id])->first()->topicCompletions->toArray();
 
         $testCompletionStatus = TopicCompletionStatus::NotPassed;
 
