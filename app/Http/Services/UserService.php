@@ -131,14 +131,13 @@ class UserService extends BaseService
 
         $errors = [];
         foreach ($importData as $userData) {
-            $existingUser = User::query()
-                ->where(['login' => $userData['login']])
-                ->orWhere(['email' => $userData['email']])
-                ->first();
+            $existingLogin = User::query()->where(['login' => $userData['login']])->exists();
+            $existingEmail = User::query()->where(['email' => $userData['email']])->exists();
 
-            if ($existingUser) {
+            if ($existingLogin || $existingEmail) {
+                $errorField = $existingLogin ? 'login' : 'email';
                 $errors[] = [
-                    'error' => 'Пользователь с таким login или email уже существует',
+                    'error' => "Пользователь с таким {$errorField} уже существует",
                     'data' => $userData,
                 ];
             } else {
