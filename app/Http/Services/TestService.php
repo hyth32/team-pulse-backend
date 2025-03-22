@@ -12,6 +12,7 @@ use App\Http\Resources\User\TestCompletionResource;
 use App\Models\AssignedTest;
 use App\Models\Template;
 use App\Models\User;
+use App\Models\UserTestCompletion;
 use App\Models\UserTopicCompletion;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
@@ -162,7 +163,12 @@ class TestService extends BaseService
             ? TopicCompletionStatus::Passed
             : TopicCompletionStatus::InProgress;
 
-        $test->pivot->update(['completion_status' => $testCompletionStatus->value()]);
+        UserTestCompletion::query()
+            ->where([
+                'user_id' => $request->user()->id,
+                'assigned_test_id' => $test->id,
+            ])
+            ->update(['completion_status' => $testCompletionStatus->value()]);
 
         return ['message' => 'Результаты сохранены'];
     }
