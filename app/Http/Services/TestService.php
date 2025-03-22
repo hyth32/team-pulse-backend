@@ -12,8 +12,9 @@ use App\Http\Resources\User\TestCompletionResource;
 use App\Models\AssignedTest;
 use App\Models\Template;
 use App\Models\User;
-use App\Models\UserTestCompletion;
+use App\Models\UserTopicCompletion;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class TestService extends BaseService
 {
@@ -29,7 +30,8 @@ class TestService extends BaseService
         if ($isAdmin) {
             $query = AssignedTest::query();
         } else {
-            $query = $user->assignedTests();
+            $query = $user->assignedTests()
+                ->wherePivot('completion_status', '!=', 2);
         }
 
         $result = self::paginateQuery($query, $request);
@@ -46,7 +48,7 @@ class TestService extends BaseService
      */
     public static function listAssignedUsers(string $uuid, BaseListRequest $request)
     {
-        $test = AssignedTest::findOrFail($uuid)->with('topicCompletions')->first();
+        $test = AssignedTest::findOrFail($uuid)->first();
 
         $query = $test->users();
 
@@ -121,7 +123,7 @@ class TestService extends BaseService
             $topicIds = $template->topics()->pluck('id')->toArray();
         
             foreach ($topicIds as $topicId) {
-                UserTestCompletion::updateOrCreate([
+                UserTopicCompletion::updateOrCreate([
                         'user_id' => $user->id,
                         'assigned_test_id' => $test->id,
                         'topic_id' => $topicId,
@@ -131,21 +133,36 @@ class TestService extends BaseService
             }
         }
 
+        $test->users()->sync($users, ['completion_status' => TopicCompletionStatus::NotPassed->value()]);
+
         return ['message' => 'Тест назначен'];
     }
 
     public function saveSolution(TestSolution $request)
     {
         $data = $request->validated();
+        $user = $request->user();
 
-        $test = AssignedTest::where(['id' => $data['testId']])->with('topicCompletions')->first();
-        $topic = $test->topicCompletions()
+        $test = $user->assignedTests()->where(['id' => $data['testId']])->first();
+
+        $userTopics = $test->topicCompletions()->where(['user_id' => $request->user()->id]);
+        $userTopicsCount = $userTopics->count();
+    
+        UserTopicCompletion::query()
             ->where([
                 'user_id' => $request->user()->id,
+                'assigned_test_id' => $test->id,
                 'topic_id' => $data['topicId'],
-            ])->first();
+            ])
+            ->update(['completion_status' => TopicCompletionStatus::Passed->value()]);
         
-        $topic->pivot->update(['completion_status' => TopicCompletionStatus::Passed->value()]);
+        $completedTopicsCount = $userTopics->where(['completion_status' => TopicCompletionStatus::Passed->value()])->count();
+
+        $testCompletionStatus = $userTopicsCount === $completedTopicsCount 
+            ? TopicCompletionStatus::Passed
+            : TopicCompletionStatus::InProgress;
+
+        $test->pivot->update(['completion_status' => $testCompletionStatus->value()]);
 
         return ['message' => 'Результаты сохранены'];
     }

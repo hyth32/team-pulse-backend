@@ -54,8 +54,8 @@ class User extends Authenticatable
             AssignedTest::class,
             UserTestCompletion::class,
         )
-        ->distinct()
-        ->whereHas('topicCompletions', function ($topicCompletionsQuery) {
+        ->withPivot('completion_status')
+        ->with('topicCompletions', function ($topicCompletionsQuery) {
             $topicCompletionsQuery->where(['user_id' => $this->id]);
         });
     }

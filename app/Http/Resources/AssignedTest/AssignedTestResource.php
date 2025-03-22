@@ -5,9 +5,9 @@ namespace App\Http\Resources\AssignedTest;
 use App\Enums\Test\TopicCompletionStatus;
 use App\Http\Resources\Topic\TopicCompletionResource;
 use App\Http\Resources\User\UserFullNameResource;
+use App\Models\UserTopicCompletion;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
-use Illuminate\Support\Facades\Log;
 
 class AssignedTestResource extends JsonResource
 {
@@ -31,13 +31,15 @@ class AssignedTestResource extends JsonResource
 
         return array_merge($baseData, [
             'topics' => TopicCompletionResource::collection(
-                collect($this->topicCompletions()
-                    ->where([
-                        'assigned_test_id' => $this->id,
-                        'user_id' => $request->user()->id,
-                        'completion_status' => TopicCompletionStatus::NotPassed->value(),
-                    ])
-                    ->get())),
+                collect(UserTopicCompletion::query()
+                        ->where([
+                            'user_id' => $request->user()->id,
+                            'assigned_test_id' => $this->id,
+                            'completion_status' => TopicCompletionStatus::NotPassed->value(),
+                        ])
+                        ->get()
+                    )
+                ),
         ]);
     }
 }
