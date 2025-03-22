@@ -5,7 +5,6 @@ namespace App\Http\Resources\User;
 use App\Enums\Test\TopicCompletionStatus;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
-use Illuminate\Support\Facades\Log;
 
 class TestCompletionResource extends JsonResource
 {

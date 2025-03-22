@@ -134,7 +134,14 @@ class TestService extends BaseService
     {
         $data = $request->validated();
 
-        $test = AssignedTest::where(['id' => $data['testId']])->first();
+        $test = AssignedTest::where(['id' => $data['testId']])->with('topicCompletion')->first();
+        $topic = $test->topicCompletion()
+            ->where([
+                'user_id' => $request->user()->id,
+                'topic_id' => $data['topicId'],
+            ])->first();
+        
+        $topic->pivot->update(['completion_status' => TopicCompletionStatus::Passed->value()]);
 
         return ['message' => 'Результаты сохранены'];
     }

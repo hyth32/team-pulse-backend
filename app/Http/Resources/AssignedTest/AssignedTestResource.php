@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\AssignedTest;
 
+use App\Enums\Test\TopicCompletionStatus;
 use App\Http\Resources\Topic\TopicCompletionResource;
 use App\Http\Resources\User\UserFullNameResource;
 use Illuminate\Http\Request;
@@ -33,6 +34,7 @@ class AssignedTestResource extends JsonResource
                     ->where([
                         'assigned_test_id' => $this->id,
                         'user_id' => $request->user()->id,
+                        'completion_status' => TopicCompletionStatus::NotPassed->value(),
                     ])->get())),
         ]);
     }
