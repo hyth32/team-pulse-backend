@@ -214,7 +214,7 @@ class TestService extends BaseService
                 $question = Question::where(['id' => $answerData['question_id']])->first();
                 $answers = $question->userAnswers()->pluck('answer')->toArray();
 
-                if ($question->answer_type != AnswerType::Text->value()) {
+                if (in_array($question->answer_type, [AnswerType::SingleChoice->value(), AnswerType::MultipleChoice])) {
                     $answers = collect($answers)->map(function ($answerText) use ($question) {
                         $answer = $question->answers()->where(['text' => $answerText])->first();
                         $answerTagPoints = collect($answer?->tags()->get())
