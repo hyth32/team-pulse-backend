@@ -228,7 +228,7 @@ class TestService extends BaseService
                 $question = Question::where(['id' => $answerData['question_id']])->first();
                 $topicName = $question->topic->name;
 
-                $answers = $question->userAnswers()->distinct()->pluck('answer')->toArray();
+                $answers = $question->userAnswers()->pluck('answer')->toArray();
 
                 if (in_array($question->answer_type, [AnswerType::SingleChoice->value(), AnswerType::MultipleChoice])) {
                     $answers = collect($answers)->map(function ($answerText) use ($question) {
@@ -262,7 +262,8 @@ class TestService extends BaseService
             ->map(function ($groupedData, $topicName) {
                 $questions = $groupedData->flatMap(function ($item) {
                     return $item['questions'];
-                });
+                })
+                ->unique(fn ($question) => $question['text']);
 
                 return [
                     'name' => $topicName,
