@@ -4,7 +4,7 @@ namespace App\Http\Services;
 
 use App\Enums\User\UserRole;
 use App\Http\Requests\BaseListRequest;
-use App\Http\Requests\User\UpdateProfileRequest;
+use App\Http\Requests\User\UpdateProfile;
 use App\Http\Requests\User\UserCreate;
 use App\Http\Requests\User\UserImport;
 use App\Http\Resources\User\UserResource;
@@ -59,9 +59,9 @@ class UserService extends BaseService
     /**
      * Изменение профиля пользователя
      * @param string $uuid
-     * @param UpdateProfileRequest $request
+     * @param UpdateProfile $request
      */
-    public function changeProfile(string $uuid, UpdateProfileRequest $request)
+    public function changeProfile(string $uuid, UpdateProfile $request)
     {
         $user = User::findOrFail($uuid);
         $data = $request->validated();

@@ -19,7 +19,6 @@ use App\Models\UserAnswer;
 use App\Models\UserTestCompletion;
 use App\Models\UserTopicCompletion;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Log;
 
 class TestService extends BaseService
 {

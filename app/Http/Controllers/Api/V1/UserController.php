@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\BaseListRequest;
+use App\Http\Requests\User\UpdateProfile;
 use App\Http\Requests\User\UpdateProfileRequest;
 use App\Http\Requests\User\UserCreate;
 use App\Http\Requests\User\UserImport;
@@ -82,7 +83,7 @@ class UserController extends Controller
      *     ),
      * )
      */
-    public function changeProfile(string $uuid, UpdateProfileRequest $request)
+    public function changeProfile(string $uuid, UpdateProfile $request)
     {
         return (new UserService)->changeProfile($uuid, $request);
     }
