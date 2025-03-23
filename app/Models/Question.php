@@ -23,4 +23,9 @@ class Question extends BaseModel
     {
         return $this->hasMany(Answer::class);
     }
+
+    public function userAnswers()
+    {
+        return $this->hasMany(UserAnswer::class);
+    }
 }

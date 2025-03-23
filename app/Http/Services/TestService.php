@@ -10,8 +10,10 @@ use App\Http\Resources\AssignedTest\AssignedTestResource;
 use App\Http\Resources\Topic\TopicResource;
 use App\Http\Resources\User\TestCompletionResource;
 use App\Models\AssignedTest;
+use App\Models\Question;
 use App\Models\Template;
 use App\Models\User;
+use App\Models\UserAnswer;
 use App\Models\UserTestCompletion;
 use App\Models\UserTopicCompletion;
 use Carbon\Carbon;
@@ -145,6 +147,21 @@ class TestService extends BaseService
         $user = $request->user();
 
         $test = $user->assignedTests()->where(['id' => $data['testId']])->first();
+
+        foreach ($data['questions'] as $questionData) {
+            $question = Question::where(['id' => $questionData['questionId']]);
+            $userAnswerData = collect($questionData['answers'])
+                ->map(function ($answerText) use ($test, $user, $question) {
+                    return [
+                        'assigned_test_id' => $test->id,
+                        'user_id' => $user->id,
+                        'question_id' => $question->id,
+                        'answer' => $answerText,
+                    ];
+                });
+
+            UserAnswer::upsert($userAnswerData);
+        }
 
         $userTopics = $test->topicCompletions()->where(['user_id' => $request->user()->id]);
         $userTopicsCount = $userTopics->count();
