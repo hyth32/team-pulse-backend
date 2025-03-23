@@ -247,7 +247,7 @@ class TestService extends BaseService
             return [
                 'name' => $topicName,
                 'questions' => [
-                    'name' => $question->text,
+                    'text' => $question->text,
                     'tags' => $question?->tags()?->pluck('name')->toArray(),
                     'answers' => $answers,
                 ],
