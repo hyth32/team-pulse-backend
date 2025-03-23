@@ -242,6 +242,8 @@ class TestService extends BaseService
             });
 
         $solutionData = [
+            'name' => $test->name,
+            'description' => $test->description,
             'questions' => $answerPoints
         ];
 
