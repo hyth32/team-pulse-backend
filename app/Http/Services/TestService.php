@@ -241,18 +241,18 @@ class TestService extends BaseService
                         'text' => $answer->text,
                         'points' => $answerTagPoints,
                     ];
-                });
+                })->toArray();
             } else {
                 $answers = collect($answers)->map(fn ($answerText) => ['text' => $answerText]);
             }
         
             return [
                 'name' => $topicName,
-                'questions' => [
+                'questions' => [[
                     'text' => $question->text,
                     'tags' => $question?->tags()?->pluck('name')->toArray(),
                     'answers' => $answers,
-                ],
+                ]],
             ];
         })->values()->all();
 
