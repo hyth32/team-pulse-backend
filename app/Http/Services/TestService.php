@@ -217,11 +217,11 @@ class TestService extends BaseService
                 if ($question->answer_type != AnswerType::Text->value()) {
                     $answers = collect($answers)->map(function ($answerText) use ($question) {
                         $answer = $question->answers()->where(['text' => $answerText])->first();
-                        $answerTagPoints = collect($answer->tags()->get())
+                        $answerTagPoints = collect($answer?->tags()->get())
                             ->map(function ($tag) {
                                 return [
-                                    'name' => $tag->name,
-                                    'points' => $tag->pivot->point_count,
+                                    'name' => $tag?->name,
+                                    'points' => $tag?->pivot->point_count,
                                 ];
                             });
                         return [
@@ -236,7 +236,7 @@ class TestService extends BaseService
                 return [
                     'topicName' => $question->topic->name,
                     'name' => $question->text,
-                    'tags' => $question->tags()->pluck('name')->toArray(),
+                    'tags' => $question?->tags()?->pluck('name')->toArray(),
                     'answers' => $answers,
                 ];
             });
