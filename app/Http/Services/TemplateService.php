@@ -41,45 +41,52 @@ class TemplateService extends BaseService
     {
         $data = $request->validated();
 
-        $template = Template::create([
-            'name' => $data['name'],
-            'description' => $data['description'],
-            'status' => TemplateStatus::getValueFromLabel($data['status']),
-            'author_id' => $request->user()->id,
-        ]);
-
-        foreach ($data['topics'] as $topicData) {
-            $topic = $template->topics()->firstOrCreate(['name' => $topicData['name']]);
-
-            foreach ($topicData['questions'] as $questionData) {
-                $question = $topic->questions()->create([
-                    'text' => $questionData['text'],
-                    'answer_type' => $questionData['answerType'],
-                ]);
-
-                if (isset($questionData['tags']) && filled($questionData['tags'])) {
-                    $tags = collect($questionData['tags'])->map(fn ($tagName) => Tag::firstOrCreate(['name' => $tagName]));
-                    $question->tags()->sync($tags->pluck('id'));
-                }
-
-                if (isset($questionData['answers']) && filled($questionData['answers'])) {
-                    foreach ($questionData['answers'] as $answerData) {
-                        $answer = $question->answers()->create(['text' => $answerData['text']]);
-
-                        if (isset($answerData['points']) && filled($answerData['points'])) {
-                            $tagData = [];
-                            foreach ($answerData['points'] as $pointData) {
-                                $tag = Tag::where(['name' => $pointData['name']])->first();
-                                $tagData[$tag->id] = ['point_count' => $pointData['points']];
+        try {
+            $template = Template::create([
+                'name' => $data['name'],
+                'description' => $data['description'],
+                'status' => TemplateStatus::getValueFromLabel($data['status']),
+                'author_id' => $request->user()->id,
+            ]);
+    
+            foreach ($data['topics'] as $topicData) {
+                $topic = $template->topics()->firstOrCreate(['name' => $topicData['name']]);
+    
+                foreach ($topicData['questions'] as $questionData) {
+                    $question = $topic->questions()->create([
+                        'text' => $questionData['text'],
+                        'answer_type' => $questionData['answerType'],
+                    ]);
+    
+                    if (isset($questionData['tags']) && filled($questionData['tags'])) {
+                        $tags = collect($questionData['tags'])->map(fn ($tagName) => Tag::firstOrCreate(['name' => $tagName]));
+                        $question->tags()->sync($tags->pluck('id'));
+                    }
+    
+                    if (isset($questionData['answers']) && filled($questionData['answers'])) {
+                        foreach ($questionData['answers'] as $answerData) {
+                            $answer = $question->answers()->create(['text' => $answerData['text']]);
+    
+                            if (isset($answerData['points']) && filled($answerData['points'])) {
+                                $tagData = [];
+                                foreach ($answerData['points'] as $pointData) {
+                                    $tag = Tag::where(['name' => $pointData['name']])->first();
+                                    $tagData[$tag->id] = ['point_count' => $pointData['points']];
+                                }
+                                $answer->tags()->sync($tagData);
                             }
-                            $answer->tags()->sync($tagData);
                         }
                     }
                 }
             }
-        }
 
-        return ['message' => 'Шаблон создан'];
+            return ['success' => true];
+        } catch (\Exception $e) {
+            return [
+                'success' => false,
+                'errors' => $e,
+            ];
+        }
     }
 
     /**
