@@ -54,9 +54,14 @@ class TestService extends BaseService
      */
     public static function listAssignedUsers(string $uuid, BaseListRequest $request)
     {
-        $test = AssignedTest::findOrFail($uuid)->first();
+        // $test = AssignedTest::findOrFail($uuid)->first();
 
-        $query = $test->users();
+        // $query = $test->users();
+
+        $query = UserTestCompletion::query()
+            ->where(['assigned_test_id' => $uuid])
+            ->first()
+            ->users();
 
         $result = self::paginateQuery($query, $request);
 
@@ -118,7 +123,7 @@ class TestService extends BaseService
             ]);
     
             $usersQuery = User::query();
-    
+
             if (!$data['assignToAll']) {
                 $usersQuery = $usersQuery
                     ->when(isset($data['groupIds']) && filled($data['groupIds']), function ($q) use ($data) {

@@ -15,4 +15,9 @@ class UserTestCompletion extends Model
         'assigned_test_id',
         'completion_status',
     ];
+
+    public function users()
+    {
+        return $this->hasMany(User::class);
+    }
 }
