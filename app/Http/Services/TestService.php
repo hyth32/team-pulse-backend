@@ -150,8 +150,8 @@ class TestService extends BaseService
         $test = $user->assignedTests()->where(['id' => $data['testId']])->first();
 
         foreach ($data['questions'] as $questionData) {
-            $question = Question::where(['id' => $questionData['questionId']]);
-            $userAnswerData = collect($questionData['answers'])
+            $question = Question::where(['id' => $questionData['questionId']])->first();
+            $userAnswerData = collect($questionData['answer'])
                 ->map(function ($answerText) use ($test, $user, $question) {
                     return [
                         'assigned_test_id' => $test->id,
@@ -159,9 +159,9 @@ class TestService extends BaseService
                         'question_id' => $question->id,
                         'answer' => $answerText,
                     ];
-                });
+                })->toArray();
 
-            UserAnswer::upsert($userAnswerData);
+            UserAnswer::upsert($userAnswerData, ['assigned_test_id', 'user_id']);
         }
 
         $userTopics = $test->topicCompletions()->where(['user_id' => $request->user()->id]);
