@@ -34,6 +34,7 @@ class TestService extends BaseService
             $query = AssignedTest::query();
         } else {
             $query = $user->assignedTests()
+                ->where('start_date', '<', now())
                 ->wherePivot('completion_status', '!=', 2);
         }
 
