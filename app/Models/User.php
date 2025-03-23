@@ -62,7 +62,8 @@ class User extends Authenticatable
 
     public static function generatePasswordHash()
     {
-        $generatedPassword = Str::random(20);
+        // $generatedPassword = Str::random(20);
+        $generatedPassword = '12345678';
         return Hash::make($generatedPassword);
     }
 }
