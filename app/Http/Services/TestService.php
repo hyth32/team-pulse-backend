@@ -58,9 +58,13 @@ class TestService extends BaseService
 
         $result = self::paginateQuery($query, $request);
 
+        $users = $result['items']->get()->map(function ($user) use ($uuid) {
+            return new TestCompletionResource($user, $uuid);
+        });
+
         return [
             'total' => $result['total'],
-            'users' => TestCompletionResource::collection($result['items']->get()),
+            'users' => TestCompletionResource::collection($users),
         ];
     }
 
