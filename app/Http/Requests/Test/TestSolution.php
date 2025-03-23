@@ -10,10 +10,7 @@ class TestSolution extends FormRequest
     {
         return [
             'testId' => 'required|string',
-            'topicId' => 'required|string',
-            'questions' => 'required|array',
-            'questions.*.questionId' => 'required|string',
-            'questions.*.answer' => 'required|array',
+            'userId' => 'required|string',
         ];
     }
 }

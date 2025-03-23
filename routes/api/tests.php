@@ -13,4 +13,6 @@ Route::controller(TestController::class)->middleware('auth:sanctum')->group(func
     Route::get('tests/{uuid}/{topicUuid}', 'topicQuestions');
 
     Route::post('tests/solve', 'solve');
+
+    Route::post('tests/solution', 'getSolution');
 });

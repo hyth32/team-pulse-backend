@@ -2,10 +2,12 @@
 
 namespace App\Http\Services;
 
+use App\Enums\Answer\AnswerType;
 use App\Enums\Test\TopicCompletionStatus;
 use App\Http\Requests\BaseListRequest;
 use App\Http\Requests\Template\TemplateAssign;
 use App\Http\Requests\Test\TestSolution;
+use App\Http\Requests\Test\TestSolve;
 use App\Http\Resources\AssignedTest\AssignedTestResource;
 use App\Http\Resources\Topic\TopicResource;
 use App\Http\Resources\User\TestCompletionResource;
@@ -146,7 +148,7 @@ class TestService extends BaseService
         return ['message' => 'Тест назначен'];
     }
 
-    public function saveSolution(TestSolution $request)
+    public function saveSolution(TestSolve $request)
     {
         $data = $request->validated();
         $user = $request->user();
@@ -193,5 +195,56 @@ class TestService extends BaseService
             ->update(['completion_status' => $testCompletionStatus->value()]);
 
         return ['message' => 'Результаты сохранены'];
+    }
+
+    public static function solution(TestSolution $request)
+    {
+        $data = $request->validated();
+        
+        $test = AssignedTest::where(['id' => $data['testId']])->first();
+        $user = User::where(['id' => $data['userId']])->first();
+
+        $userAnswers = UserAnswer::where([
+            'assigned_test_id' => $test->id,
+            'user_id' => $user->id,
+        ])->get();
+
+        $answerPoints = collect($userAnswers)
+            ->map(function ($answerData) {
+                $question = Question::where(['id' => $answerData['question_id']])->first();
+                $answers = $question->userAnswers()->pluck('answer')->toArray();
+
+                if ($question->answer_type != AnswerType::Text->value()) {
+                    $answers = collect($answers)->map(function ($answerText) use ($question) {
+                        $answer = $question->answers()->where(['text' => $answerText])->first();
+                        $answerTagPoints = collect($answer->tags()->get())
+                            ->map(function ($tag) {
+                                return [
+                                    'name' => $tag->name,
+                                    'points' => $tag->pivot->point_count,
+                                ];
+                            });
+                        return [
+                            'text' => $answer->text,
+                            'points' => $answerTagPoints,
+                        ];
+                    });
+                } else {
+                    $answers = collect($answers)->map(fn ($answerText) => ['text' => $answerText]);
+                }
+
+                return [
+                    'topicName' => $question->topic->name,
+                    'name' => $question->text,
+                    'tags' => $question->tags()->pluck('name')->toArray(),
+                    'answers' => $answers,
+                ];
+            });
+
+        $solutionData = [
+            'questions' => $answerPoints
+        ];
+
+        return ['solution' => $solutionData];
     }
 }

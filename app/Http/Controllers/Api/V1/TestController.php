@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\BaseListRequest;
 use App\Http\Requests\Template\TemplateAssign;
 use App\Http\Requests\Test\TestSolution;
+use App\Http\Requests\Test\TestSolve;
 use App\Http\Services\TestService;
 
 class TestController extends Controller
@@ -90,8 +91,13 @@ class TestController extends Controller
         return TestService::listTopicQuestions($uuid, $topicUuid, $request);
     }
 
-    public function solve(TestSolution $request)
+    public function solve(TestSolve $request)
     {
         return (new TestService)->saveSolution($request);
+    }
+
+    public function getSolution(TestSolution $request)
+    {
+        return TestService::solution($request);
     }
 }
