@@ -99,53 +99,61 @@ class TestService extends BaseService
     public function assign(TemplateAssign $request)
     {
         $data = $request->validated();
-        $template = Template::findOrFail($data['templateId']);
 
-        $test = AssignedTest::firstOrCreate([
-            'template_id' => $template->id,
-            'name' => $data['name'],
-            'description' => $data['description'],
-            'frequency' => $data['frequency'],
-            'start_date' => Carbon::parse($data['startDate']),
-            'end_date' => Carbon::parse($data['endDate']) ?? null,
-            'subject_id' => $data['subjectId'] ?? null,
-            'is_anonymous' => $data['isAnonymous'],
-            'late_result' => $data['lateResult'],
-            'assigner_id' => $request->user()->id,
-            'test_status' => TopicCompletionStatus::NotPassed->value(),
-        ]);
+        try {
+            $template = Template::findOrFail($data['templateId']);
 
-        $usersQuery = User::query();
-
-        if (!$data['assignToAll']) {
-            $usersQuery = $usersQuery
-                ->when(isset($data['groupIds']) && filled($data['groupIds']), function ($q) use ($data) {
-                    $q->whereHas('groups', fn ($q) => $q->whereIn('id', $data['groupIds']));
-                })
-                ->when(isset($data['employeeIds']) && filled($data['employeeIds']), function ($q) use ($data) {
-                    $q->whereIn('id', $data['employeeIds']);
-                });
-        }
-
-        $users = $usersQuery->get();
-        
-        foreach ($users as $user) {
-            $topicIds = $template->topics()->pluck('id')->toArray();
-        
-            foreach ($topicIds as $topicId) {
-                UserTopicCompletion::updateOrCreate([
-                        'user_id' => $user->id,
-                        'assigned_test_id' => $test->id,
-                        'topic_id' => $topicId,
-                    ],
-                    ['completion_status' => TopicCompletionStatus::NotPassed->value()]
-                );
+            $test = AssignedTest::firstOrCreate([
+                'template_id' => $template->id,
+                'name' => $data['name'],
+                'description' => $data['description'],
+                'frequency' => $data['frequency'],
+                'start_date' => Carbon::parse($data['startDate']),
+                'end_date' => Carbon::parse($data['endDate']) ?? null,
+                'subject_id' => $data['subjectId'] ?? null,
+                'is_anonymous' => $data['isAnonymous'],
+                'late_result' => $data['lateResult'],
+                'assigner_id' => $request->user()->id,
+                'test_status' => TopicCompletionStatus::NotPassed->value(),
+            ]);
+    
+            $usersQuery = User::query();
+    
+            if (!$data['assignToAll']) {
+                $usersQuery = $usersQuery
+                    ->when(isset($data['groupIds']) && filled($data['groupIds']), function ($q) use ($data) {
+                        $q->whereHas('groups', fn ($q) => $q->whereIn('id', $data['groupIds']));
+                    })
+                    ->when(isset($data['employeeIds']) && filled($data['employeeIds']), function ($q) use ($data) {
+                        $q->whereIn('id', $data['employeeIds']);
+                    });
             }
+    
+            $users = $usersQuery->get();
+            
+            foreach ($users as $user) {
+                $topicIds = $template->topics()->pluck('id')->toArray();
+            
+                foreach ($topicIds as $topicId) {
+                    UserTopicCompletion::updateOrCreate([
+                            'user_id' => $user->id,
+                            'assigned_test_id' => $test->id,
+                            'topic_id' => $topicId,
+                        ],
+                        ['completion_status' => TopicCompletionStatus::NotPassed->value()]
+                    );
+                }
+            }
+    
+            $test->users()->sync($users, ['completion_status' => TopicCompletionStatus::NotPassed->value()]);
+
+            return ['success' => true];
+        } catch (\Exception $e) {
+            return [
+                'success' => false,
+                'errors' => $e,
+            ];
         }
-
-        $test->users()->sync($users, ['completion_status' => TopicCompletionStatus::NotPassed->value()]);
-
-        return ['message' => 'Тест назначен'];
     }
 
     public function saveSolution(TestSolve $request)
@@ -209,42 +217,47 @@ class TestService extends BaseService
             'user_id' => $user->id,
         ])->get();
 
-        $answerPoints = collect($userAnswers)
-            ->map(function ($answerData) {
-                $question = Question::where(['id' => $answerData['question_id']])->first();
-                $answers = $question->userAnswers()->pluck('answer')->toArray();
+        Log::info($userAnswers);
 
-                if (in_array($question->answer_type, [AnswerType::SingleChoice->value(), AnswerType::MultipleChoice])) {
-                    $answers = collect($answers)->map(function ($answerText) use ($question) {
-                        $answer = $question->answers()->where(['text' => $answerText])->first();
-                        $answerTagPoints = collect($answer?->tags()->get())
-                            ->map(function ($tag) {
-                                return [
-                                    'name' => $tag?->name,
-                                    'points' => $tag?->pivot->point_count,
-                                ];
-                            });
-                        return [
-                            'text' => $answer->text,
-                            'points' => $answerTagPoints,
-                        ];
-                    });
-                } else {
-                    $answers = collect($answers)->map(fn ($answerText) => ['text' => $answerText]);
-                }
-
-                return [
-                    'topicName' => $question->topic->name,
+        $answerPoints = collect($userAnswers)->map(function ($answerData) {
+            $question = Question::where(['id' => $answerData['question_id']])->first();
+            $topicName = $question->topic->name;
+        
+            $answers = $question->userAnswers()->pluck('answer')->toArray();
+        
+            if (in_array($question->answer_type, [AnswerType::SingleChoice->value(), AnswerType::MultipleChoice])) {
+                $answers = collect($answers)->map(function ($answerText) use ($question) {
+                    $answer = $question->answers()->where(['text' => $answerText])->first();
+                    $answerTagPoints = collect($answer?->tags()->get())
+                        ->map(function ($tag) {
+                            return [
+                                'name' => $tag?->name,
+                                'points' => $tag?->pivot->point_count,
+                            ];
+                        });
+                    return [
+                        'text' => $answer->text,
+                        'points' => $answerTagPoints,
+                    ];
+                });
+            } else {
+                $answers = collect($answers)->map(fn ($answerText) => ['text' => $answerText]);
+            }
+        
+            return [
+                'name' => $topicName,
+                'questions' => [
                     'name' => $question->text,
                     'tags' => $question?->tags()?->pluck('name')->toArray(),
                     'answers' => $answers,
-                ];
-            });
+                ],
+            ];
+        })->values()->all();
 
         $solutionData = [
             'name' => $test->name,
             'description' => $test->description,
-            'questions' => $answerPoints
+            'topics' => $answerPoints
         ];
 
         return ['solution' => $solutionData];
