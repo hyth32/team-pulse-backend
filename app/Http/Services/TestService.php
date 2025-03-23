@@ -219,47 +219,59 @@ class TestService extends BaseService
             'user_id' => $user->id,
         ])->get();
 
-        Log::info($userAnswers);
+        $answerPoints = collect($userAnswers)
+            ->map(function ($answerData) {
+                $question = Question::where(['id' => $answerData['question_id']])->first();
+                $topicName = $question->topic->name;
 
-        $answerPoints = collect($userAnswers)->map(function ($answerData) {
-            $question = Question::where(['id' => $answerData['question_id']])->first();
-            $topicName = $question->topic->name;
-        
-            $answers = $question->userAnswers()->pluck('answer')->toArray();
-        
-            if (in_array($question->answer_type, [AnswerType::SingleChoice->value(), AnswerType::MultipleChoice])) {
-                $answers = collect($answers)->map(function ($answerText) use ($question) {
-                    $answer = $question->answers()->where(['text' => $answerText])->first();
-                    $answerTagPoints = collect($answer?->tags()->get())
-                        ->map(function ($tag) {
-                            return [
-                                'name' => $tag?->name,
-                                'points' => $tag?->pivot->point_count,
-                            ];
-                        });
-                    return [
-                        'text' => $answer->text,
-                        'points' => $answerTagPoints,
-                    ];
-                })->toArray();
-            } else {
-                $answers = collect($answers)->map(fn ($answerText) => ['text' => $answerText]);
-            }
-        
-            return [
-                'name' => $topicName,
-                'questions' => [[
-                    'text' => $question->text,
-                    'tags' => $question?->tags()?->pluck('name')->toArray(),
-                    'answers' => $answers,
-                ]],
-            ];
-        })->values()->all();
+                $answers = $question->userAnswers()->pluck('answer')->toArray();
+
+                if (in_array($question->answer_type, [AnswerType::SingleChoice->value(), AnswerType::MultipleChoice])) {
+                    $answers = collect($answers)->map(function ($answerText) use ($question) {
+                        $answer = $question->answers()->where(['text' => $answerText])->first();
+                        $answerTagPoints = collect($answer?->tags()->get())
+                            ->map(function ($tag) {
+                                return [
+                                    'name' => $tag?->name,
+                                    'points' => $tag?->pivot->point_count,
+                                ];
+                            });
+                        return [
+                            'text' => $answer->text,
+                            'points' => $answerTagPoints,
+                        ];
+                    })->toArray();
+                } else {
+                    $answers = collect($answers)->map(fn ($answerText) => ['text' => $answerText]);
+                }
+
+                return [
+                    'name' => $topicName,
+                    'questions' => [[
+                        'text' => $question->text,
+                        'tags' => $question?->tags()?->pluck('name')->toArray(),
+                        'answers' => $answers,
+                    ]],
+                ];
+            })
+            ->groupBy('name')
+            ->map(function ($groupedData, $topicName) {
+                $questions = $groupedData->flatMap(function ($item) {
+                    return $item['questions'];
+                });
+
+                return [
+                    'name' => $topicName,
+                    'questions' => $questions->values()->all(),
+                ];
+            })
+            ->values()
+            ->all();
 
         $solutionData = [
             'name' => $test->name,
             'description' => $test->description,
-            'topics' => $answerPoints
+            'topics' => $answerPoints,
         ];
 
         return ['solution' => $solutionData];
