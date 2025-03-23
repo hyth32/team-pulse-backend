@@ -176,7 +176,11 @@ class TestService extends BaseService
                 })->toArray();
 
             foreach ($userAnswersData as $userAnswerData) {
-                UserAnswer::updateOrCreate($userAnswerData);
+                UserAnswer::updateOrCreate([
+                    'assigned_test_id' => $userAnswerData['assigned_test_id'],
+                    'user_id' => $userAnswerData['user_id'],
+                    'question_id' => $userAnswerData['question_id'],
+                ], ['answer' => $userAnswerData['answer']]);
             }
         }
 

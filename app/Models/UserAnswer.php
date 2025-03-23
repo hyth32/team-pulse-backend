@@ -2,12 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 
-class UserAnswer extends Model
+class UserAnswer extends BaseModel
 {
-    public $primaryKey = ['assigned_test_id', 'user_id'];
-    public $incrementing = false;
     public $timestamps = false;
 
     protected $fillable = [

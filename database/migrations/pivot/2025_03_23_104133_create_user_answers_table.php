@@ -3,13 +3,14 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Ramsey\Uuid\Uuid;
 
 return new class extends Migration
 {
     public function up(): void
     {
         Schema::create('user_answers', function (Blueprint $table) {
-            $table->primary(['assigned_test_id', 'user_id', 'question_id', 'answer']);
+            $table->uuid('id')->primary()->default(Uuid::uuid7()->toString());
 
             $table->foreignUuid('assigned_test_id')->constrained()->cascadeOnDelete()->noActionOnUpdate();
             $table->foreignUuid('user_id')->constrained()->cascadeOnDelete()->noActionOnUpdate();
