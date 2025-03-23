@@ -176,7 +176,7 @@ class TestService extends BaseService
                 })->toArray();
 
             foreach ($userAnswersData as $userAnswerData) {
-                UserAnswer::create($userAnswerData);
+                UserAnswer::updateOrCreate($userAnswerData);
             }
         }
 
