@@ -54,23 +54,18 @@ class TestService extends BaseService
      */
     public static function listAssignedUsers(string $uuid, BaseListRequest $request)
     {
-        // $test = AssignedTest::findOrFail($uuid)->first();
-
-        // $query = $test->users();
-
-        $query = UserTestCompletion::query()
+        $testCompletions = UserTestCompletion::query()
             ->where(['assigned_test_id' => $uuid])
-            ->first()
-            ->users();
+            ->with('user')
+            ->get();
 
-        $result = self::paginateQuery($query, $request);
+        $users = collect($testCompletions)->map(fn ($completion) => $completion->user)->unique('id');
 
-        $users = $result['items']->get()->map(function ($user) use ($uuid) {
+        $users = $users->map(function ($user) use ($uuid) {
             return new TestCompletionResource($user, $uuid);
         });
 
         return [
-            'total' => $result['total'],
             'users' => TestCompletionResource::collection($users),
         ];
     }
@@ -233,7 +228,7 @@ class TestService extends BaseService
                 $question = Question::where(['id' => $answerData['question_id']])->first();
                 $topicName = $question->topic->name;
 
-                $answers = $question->userAnswers()->pluck('answer')->toArray();
+                $answers = $question->userAnswers()->distinct()->pluck('answer')->toArray();
 
                 if (in_array($question->answer_type, [AnswerType::SingleChoice->value(), AnswerType::MultipleChoice])) {
                     $answers = collect($answers)->map(function ($answerText) use ($question) {
