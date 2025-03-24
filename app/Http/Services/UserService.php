@@ -103,7 +103,8 @@ class UserService extends BaseService
             $user->groups()->sync($data['groups']);
         }
 
-        $newUserText = "Добавлен новый пользователь:\n{$data['name']} {$data['name']}\nЛогин: {$data['login']}\nПароль: {$generatedPassword}";
+        $newUserName = 
+        $newUserText = "Добавлен новый пользователь:\n{$user->name} {$user->lastname}\nЛогин: {$user->login}\nПароль: {$generatedPassword}";
         $response = Http::post('http://localhost:1234/send-message', [
             'text' => $newUserText,
         ]);
