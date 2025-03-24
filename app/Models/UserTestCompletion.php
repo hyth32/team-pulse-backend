@@ -20,4 +20,9 @@ class UserTestCompletion extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function test()
+    {
+        return $this->belongsTo(AssignedTest::class, 'assigned_test_id', 'id');
+    }
 }

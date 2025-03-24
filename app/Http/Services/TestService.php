@@ -11,6 +11,7 @@ use App\Http\Requests\Test\TestSolve;
 use App\Http\Resources\AssignedTest\AssignedTestResource;
 use App\Http\Resources\Topic\TopicResource;
 use App\Http\Resources\User\TestCompletionResource;
+use App\Http\Resources\User\UserTestListResource;
 use App\Models\AssignedTest;
 use App\Models\Question;
 use App\Models\Template;
@@ -44,6 +45,22 @@ class TestService extends BaseService
         return [
             'total' => $result['total'],
             'tests' => AssignedTestResource::collection($result['items']->get()),
+        ];
+    }
+
+    public static function listUserTests(string $userUuid, BaseListRequest $request)
+    {
+        $user = User::where(['id' => $userUuid])->first();
+        $query = UserTestCompletion::query()
+            ->where(['user_id' => $user->id])
+            ->with('user')
+            ->with('test');
+
+        $result = self::paginateQuery($query, $request);
+            
+        return [
+            'total' => $result['total'],
+            'tests' => UserTestListResource::collection($result['items']->get()),
         ];
     }
 

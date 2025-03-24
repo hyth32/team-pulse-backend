@@ -45,7 +45,7 @@ class User extends Authenticatable
 
     public function tests()
     {
-        return $this->belongsToMany(AssignedTest::class, 'assigned_test_users')->distinct();
+        return $this->belongsToMany(AssignedTest::class, UserTestCompletion::class)->distinct();
     }
 
     public function assignedTests()

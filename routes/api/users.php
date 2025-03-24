@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\V1\TestController;
 use App\Http\Controllers\Api\V1\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -10,6 +11,10 @@ Route::controller(UserController::class)->middleware('auth:sanctum')->group(func
     Route::get('/users/{uuid}', 'profile');
     Route::put('/users/{uuid}', 'changeProfile');
     Route::delete('/users/{uuid}', 'delete');
-
+    
     Route::post('users/import', 'importUsers')->withoutMiddleware('auth:sanctum');
+});
+
+Route::controller(TestController::class)->group(function () {
+    Route::get('users/{userUuid}/tests', 'userTests');
 });

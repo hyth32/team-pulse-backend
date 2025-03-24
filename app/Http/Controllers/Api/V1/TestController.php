@@ -31,6 +31,11 @@ class TestController extends Controller
         return TestService::list($request);
     }
 
+    public function userTests(string $userUuid, BaseListRequest $request)
+    {
+        return TestService::listUserTests($userUuid, $request);
+    }
+
     /**
      * @OA\Post(path="/api/v1/tests/assign",
      *      tags={"Test"},
