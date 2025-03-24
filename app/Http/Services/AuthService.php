@@ -21,12 +21,18 @@ class AuthService
 
         $user = User::where('login', $data['login'])->first();
         if (!$user) {
-            throw new AuthorizationException('Пользователь не существует');
+            return [
+                'success' => false,
+                'error' => 'username',
+            ];
         }
 
         $isPasswordValid = Hash::check($request['password'], $user->password);
         if (!$isPasswordValid) {
-            throw new AuthorizationException('Неправильный пароль');
+            return [
+                'success' => false,
+                'error' => 'password',
+            ];
         }
 
         $user->tokens()->delete();
@@ -34,10 +40,12 @@ class AuthService
         $token = $user->createToken('access_token', ['*'], $expirationDate)->plainTextToken;
 
         return [
-            'token' => $token,
-            'expirationDate' => $expirationDate->timestamp,
-            'id' => $user->id,
-            'role' => UserRole::getLabelFromValue($user->role),
+            'success' => true,
+            'data' => [
+                'token' => $token,
+                'expirationDate' => $expirationDate->timestamp,
+                'role' => UserRole::getLabelFromValue($user->role),
+            ],
         ];
     }
 }
