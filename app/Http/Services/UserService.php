@@ -147,6 +147,7 @@ class UserService extends BaseService
             } else {
                 $generatedPassword = User::generatePassword();
                 $userData['password'] = Hash::make($generatedPassword);
+
                 $user = User::create($userData);
 
                 self::sendNewUserMessage($user, $generatedPassword);   

@@ -8,6 +8,7 @@ use App\Http\Requests\Tag\TagUpdate;
 use App\Http\Resources\Tag\TagShortResource;
 use App\Models\Tag;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class TagService extends BaseService
 {
@@ -33,9 +34,16 @@ class TagService extends BaseService
     public static function save(TagCreate $request)
     {
         $data = $request->validated();
-        Tag::firstOrCreate(['name' => $data['name']]);
 
-        return ['message' => 'Тег создан'];
+        try {
+            DB::transaction(function () use ($data) {
+                Tag::firstOrCreate(['name' => $data['name']]);
+            });
+            
+            return ['message' => 'Тег создан'];
+        } catch (\Exception $e) {
+            return ['message' => 'Произошла ошибка: ' . $e->getMessage()];
+        }
     }
 
     /**

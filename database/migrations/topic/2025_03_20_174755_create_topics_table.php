@@ -11,7 +11,7 @@ return new class extends Migration
     {
         Schema::create('topics', function (Blueprint $table) {
             $table->uuid('id')->primary()->default(Uuid::uuid7()->toString());
-            $table->string('name')->unique();
+            $table->string('name');
 
             $table->timestamps();
         });

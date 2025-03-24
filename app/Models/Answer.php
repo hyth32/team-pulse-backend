@@ -6,6 +6,7 @@ class Answer extends BaseModel
 {
     protected $fillable = [
         'text',
+        'isRight',
     ];
 
     public function tags()

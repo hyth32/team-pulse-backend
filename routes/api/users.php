@@ -16,5 +16,7 @@ Route::controller(UserController::class)->middleware('auth:sanctum')->group(func
 });
 
 Route::controller(TestController::class)->group(function () {
+    Route::post('/users/subject-stats', 'subjectUserStats');
+
     Route::get('users/{userUuid}/tests', 'userTests');
 });

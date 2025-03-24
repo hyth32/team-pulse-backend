@@ -4,11 +4,8 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\BaseListRequest;
-use App\Http\Requests\Template\TemplateAssign;
 use App\Http\Requests\Template\TemplateCreate;
-use App\Http\Requests\Template\TemplateUpdate;
 use App\Http\Services\TemplateService;
-use App\Http\Services\TestService;
 use Illuminate\Http\Request;
 
 class TemplateController extends Controller
@@ -50,20 +47,6 @@ class TemplateController extends Controller
     public function create(TemplateCreate $request)
     {
         return (new TemplateService)->save($request);
-    }
-
-    /**
-     * @OA\Put(path="/api/v1/templates/{uuid}",
-     *      tags={"Template"},
-     *      summary="Обновить шаблон",
-     *      @OA\Response(response=200, description="Ответ",
-     *         @OA\MediaType(mediaType="application/json"),
-     *      ),
-     * )
-     */
-    public function update(string $uuid, TemplateUpdate $request)
-    {
-        return (new TemplateService)->update($uuid, $request);
     }
 
     /**

@@ -7,6 +7,7 @@ use App\Http\Requests\BaseListRequest;
 use App\Http\Requests\Template\TemplateAssign;
 use App\Http\Requests\Test\TestSolution;
 use App\Http\Requests\Test\TestSolve;
+use App\Http\Requests\User\SubjectStats;
 use App\Http\Services\TestService;
 
 class TestController extends Controller
@@ -34,6 +35,11 @@ class TestController extends Controller
     public function userTests(string $userUuid, BaseListRequest $request)
     {
         return TestService::listUserTests($userUuid, $request);
+    }
+
+    public function subjectUserStats(SubjectStats $request)
+    {
+        return TestService::listSubjectStats($request);
     }
 
     /**

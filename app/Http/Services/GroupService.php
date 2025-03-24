@@ -6,11 +6,10 @@ use App\Http\Requests\BaseListRequest;
 use App\Http\Requests\Group\CreateGroupRequest;
 use App\Http\Requests\Group\GroupCreate;
 use App\Http\Requests\Group\GroupUpdate;
-use App\Http\Requests\Group\UpdateGroupRequest;
 use App\Http\Resources\Group\GroupResource;
-use App\Http\Resources\GroupShortResource;
 use App\Models\Group;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class GroupService extends BaseService
 {
@@ -36,13 +35,20 @@ class GroupService extends BaseService
     public function save(GroupCreate $request)
     {
         $data = $request->validated();
-        $group = Group::firstOrCreate(['name' => $data['name']]);
 
-        if (isset($data['employeeIds']) && filled($data['employeeIds'])) {
-            $group->users()->sync($data['employeeIds']);
+        try {
+            DB::transaction(function () use ($data) {
+                $group = Group::firstOrCreate(['name' => $data['name']]);
+        
+                if (isset($data['employeeIds']) && filled($data['employeeIds'])) {
+                    $group->users()->sync($data['employeeIds']);
+                }
+            });
+
+            return ['message' => 'Группа создана'];
+        } catch (\Exception $e) {
+            return ['message' => 'Произошла ошибка: ' . $e->getMessage()];
         }
-
-        return ['message' => 'Группа создана'];
     }
 
     /**
@@ -52,16 +58,23 @@ class GroupService extends BaseService
     public function update(string $uuid, GroupUpdate $request)
     {
         $data = $request->validated();
-        $group = Group::findOrFail($uuid);
+
+        try {
+            DB::transaction(function () use ($uuid, $data) {
+                $group = Group::findOrFail($uuid);
+                
+                if (isset($data['employeeIds']) && filled($data['employeeIds'])) {
+                    $group->users()->sync($data['employeeIds']);
+                    unset($data['employeeIds']);
+                }
         
-        if (isset($data['employeeIds']) && filled($data['employeeIds'])) {
-            $group->users()->sync($data['employeeIds']);
-            unset($data['employeeIds']);
+                $group->update($data);
+            });
+    
+            return ['message' => 'Группа обновлена'];
+        } catch (\Exception $e) {
+            return ['message' => 'Произошла ошибка: ' . $e->getMessage()];
         }
-
-        $group->update($data);
-
-        return ['message' => 'Группа обновлена'];
     }
 
     /**

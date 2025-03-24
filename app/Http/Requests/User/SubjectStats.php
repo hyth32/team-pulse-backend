@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Http\Requests\Template;
+namespace App\Http\Requests\User;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class TemplateUpdate extends FormRequest
+class SubjectStats extends FormRequest
 {
     public function rules(): array
     {
         return [
-            //
+            'subjectId' => 'required|string',
         ];
     }
 }

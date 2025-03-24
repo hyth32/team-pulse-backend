@@ -26,6 +26,7 @@ class TemplateCreate extends FormRequest
             'topics.*.questions.*.tags' => 'nullable|array',
             'topics.*.questions.*.answers' => 'nullable|array',
             'topics.*.questions.*.answers.*.text' => 'nullable|string',
+            'topics.*.questions.*.answers.*.isRight' => 'required|boolean',
 
             'topics.*.questions.*.answers.*.points' => 'nullable|array',
             'topics.*.questions.*.answers.*.points.*.name' => 'required|string',
