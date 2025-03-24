@@ -102,12 +102,8 @@ class UserService extends BaseService
         if (isset($data['groups']) && filled($data['groups'])) {
             $user->groups()->sync($data['groups']);
         }
-
-        $newUserName = 
-        $newUserText = "Добавлен новый пользователь:\n{$user->name} {$user->lastname}\nЛогин: {$user->login}\nПароль: {$generatedPassword}";
-        $response = Http::post('http://localhost:1234/send-message', [
-            'text' => $newUserText,
-        ]);
+        
+        self::sendNewUserMessage($user, $generatedPassword);
 
         return ['message' => 'Пользователь создан'];
     }
@@ -149,8 +145,11 @@ class UserService extends BaseService
                     'data' => $userData,
                 ];
             } else {
-                $userData['password'] = User::generatePasswordHash();
-                User::create($userData);
+                $generatedPassword = User::generatePassword();
+                $userData['password'] = Hash::make($generatedPassword);
+                $user = User::create($userData);
+
+                self::sendNewUserMessage($user, $generatedPassword);   
             }
         }
 
@@ -162,5 +161,13 @@ class UserService extends BaseService
         }
 
         return ['success' => true];
+    }
+
+    public static function sendNewUserMessage(User $user, string $generatedPassword)
+    {
+        $newUserText = "Добавлен новый пользователь:\n{$user->name} {$user->lastname}\nЛогин: {$user->login}\nПароль: {$generatedPassword}";
+        Http::post('http://localhost:1234/send-message', [
+            'text' => $newUserText,
+        ]);
     }
 }
