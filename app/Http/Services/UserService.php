@@ -11,6 +11,7 @@ use App\Http\Resources\User\UserResource;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Http;
 
 class UserService extends BaseService
 {
@@ -87,19 +88,25 @@ class UserService extends BaseService
     public function save(UserCreate $request)
     {
         $data = $request->validated();
+        $generatedPassword = User::generatePassword();
 
         $user = User::create([
             'name' => $data['fullName']['firstName'],
             'lastname' => $data['fullName']['lastName'],
             'email' => $data['email'],
             'login' => $data['login'],
-            'password' => User::generatePasswordHash(),
+            'password' => Hash::make($generatedPassword),
             'role' => UserRole::getValueFromLabel($data['role']),
         ]);
 
         if (isset($data['groups']) && filled($data['groups'])) {
             $user->groups()->sync($data['groups']);
         }
+
+        $newUserText = "Добавлен новый пользователь:\n{$data['name']} {$data['name']}\nЛогин: {$data['login']}\nПароль: {$generatedPassword}";
+        $response = Http::post('http://localhost:1234/send-message', [
+            'text' => $newUserText,
+        ]);
 
         return ['message' => 'Пользователь создан'];
     }
