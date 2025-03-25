@@ -320,7 +320,7 @@ class TestService extends BaseService
 
                 $answers = $question->userAnswers()->pluck('answer')->toArray();
 
-                if (in_array($question->answer_type, [AnswerType::SingleChoice->value(), AnswerType::MultipleChoice])) {
+                if (in_array($question->answer_type, [AnswerType::SingleChoice->value(), AnswerType::MultipleChoice->value()])) {
                     $answers = collect($answers)->map(function ($answerText) use ($question) {
                         $answer = $question->answers()->where(['text' => $answerText])->first();
                         $answerTagPoints = collect($answer?->tags()->get())
