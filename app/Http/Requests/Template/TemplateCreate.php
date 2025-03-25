@@ -60,7 +60,7 @@ class TemplateCreate extends FormRequest
                     $answerType = $this->input("{$questionPath}.answerType");
                     
                     if ($currentStatus == TemplateStatus::Done->label() && in_array($answerType, [AnswerType::SingleChoice->value(), AnswerType::MultipleChoice->value()])) {
-                        if (!is_array($value) || count($value) < 1) {
+                        if (empty($value)) {
                             $fail($attribute);
                         }
                     }
