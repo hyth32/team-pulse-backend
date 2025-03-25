@@ -32,11 +32,16 @@ class TestService extends BaseService
      */
     public static function list(BaseListRequest $request)
     {
+        $searchQuery = $request->q;
         $user = $request->user();
         $isAdmin = $user->isAdmin();
 
         if ($isAdmin) {
-            $query = AssignedTest::query();
+            $query = AssignedTest::query()
+                ->when(isset($searchQuery), function ($query) use ($searchQuery) {
+                    $searchQuery = "%{$searchQuery}%";
+                    $query->where('name', 'ilike', $searchQuery);
+                });
         } else {
             $query = $user->assignedTests()
                 ->where('start_date', '<', now())

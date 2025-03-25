@@ -12,6 +12,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class UserService extends BaseService
 {
@@ -21,7 +22,15 @@ class UserService extends BaseService
      */
     public static function list(BaseListRequest $request)
     {
-        $query = User::query()->orderBy('created_at', 'desc');
+        $searchQuery = $request->q;
+        $query = User::query()
+            ->when(isset($searchQuery), function ($query) use ($searchQuery) {
+                $searchQuery = "%{$searchQuery}%";
+                $query->where('name', 'ilike', $searchQuery)
+                    ->orWhere('lastname', 'ilike', $searchQuery)
+                    ->orWhere('login', 'ilike', $searchQuery);
+            })
+            ->orderBy('created_at', 'desc');
 
         $result = self::paginateQuery($query, $request);
 

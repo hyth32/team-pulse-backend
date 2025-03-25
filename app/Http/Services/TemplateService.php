@@ -20,7 +20,12 @@ class TemplateService extends BaseService
      */
     public static function list(BaseListRequest $request)
     {
-        $query = Template::query();
+        $searchQuery = $request->q;
+        $query = Template::query()
+            ->when(isset($searchQuery), function ($query) use ($searchQuery) {
+                $searchQuery = "%{$searchQuery}%";
+                $query->where('name', 'ilike', $searchQuery);
+            });
 
         $result = self::paginateQuery($query, $request);
         $templates = $result['items']->orderBy('created_at', 'desc');
