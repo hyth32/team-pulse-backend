@@ -41,14 +41,19 @@ class TemplateCreate extends FormRequest
             'topics.*.questions.*.answerType' => ['required', Rule::in(AnswerType::values())],
 
             'topics.*.questions.*.tags' => 'nullable|array',
-            'topics.*.questions.*.answers' => [
-                'array',
-                Rule::when(
-                    $currentStatus == TemplateStatus::Done->label(),
-                    ['required', 'min:1'],
-                ),
+            'topics.*.questions.*.answers' => 'required|array',
+            'topics.*.questions.*.answers.*.text' => [
+                function ($attribute, $value, $fail) use ($currentStatus) {
+                    $questionPath = implode('.', array_slice(explode('.', $attribute), 0, -3));
+                    $answerType = $this->input("{$questionPath}.answerType");
+                    
+                    if ($currentStatus == TemplateStatus::Done->label() && in_array($answerType, [AnswerType::SingleChoice->value(), AnswerType::MultipleChoice->value()])) {
+                        if (!is_array($value) || count($value) < 1) {
+                            $fail($attribute);
+                        }
+                    }
+                },
             ],
-            'topics.*.questions.*.answers.*.text' => 'nullable|string',
             'topics.*.questions.*.answers.*.isRight' => 'required|boolean',
 
             'topics.*.questions.*.answers.*.points' => 'nullable|array',
@@ -62,9 +67,7 @@ class TemplateCreate extends FormRequest
         $fullFieldPaths = $validator->errors()->keys();
 
         $errorFields = collect($fullFieldPaths)
-            ->map(function ($fieldPath) {
-                return last(explode('.', $fieldPath));
-            })
+            ->map(fn ($fieldPath) => implode('.', array_filter(explode('.', $fieldPath), fn ($part) => !is_numeric($part))))
             ->unique()
             ->values()
             ->toArray();

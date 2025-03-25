@@ -64,18 +64,20 @@ class TemplateService extends BaseService
         
                         if (isset($questionData['answers']) && filled($questionData['answers'])) {
                             foreach ($questionData['answers'] as $answerData) {
-                                $answer = $question->answers()->create([
-                                    'text' => $answerData['text'],
-                                    'isRight' => $answerData['isRight'],
-                                ]);
-        
-                                if (isset($answerData['points']) && filled($answerData['points'])) {
-                                    $tagData = [];
-                                    foreach ($answerData['points'] as $pointData) {
-                                        $tag = Tag::where(['name' => $pointData['name']])->first();
-                                        $tagData[$tag->id] = ['point_count' => $pointData['points']];
+                                if (!empty($answerData['text'])) {
+                                    $answer = $question->answers()->create([
+                                        'text' => $answerData['text'],
+                                        'isRight' => $answerData['isRight'],
+                                    ]);
+            
+                                    if (isset($answerData['points']) && filled($answerData['points'])) {
+                                        $tagData = [];
+                                        foreach ($answerData['points'] as $pointData) {
+                                            $tag = Tag::where(['name' => $pointData['name']])->first();
+                                            $tagData[$tag->id] = ['point_count' => $pointData['points']];
+                                        }
+                                        $answer->tags()->sync($tagData);
                                     }
-                                    $answer->tags()->sync($tagData);
                                 }
                             }
                         }

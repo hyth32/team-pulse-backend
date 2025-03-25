@@ -36,7 +36,7 @@ class AuthService
         }
 
         $user->tokens()->delete();
-        $expirationDate = Carbon::now()->addHour();
+        $expirationDate = Carbon::now()->addDay();
         $token = $user->createToken('access_token', ['*'], $expirationDate)->plainTextToken;
 
         return [
