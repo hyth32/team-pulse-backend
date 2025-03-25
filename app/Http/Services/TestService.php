@@ -23,7 +23,6 @@ use App\Models\UserTestCompletion;
 use App\Models\UserTopicCompletion;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 
 class TestService extends BaseService
 {

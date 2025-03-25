@@ -32,12 +32,12 @@ class TestCompletionResource extends JsonResource
         $isCompleted = $completionStatus == TopicCompletionStatus::Passed->value();
         $resultReady = $isCompleted;
 
-        if (Carbon::parse($endDate)->isPast() && !$isCompleted) {
+        if ($endDate && Carbon::parse($endDate)->isPast() && !$isCompleted) {
             $completionStatus = TopicCompletionStatus::Expired->value();
         }
 
         if ($isLate) {
-            if (Carbon::parse($endDate)->isPast() && $isCompleted) {
+            if ($endDate && Carbon::parse($endDate)->isPast() && $isCompleted) {
                 $resultReady = true;
             } else {
                 $resultReady = false;
