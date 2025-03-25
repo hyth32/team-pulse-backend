@@ -21,6 +21,7 @@ class TemplateAssign extends FormRequest
             'lateResult' => 'required|boolean',
             'groupIds' => 'nullable|array',
             'employeeIds' => 'nullable|array',
+            'minPercentage' => 'nullable|numeric|max:1',
         ];
     }
 }

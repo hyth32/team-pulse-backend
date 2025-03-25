@@ -19,6 +19,7 @@ return new class extends Migration
             $table->dateTime('start_date');
             $table->dateTime('end_date');
             $table->integer('test_status');
+            $table->float('min_percentage')->nullable();
 
             $table->foreignUuid('template_id')->constrained()->onDelete('cascade');
             $table->foreignUuid('subject_id')->nullable()->constrained('users')->onDelete('cascade');

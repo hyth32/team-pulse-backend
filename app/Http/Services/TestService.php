@@ -197,6 +197,7 @@ class TestService extends BaseService
                     'late_result' => $data['lateResult'],
                     'assigner_id' => $request->user()->id,
                     'test_status' => TopicCompletionStatus::NotPassed->value(),
+                    'min_percentage' => $data['minPercentage'],
                 ]);
         
                 $usersQuery = User::query();
@@ -313,16 +314,27 @@ class TestService extends BaseService
             'user_id' => $user->id,
         ])->get();
 
+        $questionRightAnswerCount = 0;
+        $userRightAnswerCount = 0;
+
         $answerPoints = collect($userAnswers)
-            ->map(function ($answerData) {
+            ->map(function ($answerData) use ($questionRightAnswerCount, $userRightAnswerCount) {
                 $question = Question::where(['id' => $answerData['question_id']])->first();
                 $topicName = $question->topic->name;
 
                 $answers = $question->userAnswers()->pluck('answer')->toArray();
 
                 if (in_array($question->answer_type, [AnswerType::SingleChoice->value(), AnswerType::MultipleChoice->value()])) {
-                    $answers = collect($answers)->map(function ($answerText) use ($question) {
+                    $questionRightAnswerCount += $question->answers()->where('isRight', '=', true)->count();
+
+                    $answers = collect($answers)->map(function ($answerText) use ($question, $userRightAnswerCount) {
                         $answer = $question->answers()->where(['text' => $answerText])->first();
+                        $isUserAnswerRight = $answer->isRight;
+
+                        if ($isUserAnswerRight) {
+                            $userRightAnswerCount++;
+                        }
+
                         $answerTagPoints = collect($answer?->tags()->get())
                             ->map(function ($tag) {
                                 return [
@@ -330,6 +342,7 @@ class TestService extends BaseService
                                     'points' => $tag?->pivot->point_count,
                                 ];
                             });
+                        
                         return [
                             'text' => $answer->text,
                             'isRight' => $answer->isRight,
@@ -364,10 +377,15 @@ class TestService extends BaseService
             ->values()
             ->all();
 
+        $userRightAnswerPercentage = $questionRightAnswerCount > 0
+            ? round($userRightAnswerCount / $questionRightAnswerCount, 2) * 100
+            : null;
+
         $solutionData = [
             'name' => $test->name,
             'description' => $test->description,
             'topics' => $answerPoints,
+            'rightPercentage' => $userRightAnswerPercentage,
         ];
 
         return ['solution' => $solutionData];
