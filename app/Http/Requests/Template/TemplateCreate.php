@@ -41,7 +41,19 @@ class TemplateCreate extends FormRequest
             'topics.*.questions.*.answerType' => ['required', Rule::in(AnswerType::values())],
 
             'topics.*.questions.*.tags' => 'nullable|array',
-            'topics.*.questions.*.answers' => 'required|array',
+            'topics.*.questions.*.answers' => [
+                'array',
+                function ($attribute, $value, $fail) use ($currentStatus) {
+                    $questionPath = str_replace('.answers', '', $attribute);
+                    $answerType = $this->input("{$questionPath}.answerType");
+                    
+                    if ($currentStatus == TemplateStatus::Done->label() && in_array($answerType, [AnswerType::SingleChoice->value(), AnswerType::MultipleChoice->value()])) {
+                        if (!is_array($value) || count($value) < 1) {
+                            $fail($attribute);
+                        }
+                    }
+                },
+            ],
             'topics.*.questions.*.answers.*.text' => [
                 function ($attribute, $value, $fail) use ($currentStatus) {
                     $questionPath = implode('.', array_slice(explode('.', $attribute), 0, -3));
