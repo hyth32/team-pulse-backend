@@ -332,6 +332,7 @@ class TestService extends BaseService
                             });
                         return [
                             'text' => $answer->text,
+                            'isRight' => $answer->isRight,
                             'points' => $answerTagPoints,
                         ];
                     })->toArray();
