@@ -326,7 +326,7 @@ class TestService extends BaseService
         $userRightAnswerCount = 0;
 
         $answerPoints = collect($userAnswers)
-            ->map(function ($answerData) use ($questionRightAnswerCount, $userRightAnswerCount) {
+            ->map(function ($answerData) use (&$questionRightAnswerCount, &$userRightAnswerCount) {
                 $question = Question::where(['id' => $answerData['question_id']])->first();
                 $topicName = $question->topic->name;
 
@@ -335,7 +335,7 @@ class TestService extends BaseService
                 if (in_array($question->answer_type, [AnswerType::SingleChoice->value(), AnswerType::MultipleChoice->value()])) {
                     $questionRightAnswerCount += $question->answers()->where('isRight', '=', true)->count();
 
-                    $answers = collect($answers)->map(function ($answerText) use ($question, $userRightAnswerCount) {
+                    $answers = collect($answers)->map(function ($answerText) use ($question, &$userRightAnswerCount) {
                         $answer = $question->answers()->where(['text' => $answerText])->first();
                         $isUserAnswerRight = $answer->isRight;
 
@@ -393,7 +393,7 @@ class TestService extends BaseService
             'name' => $test->name,
             'description' => $test->description,
             'topics' => $answerPoints,
-            'minPercentage' => $test->min_percentage,
+            'minPercentage' => (int) $test->min_percentage,
             'rightPercentage' => $userRightAnswerPercentage,
         ];
 
