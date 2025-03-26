@@ -20,6 +20,7 @@ class AssignedTest extends BaseModel
         'is_anonymous',
         'late_result',
         'test_status',
+        'min_percentage',
     ];
 
     public function template()

@@ -390,6 +390,7 @@ class TestService extends BaseService
             'name' => $test->name,
             'description' => $test->description,
             'topics' => $answerPoints,
+            'minPercentage' => $test->min_percentage,
             'rightPercentage' => $userRightAnswerPercentage,
         ];
 
