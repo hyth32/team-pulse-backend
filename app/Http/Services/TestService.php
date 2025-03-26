@@ -23,6 +23,7 @@ use App\Models\UserTestCompletion;
 use App\Models\UserTopicCompletion;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
 
 class TestService extends BaseService
 {
@@ -234,6 +235,8 @@ class TestService extends BaseService
                 }
         
                 $test->users()->sync($users, ['completion_status' => TopicCompletionStatus::NotPassed->value()]);
+
+                DB::afterCommit(fn () => self::sendNewAssignedTestMessage($test));
             });
 
             return ['success' => true];
@@ -395,5 +398,13 @@ class TestService extends BaseService
         ];
 
         return ['solution' => $solutionData];
+    }
+
+    public static function sendNewAssignedTestMessage(AssignedTest $test)
+    {
+        $newTestText = "Назначен новый тест:\n{$test->name} {$test->start_date}-Логин: {$test->end_date}";
+        Http::post('http://localhost:1234/send-message', [
+            'text' => $newTestText,
+        ]);
     }
 }
