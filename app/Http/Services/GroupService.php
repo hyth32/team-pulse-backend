@@ -36,19 +36,15 @@ class GroupService extends BaseService
     {
         $data = $request->validated();
 
-        try {
-            DB::transaction(function () use ($data) {
-                $group = Group::firstOrCreate(['name' => $data['name']]);
-        
-                if (isset($data['employeeIds']) && filled($data['employeeIds'])) {
-                    $group->users()->sync($data['employeeIds']);
-                }
-            });
+        DB::transaction(function () use ($data) {
+            $group = Group::firstOrCreate(['name' => $data['name']]);
+    
+            if (isset($data['employeeIds']) && filled($data['employeeIds'])) {
+                $group->users()->sync($data['employeeIds']);
+            }
+        });
 
-            return ['message' => 'Группа создана'];
-        } catch (\Exception $e) {
-            return ['message' => 'Произошла ошибка: ' . $e->getMessage()];
-        }
+        return ['success' => true];
     }
 
     /**

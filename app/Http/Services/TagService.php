@@ -35,15 +35,12 @@ class TagService extends BaseService
     {
         $data = $request->validated();
 
-        try {
-            DB::transaction(function () use ($data) {
-                Tag::firstOrCreate(['name' => $data['name']]);
-            });
-            
-            return ['message' => 'Тег создан'];
-        } catch (\Exception $e) {
-            return ['message' => 'Произошла ошибка: ' . $e->getMessage()];
-        }
+        DB::transaction(function () use ($data) {
+            Tag::firstOrCreate(['name' => $data['name']]);
+        });
+        
+        return ['success' => true];
+        
     }
 
     /**
