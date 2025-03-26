@@ -404,8 +404,11 @@ class TestService extends BaseService
     {
         $dateFormat = 'd.m.Y';
         $startDate = Carbon::parse($test->start_date)->format($dateFormat);
-        $endDate = Carbon::parse($test->end_date)->format($dateFormat);
-        $newTestText = "Назначен новый тест:\n{$test->name}\n{$startDate} – {$endDate}";
+        $endDate = $test->end_date ? Carbon::parse($test->end_date)->format($dateFormat) : null;
+        $newTestText = "Назначен новый тест:\n{$test->name}\nДата начала: {$startDate}";
+        if ($endDate) {
+            $newTestText .= "\nДата окончания: {$endDate}";
+        }
         Http::post('http://193.164.150.39:1234/send-message', [
             'text' => $newTestText,
         ]);
