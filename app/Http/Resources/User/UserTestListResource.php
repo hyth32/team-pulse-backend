@@ -14,15 +14,15 @@ class UserTestListResource extends JsonResource
         $completionStatus = $this->completion_status;
         $isCompleted = $completionStatus == TopicCompletionStatus::Passed->value();
         $isLateResult = $this->test->late_result;
-        $endDate = Carbon::parse($this->test?->end_date);
+        $endDate = $this->test?->end_date;
 
         $resultReady = $isCompleted;
-        if ($endDate && $endDate->isPast($endDate) && !$isCompleted) {
+        if ($endDate && Carbon::parse($endDate)->isPast() && !$isCompleted) {
             $completionStatus = TopicCompletionStatus::Expired->value();
         }
 
         if ($isLateResult) {
-            if ($endDate && $endDate->isPast()) {
+            if ($endDate && Carbon::parse($endDate)->isPast() && $isCompleted) {
                 $resultReady = true;
             } else {
                 $resultReady = false;

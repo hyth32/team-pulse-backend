@@ -197,7 +197,7 @@ class TestService extends BaseService
                     'description' => $data['description'],
                     'frequency' => $data['frequency'],
                     'start_date' => Carbon::parse($data['startDate']),
-                    'end_date' => Carbon::parse($data['endDate']) ?? null,
+                    'end_date' => isset($data['endDate']) ? Carbon::parse($data['endDate']) : null,
                     'subject_id' => $data['subjectId'] ?? null,
                     'is_anonymous' => $data['isAnonymous'],
                     'late_result' => $data['lateResult'],
@@ -402,8 +402,11 @@ class TestService extends BaseService
 
     public static function sendNewAssignedTestMessage(AssignedTest $test)
     {
-        $newTestText = "Назначен новый тест:\n{$test->name} {$test->start_date}-Логин: {$test->end_date}";
-        Http::post('http://localhost:1234/send-message', [
+        $dateFormat = 'd.m.Y';
+        $startDate = Carbon::parse($test->start_date)->format($dateFormat);
+        $endDate = Carbon::parse($test->end_date)->format($dateFormat);
+        $newTestText = "Назначен новый тест:\n{$test->name}\n{$startDate} – {$endDate}";
+        Http::post('http://193.164.150.39:1234/send-message', [
             'text' => $newTestText,
         ]);
     }

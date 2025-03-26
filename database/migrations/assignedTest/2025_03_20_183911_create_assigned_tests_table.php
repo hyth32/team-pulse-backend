@@ -17,7 +17,7 @@ return new class extends Migration
             $table->boolean('is_anonymous');
             $table->boolean('late_result');
             $table->dateTime('start_date');
-            $table->dateTime('end_date');
+            $table->dateTime('end_date')->nullable();
             $table->integer('test_status');
             $table->float('min_percentage')->nullable();
 
