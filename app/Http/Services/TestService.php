@@ -39,7 +39,7 @@ class TestService extends BaseService
 
         if ($isAdmin) {
             $query = AssignedTest::query()
-                ->when(isset($searchQuery), function ($query) use ($searchQuery) {
+                ->when(isset($searchQuery) && $searchQuery != 'undefined', function ($query) use ($searchQuery) {
                     $searchQuery = "%{$searchQuery}%";
                     $query->where('name', 'ilike', $searchQuery);
                 });

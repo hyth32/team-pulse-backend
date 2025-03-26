@@ -24,7 +24,7 @@ class UserService extends BaseService
     {
         $searchQuery = $request->q;
         $query = User::query()
-            ->when(isset($searchQuery), function ($query) use ($searchQuery) {
+            ->when(isset($searchQuery) && $searchQuery != 'undefined', function ($query) use ($searchQuery) {
                 $searchQuery = "%{$searchQuery}%";
                 $query->where('name', 'ilike', $searchQuery)
                     ->orWhere('lastname', 'ilike', $searchQuery)
