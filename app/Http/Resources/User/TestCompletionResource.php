@@ -8,7 +8,6 @@ use App\Models\UserTestCompletion;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
-use Illuminate\Support\Facades\Log;
 
 class TestCompletionResource extends JsonResource
 {
